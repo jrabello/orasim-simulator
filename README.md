@@ -1,2 +1,2 @@
 # sgbd-emulator
-Oracle SGBD Emulator 
+Oracle SGBD Emulator
