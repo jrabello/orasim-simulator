@@ -2,19 +2,21 @@
 <html ng-app="sgbd">
   <head>
     <title>Aprendizado SGBD</title>
-
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
+<<<<<<< HEAD
     <link rel="icon" href="img/database.ico">
     <!--<>-->
+=======
+    <link rel="icon" href="img/database.ico">    
+>>>>>>> master
     <script src="js/third-party/jquery.1.12.0.min.js"></script>
     <script src="js/third-party/angular.1.5.5.js"></script>
   </head>
   <body>
     <h1 class="main-title">Aprendizado SGBD</h1>
-    <main>
-      
+    <main>      
       <div id="console-container" ng-controller="ConsoleContainerController">
         <input id="console-input" ng-keypress="handleKeyPress($event)" class="console-view"  type="text" placeholder="Digite o comando (SELECT, DELETE, UPDATE, INSERT)">
         <div id="console" class="console-view"  disabled="disabled">
