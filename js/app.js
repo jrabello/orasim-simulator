@@ -10,7 +10,7 @@ angular.module('sgbd', [])
     $scope.handleKeyPress =  function(keyEvent) {
       //console.log(keyEvent);
       //handle when user pressed enter
-      if(keyEvent.code === "Enter" || keyEvent.key === "Enter"){          
+      if(keyEvent.keyCode === 13/*ENTER*/){          
           var userInput = $("#console-input").val();          
 		  var parser = new QueryParser(userInput);
 		  
