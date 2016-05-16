@@ -29,15 +29,16 @@
         <div id="user">
           <img src="img/user.png" alt="Usuário">
         </div>        
-        <div id="user-process" class="grey-bg oval" >
-          user process
+        <div id="user-process" class="grey-bg oval">
+          User Process
         </div>
         <div class="arrow from-userp-2-listenerp"></div>
         <div class="arrow from-userp-2-serverp"></div>
         
         <!--listener process-->
-        <div class="grey-bg oval" id="listener-process">
-          listener process
+        <div class="grey-bg oval" id="listener-process" align="bottom">
+          <br>
+		  Listener
         </div>
         <div class="arrow from-listenerp-2-userp"></div>
         <div class="arrow from-listenerp-2-serverp"></div>
@@ -47,25 +48,25 @@
         
         <!--server process-->
         <div id="server-process" class="grey-bg oval" >
-          server process
+          Server Process
           <div class="black-bg" id="pga">pga</div>
         </div>
         <div class="arrow from-serverp-2-userp"></div>
         <div class="arrow from-serverp-2-listenerp"></div>
         
         <div class="black-bg" id="oracle-instance">
-          <p class="content-title">oracle instance</p>
+          <p class="content-title-instance">Oracle Instance</p>
 
           <div class="yellow-bg" id="sga">
-            <p class="content-title">sga</p>
+            <p class="content-title-sga1">SGA</p>
 
             <div class="inline-block-container">
-              <div id="shared-pool" class="green-bg" >
-                <p class="content-title">shared pool</p>
+              <div class="green-bg" id="shared-pool">
+                <p class="content-title-sga2">Shared Pool</p>
               </div>
 
               <div class="green-bg" id="db-buffer-cache">
-                 <p class="content-title">db buffer cache</p>
+                 <p class="content-title-sga2">DB Buffer Cache</p>
 
                  <div id="cache-container">
                     <div class="cache-box"></div>
@@ -99,7 +100,7 @@
               </div>
 
               <div class="green-bg" id="redo-log-buffer">
-                <p class="content-title">redo log buffer</p>
+                <p class="content-title-sga2">Redo Log Buffer</p>
 
                 <div id="cache-container">
                   <div class="buffer-box"></div>
@@ -123,17 +124,17 @@
           </div>
 
           <div class="inline-block-container process">
-            <div class="blue-bg oval">pmon</div>
+            <div class="blue-bg oval">PMON</div>
 
-            <div class="blue-bg oval">smon</div>
+            <div class="blue-bg oval">SMON</div>
 
-            <div class="blue-bg oval">dbwr</div>
+            <div class="blue-bg oval">DBWR</div>
 
-            <div class="blue-bg oval">ckpt</div>
+            <div class="blue-bg oval">CKPT</div>
 
-            <div class="blue-bg oval">lgwr</div>
+            <div class="blue-bg oval">LGWR</div>
 
-            <div class="blue-bg oval">arcn</div>
+            <div class="blue-bg oval">ARCn</div>
           </div>
 
         </div>
@@ -165,18 +166,18 @@
               </div>
             </div>
 
-            <div class="dark-grey-bg bottom-left-radius" id="parameter-file">parameter-file</div>
+            <div class="dark-grey-bg bottom-left-radius" id="parameter-file">Parameter-file</div>
             <!-- <div class="dark-grey-bg bottom-left-radius" id="password-file">password-file</div> -->
 
-            <p class="content-title" id="oracle-database-title">oracle database</p>
+            <p class="content-title" id="oracle-database-title">Oracle Database</p>
           </div>
 
         <div id="client-title">
-          client
+          Client
         </div>
 
         <div id="server-title">
-          server
+          Server
         </div>
 
       </div>
