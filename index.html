@@ -59,15 +59,30 @@
           <div class="yellow-bg" id="sga">
             <p class="content-title">sga</p>
 
-            <div class="inline-block-container">
-              <div id="shared-pool" class="green-bg" >
+            <ul class="inline-block-container">
+              <li id="shared-pool" class="green-bg" >
                 <p class="content-title">shared pool</p>
-              </div>
+                <!--<p>lala</p>-->
+                <ul>
+                  <li class="hash" ng-repeat="(hash, value) in sharedPool.hashTable">{{hash}}</li>
+                </ul>
+              </li>
 
-              <div class="green-bg" id="db-buffer-cache">
+              <li id="db-buffer-cache" class="green-bg" >
                  <p class="content-title">db buffer cache</p>
 
                  <div id="cache-container">
+                   <!--<ul>
+                    <li ng-repeat="block in dbBufferCache.getBlocksArr()" class="cache-box"></li> 
+                   </ul>-->
+                   <div ng-repeat="block in dbBufferCache.getBlocksArr() track by $index" class="cache-box"></div>
+                    <!--<div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
@@ -87,18 +102,11 @@
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>-->
                  </div>
-              </div>
+              </li>
 
-              <div class="green-bg" id="redo-log-buffer">
+              <li id="redo-log-buffer" class="green-bg" >
                 <p class="content-title">redo log buffer</p>
 
                 <div id="cache-container">
@@ -117,18 +125,15 @@
                   <div class="buffer-box"></div>
                   <div class="buffer-box"></div>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
 
           </div>
 
           <div class="inline-block-container process">
             <div class="blue-bg oval">pmon</div>
-
             <div class="blue-bg oval">smon</div>
-
             <div class="blue-bg oval">dbwr</div>
-
             <div class="blue-bg oval">ckpt</div>
 
             <div class="blue-bg oval">lgwr</div>
@@ -139,26 +144,19 @@
         </div>
 
         <div id="oracle-database">
-
            <div class="inline-block-container red-dashed-border-grey-bg" id="oracle-bds-container">
-
               <div class="bd" id="data-files">
                 <p class="bd-description">data files</p>
                 <!--<div class="cache-box-black"></div>                -->
-              </div>  
-              
+              </div>                
               <div class="black-bg" id="undo">undo</div>
-
               <div class="bd" id="control-files">
                 <p class="bd-description">control files</p>
               </div>
-
               <div class="bd" id="redo-log-files">
                 <p class="bd-description">redo log files</p>
               </div>
-
             </div>
-
             <div class="red-dashed-border-grey-bg" id="oracle-log-container">
               <div class="bd" id="archived-log-files">
                 <p class="bd-description">archived log files</p>
@@ -167,7 +165,6 @@
 
             <div class="dark-grey-bg bottom-left-radius" id="parameter-file">parameter-file</div>
             <!-- <div class="dark-grey-bg bottom-left-radius" id="password-file">password-file</div> -->
-
             <p class="content-title" id="oracle-database-title">oracle database</p>
           </div>
 
@@ -178,9 +175,7 @@
         <div id="server-title">
           server
         </div>
-
-      </div>
-      
+      </div>      
     </main>
 
     <!-- <footer class="footer-page">© TCC UAM 2016</footer> -->

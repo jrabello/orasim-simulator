@@ -330,6 +330,15 @@ h1 {
   display: inline-block;
 }
 
+.inline-block-container > li {
+  float:left;
+  margin: 3.5px;
+}
+
+.hash {
+   margin: 5.5px;
+}
+
 .bd-description {
   color: white;
   font-size: 10px;
@@ -444,3 +453,4 @@ h1 {
     width:140px;
     transform:rotate(255deg)
 }
+

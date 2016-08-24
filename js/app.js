@@ -1,5 +1,5 @@
 angular.module('sgbd', [])
-   
+
 //console Controller
 .controller('ConsoleContainerController', function($scope, $rootScope, consoleService, QueryParser) {    
     
@@ -11,18 +11,20 @@ angular.module('sgbd', [])
       //console.log(keyEvent);
       //handle when user pressed enter
       if(keyEvent.keyCode === 13/*ENTER*/){          
-          var userInput = $("#console-input").val();          
+          var userInput = jQuery("#console-input").val();          
 		  var parser = new QueryParser(userInput);
-		  
-		  consoleService.addMessage('User Process analisando query...','info');
+		  		  
 		  //verificando se query foi valida
-		  if(parser.getIsQueryParsedSuccess()){
+          consoleService.addMessage('User Process analisando query...','info');
+		  if(parser.IsQueryParsedSuccess()){
 			  //query valida, gerar evento para animationController
 			  $rootScope.$broadcast('animacao', userInput);
 		  }else{
 			  //query invalida
 			  consoleService.addMessage('Erro query invalida!','error');			  
 		  }
+          
+          jQuery("#console-input").val('');
       }
     }
     
@@ -32,6 +34,7 @@ angular.module('sgbd', [])
     $scope.$watch(function() {
 		return consoleService.consoleMessages;
 	}, function(newValue, oldValue) {
+        console.log('$scope.$watch: ', newValue, oldValue);
 		$scope.consoleMessages = newValue;
 	});
 	
@@ -59,32 +62,37 @@ angular.module('sgbd', [])
 })
 
 //animation Controller
-.controller('AnimationController', function($scope, consoleService, SharedPool, Crc32Factory, QueryParser, DbBufferCache) {
+.controller('AnimationController', function($scope, consoleService, SharedPool, 
+    Crc32, QueryParser, DbBufferCache, User, Server) {
   
   console.log('AnimationController called!');
   
-  //controller members
-  $scope.isConnected = false;
+  //controller attributes
+  //$scope.isConnected = true;
+  var animationDelay = 200;
+  $scope.user = new User();
+  $scope.server = new Server();  
   $scope.sharedPool = new SharedPool();
   $scope.dbBufferCache = new DbBufferCache();
-  
+  $scope.user.setIsConnected(true);
+  //console.log('$scope.sharedPool.hashTable:',$scope.sharedPool.hashTable);
   
   //command selector event listener
   //this is an event listener from all other controllers who wish 2 call a command here in AnimationController
   $scope.$on("animacao", function (event, query) {    
     //connect checking
-    if(!$scope.isConnected){        
+    if(!$scope.user.getIsConnected()){        
         //usuario nao conectado, rodar animacao de conexao
-		//TODO-joilson: isso deve ser modificado depois, receber a conexao por evento do usuario
 		//e nao fazer chaining com a query 
 		//
-        $scope.connectAnimation(query,function(query){                        
-            $scope.isConnected = true;
+        $scope.connectAnimation(query,function(query){
+            //connection animation finished                        
+            $scope.user.setIsConnected(true);
             //console.log('isConnected:', $scope.isConnected);
 			$scope.sendQuery2ServerProcessAnimation(query);
         });        
     }else{
-        //connected
+        //user connected
         //parsing commands    
         $scope.sendQuery2ServerProcessAnimation(query);
     }          
@@ -94,79 +102,126 @@ angular.module('sgbd', [])
   $scope.selectQueryAnimation =  function () {
       console.log('AnimationController select!!!');      
   }
-  
+
+  //should be removed and added inside proper object
   $scope.sendQuery2ServerProcessAnimation = function (query) {
-    var delay = 1000;    
-    $scope.queue(        
-        function () {
-			//consoleService.addMessage("");
-			//console.log("apply");
-			//consoleService.addMessage("Enviando query ("+query+") ao server process...", 'info');$scope.$apply();
-            $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            $('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            $('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            return $('#user img').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);   
+               
+    $scope.animationQueue(        
+        function () {			
+            return $scope.user.Send2ServerProcAnimation(animationDelay, consoleService, "User Process Enviando query ("+query+") ao server process...");			   
+		},
+        function () {			
+            return $scope.server.ServerSoftParsingAnimation(animationDelay, consoleService, "Server Process parsing query!", query);			   
 		},
 		function () {
-			//$scope.$apply();
-			$('.arrow.from-userp-2-serverp').hide();
-			//consoleService.addMessage("Server process realizando Soft-Parsing", 'info');$scope.$apply();
-			var parser = new QueryParser(query);
-			if(!parser.getIsQueryParsedSuccess()){
-				//consoleService.addMessage("Server process erro no Soft-Parsing!", 'info');$scope.$apply();
-			  	return;		  
-		  	}
-			
+						
 			//generate hash from query
-			var hash = new Crc32Factory(query).getHash();			
+			var hash = new Crc32(query).getHash();            			
 			if($scope.sharedPool.findHash(hash) === -1){
 				//hash nao encontrado
-				console.log("hash nao encontrado hash:", hash);
-				consoleService.addMessage("Server process nao encontrou query hash", 'info');$scope.$apply();
+                //adicionando hash ha shared pool
+                console.log("hash nao encontrado hash:", hash);
+                console.log("sharedPool:", $scope.sharedPool);
+				$scope.sharedPool.addHash(hash, 0);
+				
+				consoleService.addMessage("Server process nao encontrou hash", 'info');$scope.$apply();
 				consoleService.addMessage("Server process criando hash da user query", 'info');$scope.$apply();
-				$('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-				$('#shared-pool').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);	
-				//adicionando hash ha shared pool
-				$scope.sharedPool.addHash(hash, 0);				
-				//requisitando dados do dataFiles
-				//TODO-joilson remover essa porcaria de adicionar items dinamicamente no DOM do jquery
-				var data = $("<div class='cache-box-black'>");
-				var dataFiles = $("#data-files").append(data);							
+				jQuery('#server-process').repeat().fadeTo(animationDelay,0.1).fadeTo(animationDelay,1).until(2);
+				jQuery('#shared-pool').repeat().fadeTo(animationDelay,0.1).fadeTo(animationDelay,1).until(2);	
+								
+				//requisitando dados do dataFiles				
+				var data = jQuery("<div class='cache-box-black'>");
+				var dataFiles = jQuery("#data-files").append(data);							
 				data.animate({left: "-100px", top: "-131px"},//posicao server process
                               {duration: 2000});				
 				//adicionando dados no dbBufferCache
+                consoleService.addMessage("Server process adicionando dados no DbBufferCache", 'info');$scope.$apply();
 				var hashValue = $scope.sharedPool.getValue(hash);
 				var memoryLocation = $scope.dbBufferCache.getMemoryLocation(hashValue);
-				console.log(memoryLocation);
+				console.log('memoryLocation:', memoryLocation);
 				data.animate(memoryLocation,
                               {duration: 2000});
-				//enviando para server process		  
+				//enviando de db buffer cache para server process		  
 				data.animate({left: "-100px", top: "-131px"},//posicao server process
                               {duration: 2000});
+                                
 				//enviando para user process
-				//consoleService.addMessage("Server process enviando dados para User process", 'info');$scope.$apply();
+				consoleService.addMessage("Server process enviando dados para User process", 'info');$scope.$apply();
 				data.animate({left: "-250px", top: "-131px"},//posicao user process
-                              {duration: 2000});
+                              {
+                                duration: 2000,
+                                complete: function() {
+                                    // Animation complete.
+                                    data.hide();
+                                    data.remove();
+                              }
+                });
+                
 				
 			}else{
 				//hash encontrado
 				//consoleService.addMessage("Server process encontrou query hash", 'info');$scope.$apply();
-				//consoleService.addMessage("Server process requisitando dados do DbBufferCache", 'info');$scope.$apply();
-				//requisitar dados do dbSharedBuffer
+				//
+				
 				console.log("hash encontrado");
-				var hashValue = $scope.sharedPool.getValue(hash);
-				var memoryLocation = $scope.dbBufferCache.getMemoryLocation(hashValue);
-				$(".cache-box-black").animate({left: "-100px", top: "-131px"},//posicao server process
+                consoleService.addMessage("Server process encontrou hash("+hash+")", 'info');$scope.$apply();
+
+                //criando black-box
+                var data = jQuery("<div class='cache-box-black'>");                              
+				jQuery("#db-buffer-cache").append(data);	
+                $(".cache-box-black").css({
+                    position: 'absolute',
+                    top: $(".cache-box-black").position().top,
+                    left: $(".cache-box-black").position().left
+                });  
+
+                consoleService.addMessage("Server process requisitando dados do DbBufferCache", 'info');$scope.$apply();		  
+				data.animate( {top: jQuery("#server-process").position().top-50,
+                               left: jQuery("#server-process").position().left-400},//{left: "-200px", top: "-131px"},//posicao server process
                               {duration: 2000});
+                              
+                // consoleService.addMessage("Server process enviando dados para User process", 'info');$scope.$apply();
+				// var hashValue = $scope.sharedPool.getValue(hash);
+				// var memoryLocation = $scope.dbBufferCache.getMemoryLocation(hashValue);
+				// data.animate({left: "-100px", top: "-131px"},//posicao server process
+                //               {duration: 2000});
+
 				//enviar para user process
 				consoleService.addMessage("Server process enviando dados para User process", 'info');$scope.$apply();
-				$(".cache-box-black").animate({left: "-250px", top: "-131px"},//posicao server process
-                              {duration: 2000});
-				$(".cache-box-black").hide();
+				data.animate({top: jQuery("#user-process").position().top-50,
+                              left: jQuery("#user-process").position().left-400},//posicao server process
+                              {
+                                duration: 2000,
+                                complete: function() {
+                                    // Animation complete.
+                                    data.hide();
+                                    data.remove();
+                              }
+                });
+                
+				//jQuery(".cache-box-black").hide();
 			}
 		},
 		function(){
-			//$(".cache-box-black").hide();
+			//jQuery(".cache-box-black").hide();
+            //jQuery(".cache-box-black").hide();
+            // var data = jQuery("<div class='cache-box-black'>");                              
+			// 	jQuery("#db-buffer-cache").append(data);	
+            //     $(".cache-box-black").css({
+            //         position: 'absolute',
+            //         top: $(".cache-box-black").position().top,
+            //         left: $(".cache-box-black").position().left
+            //     });  
+                		  
+			// 	data.animate( {top: jQuery("#server-process").position().top,
+            //                    left: jQuery("#server-process").position().left},//{left: "-200px", top: "-131px"},//posicao server process
+            //                   {duration: 2000,
+            //                    complete: function() {
+            //                         // Animation complete.
+            //                         data.hide();
+            //                         data.remove();
+            //                   }
+            //                 });
 		}
 	);
   }
@@ -174,30 +229,30 @@ angular.module('sgbd', [])
   //connection animation
   $scope.connectAnimation =  function (query, callback) {
     var delay = 200;    
-    $scope.queue(        
+    $scope.animationQueue(        
         function () {
             //connect animacao 1
             //user process conecta ao listener    
             consoleService.addMessage("Conectando user ao listener process...", 'info');
-			$('.arrow.from-userp-2-listenerp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);			          
-            $('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            $('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            return $('#user img').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);            
-            // $('#userp-arrow-2-listenerp').animate({opacity: 0.1}, { 
+			jQuery('.arrow.from-userp-2-listenerp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);			          
+            jQuery('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            jQuery('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            return jQuery('#user img').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);            
+            // jQuery('#userp-arrow-2-listenerp').animate({opacity: 0.1}, { 
             //                         duration: delay, 
             //                         start: function(){
-            //                           $('#userp-arrow-2-listenerp').show();  
+            //                           jQuery('#userp-arrow-2-listenerp').show();  
             //                         },                                 
             //                         complete: function() {
-            //                             $('#userp-arrow-2-listenerp').animate({opacity: 1}, delay); 
+            //                             jQuery('#userp-arrow-2-listenerp').animate({opacity: 1}, delay); 
             //                         }
             // });  
-            // return $('#user img').animate({opacity: 0.1}, { 
+            // return jQuery('#user img').animate({opacity: 0.1}, { 
             //                         duration: delay,                                  
             //                         complete: function() {
-            //                             $('#user img').animate({opacity: 1}, {duration:delay,
+            //                             jQuery('#user img').animate({opacity: 1}, {duration:delay,
             //                                 complete: function(){
-            //                                     $('#userp-arrow-2-listenerp').hide();
+            //                                     jQuery('#userp-arrow-2-listenerp').hide();
             //                                     consoleService.addMessage("Conectado ao listener process!",'info');
             //                                     $scope.$apply();  
             //                                 }}); 
@@ -206,44 +261,44 @@ angular.module('sgbd', [])
         },
         function () {    
             //connect animacao 2
-            $('.arrow.from-userp-2-listenerp').hide();
-            consoleService.addMessage("Conectado ao listener process!",'info');$scope.$apply();
-            consoleService.addMessage("Listener criando server process...",'info');$scope.$apply();
-            $('.arrow.from-listenerp-2-serverp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            $('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            return $('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
+            jQuery('.arrow.from-userp-2-listenerp').hide();
+            consoleService.addMessage("Conectado ao listener process!",'info');//$scope.$apply();
+            consoleService.addMessage("Listener criando server process...",'info');//$scope.$apply();
+            jQuery('.arrow.from-listenerp-2-serverp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            jQuery('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            return jQuery('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
         },          
         function () {    
             //connect animacao 3            
-            $('.arrow.from-listenerp-2-serverp').hide();
-            consoleService.addMessage("Server process criado com sucesso!",'info');$scope.$apply();
-            consoleService.addMessage("Server process envia notificação de criação ao Listener",'info');$scope.$apply();
-            $('.arrow.from-serverp-2-listenerp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            $('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            return $('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
+            jQuery('.arrow.from-listenerp-2-serverp').hide();
+            consoleService.addMessage("Server process criado com sucesso!",'info');//$scope.$apply();
+            consoleService.addMessage("Server process envia notificação de criação ao Listener",'info');//$scope.$apply();
+            jQuery('.arrow.from-serverp-2-listenerp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            jQuery('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            return jQuery('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
         },
         function () {    
             //connect animacao 4            
-            $('.arrow.from-serverp-2-listenerp').hide();
-            consoleService.addMessage("Listener process recebe notificação",'info');$scope.$apply();
-            consoleService.addMessage("Listener envia notificacao ao User process sobre criação do Server process",'info');$scope.$apply();
-            $('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            $('.arrow.from-listenerp-2-userp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);            
-            return $('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
+            jQuery('.arrow.from-serverp-2-listenerp').hide();
+            consoleService.addMessage("Listener process recebe notificação",'info');//$scope.$apply();
+            consoleService.addMessage("Listener envia notificacao ao User process sobre criação do Server process",'info');//$scope.$apply();
+            jQuery('#listener-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            jQuery('.arrow.from-listenerp-2-userp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);            
+            return jQuery('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
         },        
         function () {    
             //connect animacao 6            
-            $('.arrow.from-listenerp-2-userp').hide();
-            consoleService.addMessage("User process recebe notificação",'info');$scope.$apply();
-            consoleService.addMessage("User process conectando ao server process...",'info');$scope.$apply();            
-            $('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
-            return $('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
+            jQuery('.arrow.from-listenerp-2-userp').hide();
+            consoleService.addMessage("User process recebe notificação",'info');//$scope.$apply();
+            consoleService.addMessage("User process conectando ao server process...",'info');//$scope.$apply();            
+            jQuery('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            jQuery('.arrow.from-userp-2-serverp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+            return jQuery('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);              
         },
         function () {    
             //connect animacao 6            
-            $('.arrow.from-userp-2-serverp').hide();
-            consoleService.addMessage("Conexão estabelecida com sucesso!",'info');$scope.$apply();            
+            jQuery('.arrow.from-userp-2-serverp').hide();
+            consoleService.addMessage("Conexão estabelecida com sucesso!",'info');//$scope.$apply();            
             return callback(query);
         }   
    );//end $scope.queue
@@ -251,14 +306,14 @@ angular.module('sgbd', [])
   }//end connectAnimation
   
   //custom queue
-  //fila custom usando promises
-  $scope.queue = function (start) {
+  //fila custom que usa promises, para executar grupos de animacoes
+  $scope.animationQueue = function (start) {
         var rest = [].splice.call(arguments, 1),
             promise = $.Deferred();
 
         if (start) {
             $.when(start()).then(function () {
-                $scope.queue.apply(window, rest);
+                $scope.animationQueue.apply(window, rest);
             });
         } else {
             promise.resolve();
@@ -268,8 +323,8 @@ angular.module('sgbd', [])
   
   //select animation
   $scope.oldSelectAnimationn =  function () {
-      var consoleView = $("#console");
-      var user = $("#user img");
+      var consoleView = jQuery("#console");
+      var user = jQuery("#user img");
 
       // Animação do user process
       // usuario conecta ao listener
@@ -280,7 +335,7 @@ angular.module('sgbd', [])
                                   start: function() {
                                     //consoleView.html(consoleView.html() + "<br/>Testando user...");
                                     //mostrando arrow do listener
-                                    //$('#listener-process').next(".jarrow").show();
+                                    //jQuery('#listener-process').next(".jarrow").show();
                                     consoleService.addMessage("Conectando usuario ao listener process...",'info');                                    
                                   }, 
                                   complete: function() {
@@ -297,22 +352,22 @@ angular.module('sgbd', [])
       // Animação do listener process
       // listener cria server process
       .queue('myAnimationQueue', function(next){
-          var listenerProcess = $("#listener-process");
+          var listenerProcess = jQuery("#listener-process");
           listenerProcess.animate({opacity: 0.1},
                               {
                                   duration: 4000,
                                   start: function() {
                                     //escondendo arrow do listener
-                                    //$('#listener-process').next(".jarrow").hide();
+                                    //jQuery('#listener-process').next(".jarrow").hide();
                                     //mostrando server process
-                                    $('#server-process').show();                                                       
+                                    jQuery('#server-process').show();                                                       
                                     //consoleView.html(consoleView.html() + "<br/>Testando user process...");
                                     consoleService.addMessage("Listener criando server process...",'info');                                    
                                     $scope.$apply();
                                   }, 
                                   complete: function() {
                                     //mostrando arrow server process
-                                    //$('#server-process').next(".jarrow").show();                                    
+                                    //jQuery('#server-process').next(".jarrow").show();                                    
                                     listenerProcess.animate({opacity: 1}, {duration: 2000});
                                     //consoleView.html (consoleView.html() + "<br/>Finalizando user process...");
                                     consoleService.addMessage("Server process criado com sucesso...",'info');
@@ -326,7 +381,7 @@ angular.module('sgbd', [])
       // Animação do listener process
       // listener notifica user process sobre criacao do server process
       .queue('myAnimationQueue', function(next){
-          var listenerProcess = $("#listener-process");          
+          var listenerProcess = jQuery("#listener-process");          
           listenerProcess.animate({opacity: 0.1},
                               {
                                   duration: 4000,
@@ -336,7 +391,7 @@ angular.module('sgbd', [])
                                   }, 
                                   complete: function() {
                                     //escondendo arrow server process
-                                    //$('#server-process').next(".jarrow").hide();
+                                    //jQuery('#server-process').next(".jarrow").hide();
                                     listenerProcess.animate({opacity: 1}, {duration: 2000});
                                     //consoleView.html (consoleView.html() + "<br/>Finalizando server process...");
                                     consoleService.addMessage("User process recebe notificação do Listener",'info'); 
@@ -369,7 +424,7 @@ angular.module('sgbd', [])
         
       // Animação da shared pool
       .queue('myAnimationQueue', function(next){
-          var sharedPool = $("#shared-pool");
+          var sharedPool = jQuery("#shared-pool");
 
           sharedPool.animate({opacity: 0.1},
                               {
@@ -395,8 +450,8 @@ angular.module('sgbd', [])
             consoleService.addMessage("Testando sql hash...",'info');
             $scope.$apply();
 
-            var sqlHashDiv = $("<div class='sql-hash'>").html("SQL_ID: <br/>1jk4kle4ha3un9j");
-            $("#shared-pool").append(sqlHashDiv);
+            var sqlHashDiv = jQuery("<div class='sql-hash'>").html("SQL_ID: <br/>1jk4kle4ha3un9j");
+            jQuery("#shared-pool").append(sqlHashDiv);
             sqlHashDiv.show(2000);
             
             //consoleView.html(consoleView.html() + "<br/>Finalizando sql hash...")
@@ -407,7 +462,7 @@ angular.module('sgbd', [])
 
       // Animação do db buffer cache
       .queue('myAnimationQueue', function(next){
-          var dbBufferCache = $("#db-buffer-cache");
+          var dbBufferCache = jQuery("#db-buffer-cache");
 
           dbBufferCache.animate({opacity: 0.1},
                               {
@@ -433,8 +488,8 @@ angular.module('sgbd', [])
           consoleService.addMessage("Testando alocação do db buffer cache...",'info');
           $scope.$apply();
 
-          var dataFilesDiv = $("#data-files");
-          var sqlCacheDiv = $("<div class='cache-box-black'>");
+          var dataFilesDiv = jQuery("#data-files");
+          var sqlCacheDiv = jQuery("<div class='cache-box-black'>");
 
           dataFilesDiv.append(sqlCacheDiv);
           sqlCacheDiv.show(2000);
@@ -446,8 +501,8 @@ angular.module('sgbd', [])
         })
 
       .queue('myAnimationQueue', function(next){
-          var dataFilesDiv = $("#data-files");
-          var sqlCacheDiv = $("<div class='cache-box-black'>");
+          var dataFilesDiv = jQuery("#data-files");
+          var sqlCacheDiv = jQuery("<div class='cache-box-black'>");
 
           dataFilesDiv.append(sqlCacheDiv);
           sqlCacheDiv.show(2000);
@@ -467,7 +522,7 @@ angular.module('sgbd', [])
 
       // Animação do server process
       .queue('myAnimationQueue', function(next){
-          var serverProcess = $("#server-process");
+          var serverProcess = jQuery("#server-process");
 
           serverProcess.animate({opacity: 0.1},
                               {
@@ -491,7 +546,7 @@ angular.module('sgbd', [])
 
       // Animação do user process
       .queue('myAnimationQueue', function(next){
-          var userProcess = $("#user-process");
+          var userProcess = jQuery("#user-process");
 
           userProcess.animate({opacity: 0.1},
                               {
@@ -553,7 +608,7 @@ angular.module('sgbd', [])
       consoleMessages.push({'contents':msg, 'type':type}); 
 	  //consoleCacheMessages = angular.copy(consoleMessages);     
 	  //consoleMessages = consoleCacheMessages;
-      $("#console-input").focus();
+      jQuery("#console-input").focus();
   };
 
   var getMessages = function(){
@@ -566,27 +621,24 @@ angular.module('sgbd', [])
 	consoleMessages: consoleMessages
   };  
  })
- 
-
-
 
 
 //Factories
-//angular way for objects
-.factory('Crc32Factory', function () { 
+//angular objects
+.factory('Crc32', function () { 
 	
 	// Private property	
 	var data = "";
 	
 	//Constructor
-	function Crc32Factory(data) {
+	function Crc32(data) {
 		// Public properties, assigned to the instance ('this')
 		this.data = data;    
 	}
 	
 	// Public method, assigned to prototype	
-	Crc32Factory.prototype.getHash = function () {
-		return crc32(this.data);
+	Crc32.prototype.getHash = function () {
+		return genCrc32(this.data);
 	};
 		
 	// Private method
@@ -603,7 +655,7 @@ angular.module('sgbd', [])
 		return crcTable;
 	}
 
-	function crc32(str) {
+	function genCrc32(str) {
 		var crcTable = window.crcTable || (window.crcTable = makeCRCTable());
 		var crc = 0 ^ (-1);
 
@@ -617,26 +669,66 @@ angular.module('sgbd', [])
 	/**
 	 * Return the constructor function
 	 */
-	return Crc32Factory;
+	return Crc32;
 })
 
 .factory('User', function () {
-	var isConnected = false;
+	var isConnected;
 	
 	//Constructor
 	function User() {
 		this.isConnected = false;	
 	}
+    
+    User.prototype.Send2ServerProcAnimation = function(delay, consoleService, msg){
+        consoleService.addMessage(msg, 'info');//$scope.$apply();
+        jQuery('#server-process').show();
+        jQuery('.arrow.from-userp-2-serverp').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+        jQuery('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+        jQuery('#user-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+        return jQuery('#user img').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);        
+    }
 	
-	User.prototype.setIsConnected = function (connected) {
+	User.prototype.setIsConnected = function (connected) {        
 		this.isConnected = connected;
+        console.log('this.isConnected1:', this.isConnected);
+        console.log('connected:', connected);
 	};
 	
 	User.prototype.getIsConnected = function () {
+        console.log('this.isConnected2:',this.isConnected);
 		return this.isConnected;
 	};
 	
 	return User;
+})
+
+.factory('Server', function (QueryParser) {
+	var ip;
+    var port;
+	
+	//Constructor
+	function Server() {
+			
+	}
+    
+    AnimateServerProcess = function(delay){                
+        return jQuery('#server-process').repeat().fadeTo(delay,0.1).fadeTo(delay,1).until(2);
+    }
+    
+    Server.prototype.ServerSoftParsingAnimation = function(delay, consoleService, msg, query){
+        consoleService.addMessage("Server process realizando Soft-Parsing", 'info');//$scope.$apply();
+        			
+        var parser = new QueryParser(query);
+        if(!parser.IsQueryParsedSuccess()){
+            consoleService.addMessage("Server process erro no Soft-Parsing!", 'info');//$scope.$apply();
+            return;		  
+        }
+        jQuery('.arrow.from-userp-2-serverp').hide();
+        return AnimateServerProcess(delay);
+    }
+	
+	return Server;
 })
 
 .factory('QueryParser',function(){
@@ -656,7 +748,7 @@ angular.module('sgbd', [])
 		}	
 	} 	
 		
-	QueryParser.prototype.getIsQueryParsedSuccess = function () {
+	QueryParser.prototype.IsQueryParsedSuccess = function () {
 		return this.isQueryParsedSuccess;
 	};
 	
@@ -668,7 +760,7 @@ angular.module('sgbd', [])
 	
 	var hashTable;
 	
-	function SharedPool() {
+	function SharedPool() {        
 		this.hashTable = {};			
 	} 
 			
@@ -681,11 +773,10 @@ angular.module('sgbd', [])
 	};
 	
 	//returns -1 if not found, value otherwise
-	SharedPool.prototype.findHash = function (hash) {
-		for(var key in this.hashTable){
-			if (key === hash)
-				return this.hashTable[hash];
-		}
+	SharedPool.prototype.findHash = function (hash) {		
+	    if(this.hashTable.hasOwnProperty(hash)){
+            return this.hashTable[hash];
+        }
 		return -1;
 	};
 	
@@ -695,14 +786,23 @@ angular.module('sgbd', [])
 .factory('DbBufferCache',function(){
 	
 	var mapArr = [];
+    var blocks;
 	
 	function DbBufferCache() {
 		//posicao do elemento no dbBufferCache
 		this.mapArr = [];
 		this.mapArr.push({left: "150px", top: "-321px"});
-					
+		this.blocks = 36;
 	} 
-			
+	
+    DbBufferCache.prototype.getBlocks = function(){
+        return this.blocks;   
+    }
+    	
+    DbBufferCache.prototype.getBlocksArr = function(){
+        return new Array(this.blocks);   
+    }
+    
 	DbBufferCache.prototype.getMemoryLocation = function (value) {
 		return this.mapArr[value];
 	};
