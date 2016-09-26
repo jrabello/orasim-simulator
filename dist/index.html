@@ -1,44 +1,44 @@
 <!DOCTYPE html>
-<html ng-app="sgbd">
+<html>
   <head>
     <title># ORASIM #</title>
     <meta charset="UTF-8">
     
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">    
-    <link rel="icon" href="img/database.ico">
-    <link rel="icon" href="img/database.ico">   
-     
-    <script src="js/third-party/jquery-1.12.0.min.js"></script>
-    <script src="js/third-party/angular-1.5.5.js"></script>
+    <link rel="icon" href="img/database.ico">      
+    
   </head>
   <body>
     <h1 class="main-title"># ORASIM #</h1>
-    <main>      
-      <div id="console-container" ng-controller="ConsoleContainerController">
-        <input id="console-input" ng-keypress="handleKeyPress($event)" class="console-view"  type="text" placeholder="Digite o comando (SELECT, DELETE, UPDATE, INSERT)">
+    <main>
+
+      <!--console-->
+      <div id="console-container">
+        <input id="console-input" onkeypress="Orasim.getSqlConsole().handleKeyPress(event)" class="console-view"  type="text" placeholder="Digite o comando (SELECT, DELETE, UPDATE, INSERT)">
         <div id="console" class="console-view"  disabled="disabled">
-          <ul>
-            <li ng-repeat="message in consoleMessages" class="console-li-{{message.type}}">{{message.contents}}</li>
+          <ul id="console-msg-list-container">
+            <!--<li ng-repeat="message in consoleMessages" class="console-li-{{message.type}}">{{message.contents}}</li>-->
           </ul>
         </div>      
       </div>
+
+      <!--animation div-->
       <div id ="animation-container" ng-controller="AnimationController">
 
         <!--user process-->
         <div id="user">
           <img src="img/user.png" alt="Usuário">
         </div>        
-        <div id="user-process" class="grey-bg oval">
-          User Process
+        <div id="user-process" class="grey-bg oval" >
+          user process
         </div>
         <div class="arrow from-userp-2-listenerp"></div>
         <div class="arrow from-userp-2-serverp"></div>
         
         <!--listener process-->
-        <div class="grey-bg oval" id="listener-process" align="bottom">
-          <br>
-		  Listener
+        <div class="grey-bg oval" id="listener-process">
+          listener process
         </div>
         <div class="arrow from-listenerp-2-userp"></div>
         <div class="arrow from-listenerp-2-serverp"></div>
@@ -48,27 +48,42 @@
         
         <!--server process-->
         <div id="server-process" class="grey-bg oval" >
-          Server Process
+          server process
           <div class="black-bg" id="pga">pga</div>
         </div>
         <div class="arrow from-serverp-2-userp"></div>
         <div class="arrow from-serverp-2-listenerp"></div>
         
         <div class="black-bg" id="oracle-instance">
-          <p class="content-title-instance">Oracle Instance</p>
+          <p class="content-title">oracle instance</p>
 
           <div class="yellow-bg" id="sga">
-            <p class="content-title-sga1">SGA</p>
+            <p class="content-title">sga</p>
 
-            <div class="inline-block-container">
-              <div class="green-bg" id="shared-pool">
-                <p class="content-title-sga2">Shared Pool</p>
-              </div>
+            <ul class="inline-block-container">
+              <li id="shared-pool" class="green-bg" >
+                <p class="content-title">shared pool</p>
+                <!--<p>lala</p>-->
+                <ul>
+                  <li class="hash" ng-repeat="(hash, value) in sharedPool.hashTable">{{hash}}</li>
+                </ul>
+              </li>
 
-              <div class="green-bg" id="db-buffer-cache">
-                 <p class="content-title-sga2">DB Buffer Cache</p>
+              <li id="db-buffer-cache" class="green-bg" >
+                 <p class="content-title">db buffer cache</p>
 
                  <div id="cache-container">
+                   <!--<ul>
+                    <li ng-repeat="block in dbBufferCache.getBlocksArr()" class="cache-box"></li> 
+                   </ul>-->
+                   <div ng-repeat="block in dbBufferCache.getBlocksArr() track by $index" class="cache-box"></div>
+                    <!--<div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>
+
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
@@ -88,19 +103,12 @@
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
+                    <div class="cache-box"></div>-->
                  </div>
-              </div>
+              </li>
 
-              <div class="green-bg" id="redo-log-buffer">
-                <p class="content-title-sga2">Redo Log Buffer</p>
+              <li id="redo-log-buffer" class="green-bg" >
+                <p class="content-title">redo log buffer</p>
 
                 <div id="cache-container">
                   <div class="buffer-box"></div>
@@ -118,77 +126,66 @@
                   <div class="buffer-box"></div>
                   <div class="buffer-box"></div>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
 
           </div>
 
           <div class="inline-block-container process">
-            <div class="blue-bg oval">PMON</div>
+            <div class="blue-bg oval">pmon</div>
+            <div class="blue-bg oval">smon</div>
+            <div class="blue-bg oval">dbwr</div>
+            <div class="blue-bg oval">ckpt</div>
 
-            <div class="blue-bg oval">SMON</div>
+            <div class="blue-bg oval">lgwr</div>
 
-            <div class="blue-bg oval">DBWR</div>
-
-            <div class="blue-bg oval">CKPT</div>
-
-            <div class="blue-bg oval">LGWR</div>
-
-            <div class="blue-bg oval">ARCn</div>
+            <div class="blue-bg oval">arcn</div>
           </div>
 
         </div>
 
         <div id="oracle-database">
-
            <div class="inline-block-container red-dashed-border-grey-bg" id="oracle-bds-container">
-
               <div class="bd" id="data-files">
                 <p class="bd-description">data files</p>
                 <!--<div class="cache-box-black"></div>                -->
-              </div>  
-              
+              </div>                
               <div class="black-bg" id="undo">undo</div>
-
               <div class="bd" id="control-files">
                 <p class="bd-description">control files</p>
               </div>
-
               <div class="bd" id="redo-log-files">
                 <p class="bd-description">redo log files</p>
               </div>
-
             </div>
-
             <div class="red-dashed-border-grey-bg" id="oracle-log-container">
               <div class="bd" id="archived-log-files">
                 <p class="bd-description">archived log files</p>
               </div>
             </div>
 
-            <div class="dark-grey-bg bottom-left-radius" id="parameter-file">Parameter-file</div>
+            <div class="dark-grey-bg bottom-left-radius" id="parameter-file">parameter-file</div>
             <!-- <div class="dark-grey-bg bottom-left-radius" id="password-file">password-file</div> -->
-
-            <p class="content-title" id="oracle-database-title">Oracle Database</p>
+            <p class="content-title" id="oracle-database-title">oracle database</p>
           </div>
 
         <div id="client-title">
-          Client
+          client
         </div>
 
         <div id="server-title">
-          Server
+          server
         </div>
-
-      </div>
-      
+      </div>      
     </main>
-
+    
     <!-- <footer class="footer-page">© TCC UAM 2016</footer> -->
     <!-- includes -->
     
+    <script src="js/third-party/jquery-1.12.0.min.js"></script>
     <script src="js/third-party/jquery-timing.min.js"></script>
-    <script src="js/third-party/sql-parser.min.js"></script>
-    <script src="js/app.js"></script>
-  </body>
+    <script src="js/third-party/sql-parser.min.js"></script>    
+    <script type="text/javascript" src="js/app.bundle.js"></script>
+    
+    </body>
 </html>
