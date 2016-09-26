@@ -1,21 +1,27 @@
 export class SqlParser{
-    //query identifier token(SELECT, INSERT, CREATE, UPDATE)
+    //query identifier token(SELECT, INSERT, CREATE, UPDATE)[always uppercase]
+    private queryTokenId: string
+    private query: string
     private isParsedSuccess: boolean    
-    private queryToken: string
+    
 
     constructor(){
-        this.isParsedSuccess = false         
+        this.isParsedSuccess = false  
+        this.query = ""
+        this.isParsedSuccess = false       
     }
 
     parse(query: string): void {
         try{
             SQLParser.parse(query)
-            this.queryToken = SQLParser.lexer.tokenize(query)[0][0]                        
+            this.query = query
+            this.queryTokenId = SQLParser.lexer.tokenize(query)[0][0]                        
             this.isParsedSuccess = true            
         }catch(err){
             console.log("Erro SqlParser.parse:",err)
             this.isParsedSuccess = false
-            this.queryToken = ""
+            this.queryTokenId = ""
+            this.query = ""
         }
     }
 
@@ -23,7 +29,11 @@ export class SqlParser{
         return this.isParsedSuccess
     }
 
-    getQueryToken(): string{
-        return this.queryToken
+    getQuery(): string{
+        return this.query
+    }
+
+    getQueryTokenId(): string{
+        return this.queryTokenId
     }
 }

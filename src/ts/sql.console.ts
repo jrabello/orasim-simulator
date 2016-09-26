@@ -9,9 +9,10 @@ export class SqlConsole{
         this.sqlParser = new SqlParser()        
     }
 
-    handleKeyPress(e): void {
+    private handleKeyPress(e): void {
         //enter key pressed
         if(e.keyCode === 13){
+            //getting value from <input type=text> and parsing
             let userSqlCmd = $("#console-input").val()
             this.sqlParser.parse(userSqlCmd)
             
@@ -29,7 +30,7 @@ export class SqlConsole{
         $("#console-msg-list-container").append(msg.getMsg())
     }
 
-    logPrint(aMsg: string): void{
+    private logPrint(aMsg: string): void{
         console.log(aMsg)
     }
 }

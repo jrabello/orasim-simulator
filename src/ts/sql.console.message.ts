@@ -1,5 +1,5 @@
 export class SqlConsoleMessage{    
-    msgElement: HTMLElement;
+    private msgElement: HTMLElement;
 
     constructor(type: string, msg: string){
         this.msgElement = $(`<li class="console-li-`+type+`">`+msg+`</li>`)[0]

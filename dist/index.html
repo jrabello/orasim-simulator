@@ -64,19 +64,20 @@
               <li id="shared-pool" class="green-bg" >
                 <p class="content-title">shared pool</p>
                 <!--<p>lala</p>-->
-                <ul>
-                  <li class="hash" ng-repeat="(hash, value) in sharedPool.hashTable">{{hash}}</li>
+                <ul id="hash-ul-container">
+                  <!--<li class="hash" ng-repeat="(hash, value) in sharedPool.hashTable">{{hash}}</li>-->
+
                 </ul>
               </li>
 
               <li id="db-buffer-cache" class="green-bg" >
                  <p class="content-title">db buffer cache</p>
 
-                 <div id="cache-container">
+                 <div id="cache-container"></div>
                    <!--<ul>
                     <li ng-repeat="block in dbBufferCache.getBlocksArr()" class="cache-box"></li> 
                    </ul>-->
-                   <div ng-repeat="block in dbBufferCache.getBlocksArr() track by $index" class="cache-box"></div>
+                   <!--<div ng-repeat="block in dbBufferCache.getBlocksArr() track by $index" class="cache-box"></div>-->
                     <!--<div class="cache-box"></div>
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
@@ -104,7 +105,7 @@
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>
                     <div class="cache-box"></div>-->
-                 </div>
+                 <!--</div>-->
               </li>
 
               <li id="redo-log-buffer" class="green-bg" >

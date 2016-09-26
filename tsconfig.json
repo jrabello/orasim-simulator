@@ -4,9 +4,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "ignoreRules": {
-    "TS2339": true
-  },
   "exclude": [
     "node_modules"
   ]
