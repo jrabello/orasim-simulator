@@ -1,6 +1,8 @@
-import { Animation } from './animation'
-import { SqlParser } from './sql.parser'
+import { Animation } from '../animation/animation'
+import { SqlParser } from '../sql-parser/sql.parser'
 import { SqlConsoleMessage } from './sql.console.message'
+import { SqlConsoleMsgInfo } from './sql.console.msg.info'
+import { SqlConsoleMsgError } from './sql.console.msg.error'
 
 export class SqlConsole{
     private sqlParser: SqlParser    
@@ -15,12 +17,12 @@ export class SqlConsole{
             //getting value from <input type=text> and parsing
             let userSqlCmd = $("#console-input").val()
             this.sqlParser.parse(userSqlCmd)
-            this.addMsg(new SqlConsoleMessage('info','( ' + this.sqlParser.getQuery() +' )'))
+            this.addMsg(new SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() +' )'))
             //if query parsed successfully, run animation otherwise print error
             if (this.sqlParser.parsedSuccess())                
                 Orasim.getAnimation().start(this.sqlParser)
             else
-                this.addMsg(new SqlConsoleMessage('error', 'Query Inválida!'))
+                this.addMsg(new SqlConsoleMsgError( 'Query Inválida!'))
             
             $("#console-input").val('')            
         }
