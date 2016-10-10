@@ -46,16 +46,26 @@
 
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
-	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(7);
-	var oracle_instance_1 = __webpack_require__(8);
+	var server_process_1 = __webpack_require__(4);
+	var user_process_1 = __webpack_require__(5);
+	var animation_1 = __webpack_require__(6);
+	var oracle_database_1 = __webpack_require__(9);
+	var oracle_instance_1 = __webpack_require__(12);
 	var Main = (function () {
 	    function Main() {
 	        this.sqlConsole = new sql_console_1.SqlConsole();
+	        this.serverProcess = new server_process_1.ServerProcess();
+	        this.userProcess = new user_process_1.UserProcess();
 	        this.animation = new animation_1.Animation();
 	        this.oracleInstance = new oracle_instance_1.OracleInstance();
 	        this.oracleDatabase = new oracle_database_1.OracleDatabase();
 	    }
+	    Main.prototype.getUserProcess = function () {
+	        return this.userProcess;
+	    };
+	    Main.prototype.getServerProcess = function () {
+	        return this.serverProcess;
+	    };
 	    Main.prototype.getSqlConsole = function () {
 	        return this.sqlConsole;
 	    };
@@ -91,6 +101,7 @@
 	            //getting value from <input type=text> and parsing
 	            var userSqlCmd = $("#console-input").val();
 	            this.sqlParser.parse(userSqlCmd);
+	            this.addMsg(new sql_console_message_1.SqlConsoleMessage('info', '( ' + this.sqlParser.getQuery() + ' )'));
 	            //if query parsed successfully, run animation otherwise print error
 	            if (this.sqlParser.parsedSuccess())
 	                Orasim.getAnimation().start(this.sqlParser);
@@ -168,10 +179,70 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var ServerProcess = (function () {
+	    function ServerProcess() {
+	        this.element = $("#server-process")[0];
+	    }
+	    ServerProcess.prototype.getElement = function () {
+	        return this.element;
+	    };
+	    ServerProcess.prototype.getElementOffset = function () {
+	        return $(this.element).offset();
+	    };
+	    ServerProcess.prototype.getBlockFromDatFiles = function (dataFiles, delay) {
+	        var blockHtml = dataFiles.getNewBlockHtml();
+	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay);
+	        return blockHtml;
+	    };
+	    //DbBufferCache
+	    ServerProcess.prototype.getNewBlockFromDbBufferCache = function (dbBufferCache, delay) {
+	        var blockHtml = dbBufferCache.getNewBlockHtml();
+	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay);
+	        return blockHtml;
+	    };
+	    ServerProcess.prototype.storeBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
+	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, function () {
+	            dbBufferCache.setMemoryLocationUsed(memLocation);
+	        });
+	    };
+	    ServerProcess.prototype.getBlockFromDbBufferCache = function (blockHtml, dbBufferCache, delay) {
+	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay);
+	    };
+	    //UserProcess
+	    ServerProcess.prototype.sendDataToUserProcess = function (blockHtml, userProcess, delay) {
+	        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay);
+	    };
+	    return ServerProcess;
+	}());
+	exports.ServerProcess = ServerProcess;
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var UserProcess = (function () {
+	    function UserProcess() {
+	        this.element = $("#user-process")[0];
+	    }
+	    UserProcess.prototype.getElement = function () {
+	        return this.element;
+	    };
+	    return UserProcess;
+	}());
+	exports.UserProcess = UserProcess;
+
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var crc32_1 = __webpack_require__(5);
+	var crc32_1 = __webpack_require__(7);
 	var sql_console_message_1 = __webpack_require__(3);
 	var Animation = (function () {
 	    function Animation() {
@@ -182,19 +253,28 @@
 	        //overriding jquery object
 	        //this chain method makes sure animations are executed 
 	        //in order using promises
-	        $.chain = function () {
-	            var promise = $.Deferred().resolve().promise();
-	            jQuery.each(arguments, function () {
-	                promise = promise.pipe(this);
-	            });
-	            return promise;
-	        };
+	        // $.chain = function () {
+	        //     let promise = $.Deferred().resolve().promise();
+	        //     jQuery.each(arguments, function () {
+	        //         promise = promise.pipe(this);
+	        //     });
+	        //     return promise;
+	        // };
 	    }
 	    Animation.prototype.start = function (sqlParser) {
 	        //if here query was parsed successfully       
 	        if (sqlParser.getQueryTokenId() == "SELECT") {
 	            this.selectAnimation(sqlParser);
 	        }
+	    };
+	    // animate source to dest within delay
+	    Animation.prototype.moveTo = function (sourceElem, destElem, delay) {
+	        var x;
+	        var y;
+	        x = $(destElem).offset().top - $(sourceElem).offset().top + $(sourceElem).position().top;
+	        y = ($(destElem).offset().left - $(sourceElem).offset().left) + $(sourceElem).position().left;
+	        $(sourceElem).animate({ top: x, left: y }, { duration: delay * 2,
+	            complete: function () { return null; } });
 	    };
 	    Animation.prototype.selectAnimation = function (sqlParser) {
 	        var _this = this;
@@ -204,7 +284,7 @@
 	        // console.log('selectAnimation retSend2ServerProc:', retSend2ServerProc)
 	        // let retServerProcessDoSelect =  
 	        // console.log('selectAnimation retAnimateBlock:', retServerProcessDoSelect)
-	        //executing one group of animations after another
+	        // executing one group of animations after another
 	        // new Promise(() => {
 	        //     return 
 	        // }).then((res) => {                                              
@@ -234,8 +314,7 @@
 	    Animation.prototype.sendDataFromUserProcessToServerProcess = function () {
 	        var _this = this;
 	        return new Promise(function (resolve, reject) {
-	            //animate user process sending 2 server process
-	            //in this case 4 seconds 2 animate(depends on the delay)
+	            //animate user process sending 2 server process            
 	            $('.arrow.from-userp-2-serverp').show();
 	            $('.arrow.from-userp-2-serverp').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2).wait().hide();
 	            $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
@@ -249,58 +328,83 @@
 	    Animation.prototype.serverProcessDoSelect = function (hash) {
 	        var _this = this;
 	        return new Promise(function (resolve, reject) {
+	            var animationTime = 0;
+	            var dataFiles = Orasim.getOracleDatabase().getDataFiles();
 	            var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	            var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
 	            var sqlConsole = Orasim.getSqlConsole();
+	            var serverProcess = Orasim.getServerProcess();
+	            var userProcess = Orasim.getUserProcess();
+	            //finding hash into sharedPool
 	            if (sharedPool.findHash(hash)) {
 	                //hash found, server process getting data directly from dbBufferCache
+	                //let memoryLocation = dbBufferCache.getMemoryLocation(hashIndex)
 	                console.log("hash encontrado");
-	                var hashIndex = sharedPool.getHashIndex(hash);
-	                var memoryLocation = dbBufferCache.getMemoryLocation(hashIndex);
-	                $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(1);
-	                $(".cache-box-black").animate({ left: "-100px", top: "-131px" }, //posicao server process
-	                { duration: _this.delay });
-	                //enviar para user process
-	                Orasim.getSqlConsole().addMsg(new sql_console_message_1.SqlConsoleMessage('info', 'Server process enviando dados para User process'));
-	                $(".cache-box-black").animate({ left: "-250px", top: "-131px" }, //posicao server process
-	                { duration: _this.delay });
-	                $(".cache-box-black").hide();
+	                var memLocation = sharedPool.getMemoryLocation(hash);
+	                console.log('hashIndex: ' + memLocation);
+	                $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
+	                $('#db-buffer-cache').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
+	                // animacao pegando dados do dbBufferCache
+	                var blockHtml_1 = serverProcess.getNewBlockFromDbBufferCache(dbBufferCache, _this.delay);
+	                serverProcess.getBlockFromDbBufferCache(blockHtml_1, dbBufferCache, _this.delay);
+	                // animacao enviando dados para userProcess
+	                serverProcess.sendDataToUserProcess(blockHtml_1, userProcess, _this.delay);
+	                // $(".cache-box-black").animate(
+	                //     { left: "-100px", top: "-131px" },//posicao server process
+	                //     { duration: this.delay })
+	                // //enviar para user process
+	                // Orasim.getSqlConsole().addMsg(new SqlConsoleMessage('info', 'Server process enviando dados para User process'))
+	                // $(".cache-box-black").animate(
+	                //     { left: "-250px", top: "-131px" },//posicao server process
+	                //     { duration: this.delay })
+	                // $(".cache-box-black").hide()
 	                setTimeout(function () {
+	                    blockHtml_1.remove();
 	                    resolve(0);
-	                }, _this.delay * 2);
+	                }, _this.delay * 6);
 	            }
 	            else {
-	                //hash not found, we need 2 get data from database first, and save it into dbBufferCache            
-	                console.log("hash NAO encontrado hash:", hash);
-	                //'info', 'Server process enviando dados para User process')
-	                sqlConsole.addMsg(new sql_console_message_1.SqlConsoleMessage('info', "Server process nao encontrou o hash na SharedPool"));
-	                sqlConsole.addMsg(new sql_console_message_1.SqlConsoleMessage('info', "Server process criando hash da user query"));
+	                //hash not found, we need 2 get data from database first, and save it into dbBufferCache
+	                sqlConsole.addMsg(new sql_console_message_1.SqlConsoleMessage('info', "ServerProcess nao encontrou o hash na SharedPool"));
+	                sqlConsole.addMsg(new sql_console_message_1.SqlConsoleMessage('info', "ServerProcess criando hash da user query"));
+	                // animacao fade server process e shared pool
 	                $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
 	                $('#shared-pool').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	                //adicionando hash ha shared pool
+	                $('#data-files').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
+	                //adicionando hash na shared pool, adicionando dados no dbBufferCache
 	                sharedPool.addHash(hash);
-	                //requisitando dados do dataFiles
-	                //TODO-joilson remover essa porcaria de adicionar items dinamicamente no DOM do jquery
-	                var data = $("<div class='cache-box-black'>");
-	                var dataFiles = $("#data-files").append(data);
-	                data.animate({ left: "-100px", top: "-131px" }, //posicao server process
-	                { duration: 2000 });
-	                //adicionando dados no dbBufferCache
-	                var hashIndex = sharedPool.getHashIndex(hash);
-	                var memoryLocation = dbBufferCache.getMemoryLocation(hashIndex);
-	                console.log(memoryLocation);
-	                data.animate(memoryLocation, { duration: 2000 });
-	                //enviando para server process		  
-	                data.animate({ left: "-100px", top: "-131px" }, //posicao server process
-	                { duration: 2000 });
-	                //enviando para user process
-	                //consoleService.addMessage("Server process enviando dados para User process", 'info');$scope.$apply();
-	                data.animate({ left: "-250px", top: "-131px" }, //posicao user process
-	                { duration: 2000 });
+	                var memLocation = sharedPool.getMemoryLocation(hash);
+	                dbBufferCache.setMemoryLocationUsed(memLocation);
+	                // animacao requisitando dados do dataFiles
+	                // animacao gravando dados no dbBufferCache
+	                // animacao pegando dados do dbBufferCache
+	                // animacao enviando dados para userProcess
+	                var blockHtml_2 = serverProcess.getBlockFromDatFiles(dataFiles, _this.delay);
+	                serverProcess.storeBlockInDbBufferCache(blockHtml_2, dbBufferCache, memLocation, _this.delay);
+	                serverProcess.getBlockFromDbBufferCache(blockHtml_2, dbBufferCache, _this.delay);
+	                serverProcess.sendDataToUserProcess(blockHtml_2, userProcess, _this.delay);
+	                // let data = $("<div class='cache-box-black'>")
+	                // let dataFiles = $("#data-files").append(data)
+	                // data.animate({ left: "-100px", top: "-131px" },//posicao server process
+	                //     { duration: 2000 })
+	                // console.log(memoryLocation)
+	                // data.animate(memoryLocation,
+	                //     { duration: 2000 })
+	                // //enviando para server process		  
+	                // data.animate({ left: "-100px", top: "-131px" },//posicao server process
+	                //     { duration: 2000 })
+	                // //enviando para user process
+	                // //consoleService.addMessage("Server process enviando dados para User process", 'info');$scope.$apply();
+	                // data.animate(
+	                //     { left: "-250px", top: "-131px" },//posicao user process
+	                //     { duration: 2000 ,
+	                //       complete: () => data.hide() })
 	                setTimeout(function () {
+	                    $(blockHtml_2).remove();
 	                    resolve(0);
 	                }, _this.delay * 8);
 	            }
+	            //setTimeout(() => { resolve(0); }, animationTime);  
 	        });
 	    };
 	    return Animation;
@@ -309,7 +413,7 @@
 
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -318,7 +422,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var hash_1 = __webpack_require__(6);
+	var hash_1 = __webpack_require__(8);
 	var Crc32 = (function (_super) {
 	    __extends(Crc32, _super);
 	    function Crc32(data) {
@@ -370,7 +474,7 @@
 
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -392,24 +496,80 @@
 
 
 /***/ },
-/* 7 */
-/***/ function(module, exports) {
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var data_files_1 = __webpack_require__(10);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
+	        this.dataFiles = new data_files_1.DataFiles();
 	    }
+	    OracleDatabase.prototype.getDataFiles = function () {
+	        return this.dataFiles;
+	    };
 	    return OracleDatabase;
 	}());
 	exports.OracleDatabase = OracleDatabase;
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(9);
+	var block_1 = __webpack_require__(11);
+	var DataFiles = (function () {
+	    function DataFiles() {
+	        this.block = new block_1.Block();
+	        this.element = $("#data-files")[0];
+	        //$(this.element).append(this.block.getElement())
+	    }
+	    // returns existing block
+	    DataFiles.prototype.getBlock = function () {
+	        return this.block.getElement();
+	    };
+	    // returns a new block, only for animation purposes
+	    DataFiles.prototype.getNewBlockHtml = function () {
+	        var newBlock = new block_1.Block();
+	        $(this.element).append(newBlock.getElement());
+	        return newBlock.getElement();
+	    };
+	    return DataFiles;
+	}());
+	exports.DataFiles = DataFiles;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Block = (function () {
+	    function Block() {
+	        this.element = $("<div class=\"cache-box\"></div>")[0];
+	        //this.element = $(`<div class="block"></div>`)[0]
+	        this.size = 4096;
+	        this.used = false;
+	    }
+	    Block.prototype.setUsed = function (flag) {
+	        this.used = flag;
+	        $(this.element).css("background-color", "#f00");
+	    };
+	    Block.prototype.getElement = function () {
+	        return this.element;
+	    };
+	    return Block;
+	}());
+	exports.Block = Block;
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var sga_1 = __webpack_require__(13);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -423,12 +583,12 @@
 
 
 /***/ },
-/* 9 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(10);
-	var shared_pool_1 = __webpack_require__(11);
+	var db_buffer_cache_1 = __webpack_require__(14);
+	var shared_pool_1 = __webpack_require__(15);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -446,15 +606,43 @@
 
 
 /***/ },
-/* 10 */
-/***/ function(module, exports) {
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var block_1 = __webpack_require__(11);
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
+	        this.numBlocks = 30;
+	        this.element = $('#db-buffer-cache')[0];
+	        this.blocks = new Array();
+	        this.initBlocks();
 	    }
-	    DbBufferCache.prototype.getMemoryLocation = function (index) {
-	        return 0;
+	    DbBufferCache.prototype.initBlocks = function () {
+	        for (var i = 0; i < this.numBlocks; i++) {
+	            var block = new block_1.Block();
+	            this.blocks.push(block);
+	            $('#db-buffer-cache').append(block.getElement());
+	        }
+	    };
+	    DbBufferCache.prototype.setMemoryLocationUsed = function (memLocation) {
+	        this.blocks[memLocation].setUsed(true);
+	    };
+	    // getMemoryLocation(index: number): number {
+	    //     return 0
+	    // }
+	    DbBufferCache.prototype.getNewBlockHtml = function () {
+	        var newBlock = new block_1.Block();
+	        //$(newBlock.getElement()).css("top", "0px") 
+	        //$(newBlock.getElement()).css('left', "0px")        
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.element).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        $(newBlock.getElement()).css("z-index", 100);
+	        return newBlock.getElement();
+	    };
+	    DbBufferCache.prototype.getElement = function () {
+	        return this.element;
 	    };
 	    return DbBufferCache;
 	}());
@@ -462,7 +650,7 @@
 
 
 /***/ },
-/* 11 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -476,7 +664,8 @@
 	        //adding to view
 	        $("#hash-ul-container").append($(this.hashHtmlTemplate).append(hash.getHexStrHash())[0].outerHTML);
 	    };
-	    SharedPool.prototype.getHashIndex = function (hs) {
+	    //getting index of some hash in collection
+	    SharedPool.prototype.getMemoryLocation = function (hs) {
 	        var i = 0;
 	        for (var _i = 0, _a = this.hashCollection; _i < _a.length; _i++) {
 	            var hash = _a[_i];
@@ -486,6 +675,7 @@
 	        }
 	        return -1;
 	    };
+	    //finding hash in collection
 	    SharedPool.prototype.findHash = function (hs) {
 	        //searching for hash in collection
 	        for (var _i = 0, _a = this.hashCollection; _i < _a.length; _i++) {

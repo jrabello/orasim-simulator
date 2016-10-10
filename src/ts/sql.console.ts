@@ -15,7 +15,7 @@ export class SqlConsole{
             //getting value from <input type=text> and parsing
             let userSqlCmd = $("#console-input").val()
             this.sqlParser.parse(userSqlCmd)
-            
+            this.addMsg(new SqlConsoleMessage('info','( ' + this.sqlParser.getQuery() +' )'))
             //if query parsed successfully, run animation otherwise print error
             if (this.sqlParser.parsedSuccess())                
                 Orasim.getAnimation().start(this.sqlParser)
