@@ -46,11 +46,11 @@
 
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
-	var server_process_1 = __webpack_require__(4);
-	var user_process_1 = __webpack_require__(5);
-	var animation_1 = __webpack_require__(6);
-	var oracle_database_1 = __webpack_require__(9);
-	var oracle_instance_1 = __webpack_require__(12);
+	var server_process_1 = __webpack_require__(6);
+	var user_process_1 = __webpack_require__(7);
+	var animation_1 = __webpack_require__(8);
+	var oracle_database_1 = __webpack_require__(11);
+	var oracle_instance_1 = __webpack_require__(14);
 	var Main = (function () {
 	    function Main() {
 	        this.sqlConsole = new sql_console_1.SqlConsole();
@@ -90,7 +90,8 @@
 
 	"use strict";
 	var sql_parser_1 = __webpack_require__(2);
-	var sql_console_message_1 = __webpack_require__(3);
+	var sql_console_msg_info_1 = __webpack_require__(3);
+	var sql_console_msg_error_1 = __webpack_require__(5);
 	var SqlConsole = (function () {
 	    function SqlConsole() {
 	        this.sqlParser = new sql_parser_1.SqlParser();
@@ -98,15 +99,13 @@
 	    SqlConsole.prototype.handleKeyPress = function (e) {
 	        //enter key pressed
 	        if (e.keyCode === 13) {
-	            //getting value from <input type=text> and parsing
 	            var userSqlCmd = $("#console-input").val();
 	            this.sqlParser.parse(userSqlCmd);
-	            this.addMsg(new sql_console_message_1.SqlConsoleMessage('info', '( ' + this.sqlParser.getQuery() + ' )'));
-	            //if query parsed successfully, run animation otherwise print error
+	            this.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() + ' )'));
 	            if (this.sqlParser.parsedSuccess())
 	                Orasim.getAnimation().start(this.sqlParser);
 	            else
-	                this.addMsg(new sql_console_message_1.SqlConsoleMessage('error', 'Query Inválida!'));
+	                this.addMsg(new sql_console_msg_error_1.SqlConsoleMsgError('Query Inválida!'));
 	            $("#console-input").val('');
 	        }
 	    };
@@ -162,6 +161,27 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var sql_console_message_1 = __webpack_require__(4);
+	var SqlConsoleMsgInfo = (function (_super) {
+	    __extends(SqlConsoleMsgInfo, _super);
+	    function SqlConsoleMsgInfo(msg) {
+	        _super.call(this, 'info', msg);
+	    }
+	    return SqlConsoleMsgInfo;
+	}(sql_console_message_1.SqlConsoleMessage));
+	exports.SqlConsoleMsgInfo = SqlConsoleMsgInfo;
+
+
+/***/ },
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -178,7 +198,28 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var sql_console_message_1 = __webpack_require__(4);
+	var SqlConsoleMsgError = (function (_super) {
+	    __extends(SqlConsoleMsgError, _super);
+	    function SqlConsoleMsgError(msg) {
+	        _super.call(this, 'error', msg);
+	    }
+	    return SqlConsoleMsgError;
+	}(sql_console_message_1.SqlConsoleMessage));
+	exports.SqlConsoleMsgError = SqlConsoleMsgError;
+
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -221,7 +262,7 @@
 
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -238,28 +279,16 @@
 
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var crc32_1 = __webpack_require__(7);
-	var sql_console_message_1 = __webpack_require__(3);
+	var crc32_1 = __webpack_require__(9);
+	var sql_console_msg_info_1 = __webpack_require__(3);
 	var Animation = (function () {
 	    function Animation() {
 	        //miliseconds
 	        this.delay = 1000;
-	        // TAKEN
-	        // taken from http://stackoverflow.com/questions/10370298/how-do-i-animate-in-jquery-without-stacking-callbacks
-	        //overriding jquery object
-	        //this chain method makes sure animations are executed 
-	        //in order using promises
-	        // $.chain = function () {
-	        //     let promise = $.Deferred().resolve().promise();
-	        //     jQuery.each(arguments, function () {
-	        //         promise = promise.pipe(this);
-	        //     });
-	        //     return promise;
-	        // };
 	    }
 	    Animation.prototype.start = function (sqlParser) {
 	        //if here query was parsed successfully       
@@ -280,32 +309,6 @@
 	        var _this = this;
 	        var query = sqlParser.getQuery();
 	        var hash = new crc32_1.Crc32(query);
-	        // let retSend2ServerProc =  
-	        // console.log('selectAnimation retSend2ServerProc:', retSend2ServerProc)
-	        // let retServerProcessDoSelect =  
-	        // console.log('selectAnimation retAnimateBlock:', retServerProcessDoSelect)
-	        // executing one group of animations after another
-	        // new Promise(() => {
-	        //     return 
-	        // }).then((res) => {                                              
-	        // })
-	        // new Promise(() => {                    
-	        //     return this.sendDataFromUserProcessToServerProcess();
-	        // })
-	        // .then((res) => {            
-	        //     return this.serverProcessDoSelect(hash)
-	        // });
-	        // $.chain(() => {
-	        //     return this.sendDataFromUserProcessToServerProcess()
-	        // }, () => {
-	        //     return this.serverProcessDoSelect(hash)
-	        // });
-	        // select * from a
-	        // let ref = this
-	        // let animations = $.chain(function() {
-	        // }, function() {
-	        //     return ref.serverProcessDoSelect(hash)
-	        // });
 	        this.sendDataFromUserProcessToServerProcess()
 	            .then(function (res) {
 	            return _this.serverProcessDoSelect(hash);
@@ -349,15 +352,6 @@
 	                serverProcess.getBlockFromDbBufferCache(blockHtml_1, dbBufferCache, _this.delay);
 	                // animacao enviando dados para userProcess
 	                serverProcess.sendDataToUserProcess(blockHtml_1, userProcess, _this.delay);
-	                // $(".cache-box-black").animate(
-	                //     { left: "-100px", top: "-131px" },//posicao server process
-	                //     { duration: this.delay })
-	                // //enviar para user process
-	                // Orasim.getSqlConsole().addMsg(new SqlConsoleMessage('info', 'Server process enviando dados para User process'))
-	                // $(".cache-box-black").animate(
-	                //     { left: "-250px", top: "-131px" },//posicao server process
-	                //     { duration: this.delay })
-	                // $(".cache-box-black").hide()
 	                setTimeout(function () {
 	                    blockHtml_1.remove();
 	                    resolve(0);
@@ -365,8 +359,8 @@
 	            }
 	            else {
 	                //hash not found, we need 2 get data from database first, and save it into dbBufferCache
-	                sqlConsole.addMsg(new sql_console_message_1.SqlConsoleMessage('info', "ServerProcess nao encontrou o hash na SharedPool"));
-	                sqlConsole.addMsg(new sql_console_message_1.SqlConsoleMessage('info', "ServerProcess criando hash da user query"));
+	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"));
+	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess criando hash da user query"));
 	                // animacao fade server process e shared pool
 	                $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
 	                $('#shared-pool').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
@@ -383,22 +377,6 @@
 	                serverProcess.storeBlockInDbBufferCache(blockHtml_2, dbBufferCache, memLocation, _this.delay);
 	                serverProcess.getBlockFromDbBufferCache(blockHtml_2, dbBufferCache, _this.delay);
 	                serverProcess.sendDataToUserProcess(blockHtml_2, userProcess, _this.delay);
-	                // let data = $("<div class='cache-box-black'>")
-	                // let dataFiles = $("#data-files").append(data)
-	                // data.animate({ left: "-100px", top: "-131px" },//posicao server process
-	                //     { duration: 2000 })
-	                // console.log(memoryLocation)
-	                // data.animate(memoryLocation,
-	                //     { duration: 2000 })
-	                // //enviando para server process		  
-	                // data.animate({ left: "-100px", top: "-131px" },//posicao server process
-	                //     { duration: 2000 })
-	                // //enviando para user process
-	                // //consoleService.addMessage("Server process enviando dados para User process", 'info');$scope.$apply();
-	                // data.animate(
-	                //     { left: "-250px", top: "-131px" },//posicao user process
-	                //     { duration: 2000 ,
-	                //       complete: () => data.hide() })
 	                setTimeout(function () {
 	                    $(blockHtml_2).remove();
 	                    resolve(0);
@@ -413,7 +391,7 @@
 
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -422,7 +400,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var hash_1 = __webpack_require__(8);
+	var hash_1 = __webpack_require__(10);
 	var Crc32 = (function (_super) {
 	    __extends(Crc32, _super);
 	    function Crc32(data) {
@@ -474,7 +452,7 @@
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -496,11 +474,11 @@
 
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(10);
+	var data_files_1 = __webpack_require__(12);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -514,11 +492,11 @@
 
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(11);
+	var block_1 = __webpack_require__(13);
 	var DataFiles = (function () {
 	    function DataFiles() {
 	        this.block = new block_1.Block();
@@ -541,7 +519,7 @@
 
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -565,11 +543,11 @@
 
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(13);
+	var sga_1 = __webpack_require__(15);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -583,12 +561,12 @@
 
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(14);
-	var shared_pool_1 = __webpack_require__(15);
+	var db_buffer_cache_1 = __webpack_require__(16);
+	var shared_pool_1 = __webpack_require__(17);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -606,11 +584,11 @@
 
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(11);
+	var block_1 = __webpack_require__(13);
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
 	        this.numBlocks = 30;
@@ -650,7 +628,7 @@
 
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports) {
 
 	"use strict";

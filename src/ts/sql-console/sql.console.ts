@@ -13,12 +13,11 @@ export class SqlConsole{
 
     private handleKeyPress(e): void {
         //enter key pressed
-        if(e.keyCode === 13){
-            //getting value from <input type=text> and parsing
+        if(e.keyCode === 13){            
             let userSqlCmd = $("#console-input").val()
             this.sqlParser.parse(userSqlCmd)
             this.addMsg(new SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() +' )'))
-            //if query parsed successfully, run animation otherwise print error
+            
             if (this.sqlParser.parsedSuccess())                
                 Orasim.getAnimation().start(this.sqlParser)
             else
