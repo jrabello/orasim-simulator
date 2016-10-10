@@ -20,8 +20,7 @@ class Main{
         this.userProcess = new UserProcess()
         this.animation = new Animation()
         this.oracleInstance = new OracleInstance()
-        this.oracleDatabase = new OracleDatabase()
-        
+        this.oracleDatabase = new OracleDatabase()        
     }
 
     getUserProcess(): UserProcess{
