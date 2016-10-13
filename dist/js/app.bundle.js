@@ -46,12 +46,17 @@
 
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
-	var server_process_1 = __webpack_require__(6);
-	var user_process_1 = __webpack_require__(7);
-	var animation_1 = __webpack_require__(8);
-	var oracle_database_1 = __webpack_require__(11);
-	var oracle_instance_1 = __webpack_require__(14);
+	var server_process_1 = __webpack_require__(10);
+	var user_process_1 = __webpack_require__(11);
+	var animation_1 = __webpack_require__(3);
+	var oracle_database_1 = __webpack_require__(12);
+	var oracle_instance_1 = __webpack_require__(15);
+	/**
+	 * Classe Responsável por guardar instâncias de todos os metodos
+	 * que possuem caracteristica de SingleTon(uma unica e apenas uma instancia)
+	 */
 	var Main = (function () {
+	    // criando instancias de classes SingleTon 
 	    function Main() {
 	        this.sqlConsole = new sql_console_1.SqlConsole();
 	        this.serverProcess = new server_process_1.ServerProcess();
@@ -80,7 +85,8 @@
 	    };
 	    return Main;
 	}());
-	//storing main instance into global namespace
+	// adicionando instancia da classe Main dentro de objeto global 
+	// chamado Orasim(global namespace)
 	window.Orasim = new Main();
 
 
@@ -90,30 +96,52 @@
 
 	"use strict";
 	var sql_parser_1 = __webpack_require__(2);
-	var sql_console_msg_info_1 = __webpack_require__(3);
-	var sql_console_msg_error_1 = __webpack_require__(5);
+	var sql_console_msg_error_1 = __webpack_require__(9);
+	/**
+	 *  Classe responsavel por modelar o console que o usuário
+	 *  usará para interagir com a aplicação
+	 */
 	var SqlConsole = (function () {
 	    function SqlConsole() {
 	        this.sqlParser = new sql_parser_1.SqlParser();
 	    }
-	    SqlConsole.prototype.handleKeyPress = function (e) {
-	        //enter key pressed
-	        if (e.keyCode === 13) {
+	    /**
+	     *  Responsável por fazer tratamento de qualquer tecla pressionada
+	     *  no input do console
+	     *
+	     *  @param   event   evento passado pelo browser de tecla pressionada
+	     */
+	    SqlConsole.prototype.handleKeyPress = function (event) {
+	        // verificando se tecla enter foi pressionada
+	        if (event.keyCode === 13) {
+	            // verificando se existe alguma animacao em andamento 
+	            if (Orasim.getAnimation().isAnimating()) {
+	                this.addMsg(new sql_console_msg_error_1.SqlConsoleMsgError('Animação em andamento!'));
+	                return;
+	            }
+	            // setando estado de inicio da animacao
+	            Orasim.getAnimation().setAnimating(true);
+	            // pegando valor digitado no input do console
+	            // fazendo parsing da query
 	            var userSqlCmd = $("#console-input").val();
-	            this.sqlParser.parse(userSqlCmd);
-	            this.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() + ' )'));
+	            var animation = this.sqlParser.parse(userSqlCmd);
+	            // caso a query seja parseada com sucesso execute a animacao especifica
+	            // caso contrario imprima uma mensagem de erro no console
 	            if (this.sqlParser.parsedSuccess())
-	                Orasim.getAnimation().start(this.sqlParser);
+	                animation.start();
 	            else
 	                this.addMsg(new sql_console_msg_error_1.SqlConsoleMsgError('Query Inválida!'));
+	            // limpando input do console
 	            $("#console-input").val('');
 	        }
 	    };
+	    /**
+	     *  Responsável por adicionar mensagens no console
+	     *
+	     *  @param   msg     Mensagem a ser adicionada no console
+	     */
 	    SqlConsole.prototype.addMsg = function (msg) {
 	        $("#console-msg-list-container").append(msg.getMsg());
-	    };
-	    SqlConsole.prototype.logPrint = function (aMsg) {
-	        console.log(aMsg);
 	    };
 	    return SqlConsole;
 	}());
@@ -122,29 +150,22 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var animation_1 = __webpack_require__(3);
+	var animation_select_1 = __webpack_require__(4);
+	var crc32_1 = __webpack_require__(7);
+	/**
+	 * Classe Responsavel por fazer analise lexica e sintatica
+	 * de uma query sql
+	 */
 	var SqlParser = (function () {
 	    function SqlParser() {
 	        this.isParsedSuccess = false;
-	        this.query = "";
 	        this.isParsedSuccess = false;
+	        this.query = "";
 	    }
-	    SqlParser.prototype.parse = function (query) {
-	        try {
-	            SQLParser.parse(query);
-	            this.query = query;
-	            this.queryTokenId = SQLParser.lexer.tokenize(query)[0][0];
-	            this.isParsedSuccess = true;
-	        }
-	        catch (err) {
-	            console.log("Erro SqlParser.parse:", err);
-	            this.isParsedSuccess = false;
-	            this.queryTokenId = "";
-	            this.query = "";
-	        }
-	    };
 	    SqlParser.prototype.parsedSuccess = function () {
 	        return this.isParsedSuccess;
 	    };
@@ -154,6 +175,47 @@
 	    SqlParser.prototype.getQueryTokenId = function () {
 	        return this.queryTokenId;
 	    };
+	    /**
+	     * Metodo responsavel por fazer parsing da sql query
+	     * @param   query   string contendo sql query inserida no console
+	     */
+	    SqlParser.prototype.parse = function (query) {
+	        //.addMsg(new SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() +' )'))
+	        // transformando a query em lower-case 
+	        var lowerQuery = query.toLowerCase();
+	        // verificando qual query foi digitada
+	        switch (lowerQuery) {
+	            case "select":
+	                var hash = new crc32_1.Crc32(lowerQuery);
+	                var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	                var isHashFound = sharedPool.findHash(hash);
+	                // caso o hash na seja encontrado, adicione na shared-pool 
+	                if (!isHashFound)
+	                    sharedPool.addHash(hash);
+	                this.isParsedSuccess = true;
+	                return new animation_select_1.AnimationSelect(isHashFound);
+	            case "insert":
+	                console.log('insert');
+	                this.isParsedSuccess = true;
+	                return new animation_1.Animation();
+	        }
+	        this.isParsedSuccess = false;
+	        // retorno default(nenhuma animacao sera executada)
+	        return new animation_1.Animation();
+	        // codigo abaixo faz referencia a biblioteca utilizada para fazer parsing 
+	        // da query, no momento nao estamos utilizando a mesma
+	        // try{
+	        //     SQLParser.parse(query)
+	        //     this.query = query
+	        //     this.queryTokenId = SQLParser.lexer.tokenize(query)[0][0]                        
+	        //     this.isParsedSuccess = true            
+	        // }catch(err){
+	        //     console.log("Erro SqlParser.parse:",err)
+	        //     this.isParsedSuccess = false
+	        //     this.queryTokenId = ""
+	        //     this.query = ""
+	        // }
+	    };
 	    return SqlParser;
 	}());
 	exports.SqlParser = SqlParser;
@@ -161,6 +223,59 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+	/**
+	 * Classe Base, responsavel por implementar animações
+	 * em comum com classes filhas
+	 */
+	var Animation = (function () {
+	    function Animation() {
+	        //miliseconds
+	        this.delay = 1000;
+	        this.animating = false;
+	    }
+	    Animation.prototype.start = function () {
+	        //if here query was parsed successfully       
+	        // if (sqlParser.getQueryTokenId() == "SELECT") {
+	        //     this.selectAnimation(sqlParser)
+	        // }
+	    };
+	    Animation.prototype.isAnimating = function () {
+	        return this.animating;
+	    };
+	    Animation.prototype.setAnimating = function (flag) {
+	        this.animating = flag;
+	    };
+	    Animation.prototype.getDelay = function () {
+	        return this.delay;
+	    };
+	    // animate source to dest within delay
+	    Animation.prototype.moveTo = function (sourceElem, destElem, duration, delayAfter, startCb, completeCb) {
+	        var x;
+	        var y;
+	        x = $(destElem).offset().top - $(sourceElem).offset().top + $(sourceElem).position().top;
+	        y = ($(destElem).offset().left - $(sourceElem).offset().left) + $(sourceElem).position().left;
+	        $(sourceElem).animate({ top: x, left: y }, { duration: duration,
+	            start: function () { return startCb(); },
+	            complete: function () { return completeCb(); } });
+	    };
+	    Animation.prototype.sleep = function (delay) {
+	        //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})      
+	        return new Promise(function (resolve, reject) {
+	            setTimeout(function () {
+	                resolve(0);
+	            }, delay);
+	        });
+	    };
+	    return Animation;
+	}());
+	exports.Animation = Animation;
+
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -169,32 +284,120 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(4);
-	var SqlConsoleMsgInfo = (function (_super) {
-	    __extends(SqlConsoleMsgInfo, _super);
-	    function SqlConsoleMsgInfo(msg) {
-	        _super.call(this, 'info', msg);
+	var animation_1 = __webpack_require__(3);
+	var sql_console_msg_info_1 = __webpack_require__(5);
+	/**
+	 * Classe responsavel por implementar animações
+	 * relacionadas ao select
+	 * @attribute isHashFound Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false
+	 * @attribute animHashNotFoundDelay Delay da animacao do hash nao encontrado na shared-pool
+	 * @attribute animHashFoundDelay Delay da animacao do hash encontrado na shared-pool
+	 */
+	var AnimationSelect = (function (_super) {
+	    __extends(AnimationSelect, _super);
+	    function AnimationSelect(isHashFound) {
+	        _super.call(this);
+	        this.isHashFound = isHashFound;
+	        this.animHashNotFoundDelay = _super.prototype.getDelay.call(this) * 12;
+	        this.animHashFoundDelay = _super.prototype.getDelay.call(this) * 8;
 	    }
-	    return SqlConsoleMsgInfo;
-	}(sql_console_message_1.SqlConsoleMessage));
-	exports.SqlConsoleMsgInfo = SqlConsoleMsgInfo;
-
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var SqlConsoleMessage = (function () {
-	    function SqlConsoleMessage(type, msg) {
-	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
-	    }
-	    SqlConsoleMessage.prototype.getMsg = function () {
-	        return this.msgElement;
+	    AnimationSelect.prototype.start = function () {
+	        var _this = this;
+	        var userProcess = Orasim.getUserProcess();
+	        // executando animacoes dentro de promises
+	        // setando estado de termino da animacao
+	        new Promise(function (resolve, reject) {
+	            var animationTime = _super.prototype.getDelay.call(_this) * 2;
+	            userProcess.animateSendDataToServerProcess(animationTime);
+	            setTimeout(function () { resolve(0); }, animationTime);
+	        })
+	            .then(function (res) {
+	            console.log('animateSelect');
+	            //breakpoint
+	            return _this.animateSelect();
+	        })
+	            .then(function (res) {
+	            console.log('setAnimating(false)');
+	            return Orasim.getAnimation().setAnimating(false);
+	        });
 	    };
-	    return SqlConsoleMessage;
-	}());
-	exports.SqlConsoleMessage = SqlConsoleMessage;
+	    AnimationSelect.prototype.animateSelect = function () {
+	        var _this = this;
+	        return new Promise(function (resolve, reject) {
+	            var animationTime = 0;
+	            // rodar animacao especifica se o hash foi encontrado 
+	            // na shared-pool ou não             
+	            if (_this.isHashFound) {
+	                _this.animateHashFound();
+	                animationTime = _this.animHashFoundDelay;
+	            }
+	            else {
+	                _this.animateHashNotFound();
+	                animationTime = _this.animHashNotFoundDelay;
+	            }
+	            setTimeout(function () { resolve(0); }, animationTime);
+	        });
+	    };
+	    AnimationSelect.prototype.animateHashNotFound = function () {
+	        var _this = this;
+	        return new Promise(function (resolve, reject) {
+	            var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	            var dataFiles = Orasim.getOracleDatabase().getDataFiles();
+	            var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	            var sqlConsole = Orasim.getSqlConsole();
+	            var serverProcess = Orasim.getServerProcess();
+	            var userProcess = Orasim.getUserProcess();
+	            // hash nao encontrado
+	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"));
+	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess criando hash da user query"));
+	            // animacao adicionando hash na shared pool
+	            // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache            
+	            sharedPool.animateAddHash();
+	            var memLocation = sharedPool.getLastMemoryLocation();
+	            // animacao requisitando dados do dataFiles
+	            // animacao gravando dados no dbBufferCache
+	            // animacao pegando dados do dbBufferCache
+	            // animacao enviando dados para userProcess
+	            var blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, _this.animHashNotFoundDelay * 0.25);
+	            serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, _this.animHashNotFoundDelay * 0.25);
+	            serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, _this.animHashNotFoundDelay * 0.25);
+	            serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, _this.animHashNotFoundDelay * 0.25);
+	            setTimeout(function () {
+	                $(blockHtml).remove();
+	                resolve(0);
+	            }, _this.animHashNotFoundDelay);
+	        }); //end promise
+	    };
+	    AnimationSelect.prototype.animateHashFound = function () {
+	        var _this = this;
+	        return new Promise(function (resolve, reject) {
+	            //let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+	            var dataFiles = Orasim.getOracleDatabase().getDataFiles();
+	            var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	            var sqlConsole = Orasim.getSqlConsole();
+	            var serverProcess = Orasim.getServerProcess();
+	            var userProcess = Orasim.getUserProcess();
+	            //hash found, server process getting data directly from dbBufferCache
+	            //let memoryLocation = dbBufferCache.getMemoryLocation(hashIndex)
+	            console.log("hash encontrado");
+	            // let memLocation = sharedPool.getMemoryLocation()
+	            // console.log('hashIndex: '+memLocation)
+	            // $('#server-process').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
+	            // $('#db-buffer-cache').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
+	            // animacao pegando dados do dbBufferCache
+	            // animacao enviando dados para userProcess
+	            var blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, _this.animHashFoundDelay * 0.5);
+	            serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, _this.animHashFoundDelay * 0.5);
+	            //serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, super.getDelay())
+	            setTimeout(function () {
+	                blockHtml.remove();
+	                resolve(0);
+	            }, _this.animHashFoundDelay);
+	        }); //end promise
+	    };
+	    return AnimationSelect;
+	}(animation_1.Animation));
+	exports.AnimationSelect = AnimationSelect;
 
 
 /***/ },
@@ -207,15 +410,19 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(4);
-	var SqlConsoleMsgError = (function (_super) {
-	    __extends(SqlConsoleMsgError, _super);
-	    function SqlConsoleMsgError(msg) {
-	        _super.call(this, 'error', msg);
+	var sql_console_message_1 = __webpack_require__(6);
+	/**
+	 * Classe responsavel por especializar mensagens de informacao
+	 * da aplicacao
+	 */
+	var SqlConsoleMsgInfo = (function (_super) {
+	    __extends(SqlConsoleMsgInfo, _super);
+	    function SqlConsoleMsgInfo(msg) {
+	        _super.call(this, 'info', msg);
 	    }
-	    return SqlConsoleMsgError;
+	    return SqlConsoleMsgInfo;
 	}(sql_console_message_1.SqlConsoleMessage));
-	exports.SqlConsoleMsgError = SqlConsoleMsgError;
+	exports.SqlConsoleMsgInfo = SqlConsoleMsgInfo;
 
 
 /***/ },
@@ -223,175 +430,32 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	var ServerProcess = (function () {
-	    function ServerProcess() {
-	        this.element = $("#server-process")[0];
+	/**
+	 * Classe Base, responsavel por modelar as mensagens que serão inseridas
+	 * no console da aplicação
+	 */
+	var SqlConsoleMessage = (function () {
+	    function SqlConsoleMessage(type, msg) {
+	        this.buildHtmlElement(type, msg);
 	    }
-	    ServerProcess.prototype.getElement = function () {
-	        return this.element;
+	    /**
+	     * Metodo responsavel por criar elemento html que sera inserido no console
+	     * @param   type    tipo da mensagem(info ou error)
+	     * @param   msg     mensagem que sera impressa no console
+	     */
+	    SqlConsoleMessage.prototype.buildHtmlElement = function (type, msg) {
+	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
 	    };
-	    ServerProcess.prototype.getElementOffset = function () {
-	        return $(this.element).offset();
+	    SqlConsoleMessage.prototype.getMsg = function () {
+	        return this.msgElement;
 	    };
-	    ServerProcess.prototype.getBlockFromDatFiles = function (dataFiles, delay) {
-	        var blockHtml = dataFiles.getNewBlockHtml();
-	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay);
-	        return blockHtml;
-	    };
-	    //DbBufferCache
-	    ServerProcess.prototype.getNewBlockFromDbBufferCache = function (dbBufferCache, delay) {
-	        var blockHtml = dbBufferCache.getNewBlockHtml();
-	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay);
-	        return blockHtml;
-	    };
-	    ServerProcess.prototype.storeBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
-	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, function () {
-	            dbBufferCache.setMemoryLocationUsed(memLocation);
-	        });
-	    };
-	    ServerProcess.prototype.getBlockFromDbBufferCache = function (blockHtml, dbBufferCache, delay) {
-	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay);
-	    };
-	    //UserProcess
-	    ServerProcess.prototype.sendDataToUserProcess = function (blockHtml, userProcess, delay) {
-	        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay);
-	    };
-	    return ServerProcess;
+	    return SqlConsoleMessage;
 	}());
-	exports.ServerProcess = ServerProcess;
+	exports.SqlConsoleMessage = SqlConsoleMessage;
 
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var UserProcess = (function () {
-	    function UserProcess() {
-	        this.element = $("#user-process")[0];
-	    }
-	    UserProcess.prototype.getElement = function () {
-	        return this.element;
-	    };
-	    return UserProcess;
-	}());
-	exports.UserProcess = UserProcess;
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var crc32_1 = __webpack_require__(9);
-	var sql_console_msg_info_1 = __webpack_require__(3);
-	var Animation = (function () {
-	    function Animation() {
-	        //miliseconds
-	        this.delay = 1000;
-	    }
-	    Animation.prototype.start = function (sqlParser) {
-	        //if here query was parsed successfully       
-	        if (sqlParser.getQueryTokenId() == "SELECT") {
-	            this.selectAnimation(sqlParser);
-	        }
-	    };
-	    // animate source to dest within delay
-	    Animation.prototype.moveTo = function (sourceElem, destElem, delay) {
-	        var x;
-	        var y;
-	        x = $(destElem).offset().top - $(sourceElem).offset().top + $(sourceElem).position().top;
-	        y = ($(destElem).offset().left - $(sourceElem).offset().left) + $(sourceElem).position().left;
-	        $(sourceElem).animate({ top: x, left: y }, { duration: delay * 2,
-	            complete: function () { return null; } });
-	    };
-	    Animation.prototype.selectAnimation = function (sqlParser) {
-	        var _this = this;
-	        var query = sqlParser.getQuery();
-	        var hash = new crc32_1.Crc32(query);
-	        this.sendDataFromUserProcessToServerProcess()
-	            .then(function (res) {
-	            return _this.serverProcessDoSelect(hash);
-	        });
-	    };
-	    Animation.prototype.sendDataFromUserProcessToServerProcess = function () {
-	        var _this = this;
-	        return new Promise(function (resolve, reject) {
-	            //animate user process sending 2 server process            
-	            $('.arrow.from-userp-2-serverp').show();
-	            $('.arrow.from-userp-2-serverp').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2).wait().hide();
-	            $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	            $('#user-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	            $('#user img').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	            setTimeout(function () {
-	                resolve(0);
-	            }, _this.delay * 2 * 2);
-	        });
-	    };
-	    Animation.prototype.serverProcessDoSelect = function (hash) {
-	        var _this = this;
-	        return new Promise(function (resolve, reject) {
-	            var animationTime = 0;
-	            var dataFiles = Orasim.getOracleDatabase().getDataFiles();
-	            var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
-	            var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
-	            var sqlConsole = Orasim.getSqlConsole();
-	            var serverProcess = Orasim.getServerProcess();
-	            var userProcess = Orasim.getUserProcess();
-	            //finding hash into sharedPool
-	            if (sharedPool.findHash(hash)) {
-	                //hash found, server process getting data directly from dbBufferCache
-	                //let memoryLocation = dbBufferCache.getMemoryLocation(hashIndex)
-	                console.log("hash encontrado");
-	                var memLocation = sharedPool.getMemoryLocation(hash);
-	                console.log('hashIndex: ' + memLocation);
-	                $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	                $('#db-buffer-cache').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	                // animacao pegando dados do dbBufferCache
-	                var blockHtml_1 = serverProcess.getNewBlockFromDbBufferCache(dbBufferCache, _this.delay);
-	                serverProcess.getBlockFromDbBufferCache(blockHtml_1, dbBufferCache, _this.delay);
-	                // animacao enviando dados para userProcess
-	                serverProcess.sendDataToUserProcess(blockHtml_1, userProcess, _this.delay);
-	                setTimeout(function () {
-	                    blockHtml_1.remove();
-	                    resolve(0);
-	                }, _this.delay * 6);
-	            }
-	            else {
-	                //hash not found, we need 2 get data from database first, and save it into dbBufferCache
-	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"));
-	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess criando hash da user query"));
-	                // animacao fade server process e shared pool
-	                $('#server-process').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	                $('#shared-pool').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	                $('#data-files').repeat().fadeTo(_this.delay, 0.1).fadeTo(_this.delay, 1).until(2);
-	                //adicionando hash na shared pool, adicionando dados no dbBufferCache
-	                sharedPool.addHash(hash);
-	                var memLocation = sharedPool.getMemoryLocation(hash);
-	                dbBufferCache.setMemoryLocationUsed(memLocation);
-	                // animacao requisitando dados do dataFiles
-	                // animacao gravando dados no dbBufferCache
-	                // animacao pegando dados do dbBufferCache
-	                // animacao enviando dados para userProcess
-	                var blockHtml_2 = serverProcess.getBlockFromDatFiles(dataFiles, _this.delay);
-	                serverProcess.storeBlockInDbBufferCache(blockHtml_2, dbBufferCache, memLocation, _this.delay);
-	                serverProcess.getBlockFromDbBufferCache(blockHtml_2, dbBufferCache, _this.delay);
-	                serverProcess.sendDataToUserProcess(blockHtml_2, userProcess, _this.delay);
-	                setTimeout(function () {
-	                    $(blockHtml_2).remove();
-	                    resolve(0);
-	                }, _this.delay * 8);
-	            }
-	            //setTimeout(() => { resolve(0); }, animationTime);  
-	        });
-	    };
-	    return Animation;
-	}());
-	exports.Animation = Animation;
-
-
-/***/ },
-/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -400,15 +464,26 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var hash_1 = __webpack_require__(10);
+	var hash_1 = __webpack_require__(8);
+	/**
+	 * Classe responsavel por especializar um hash modelando o crc32
+	 */
 	var Crc32 = (function (_super) {
 	    __extends(Crc32, _super);
 	    function Crc32(data) {
-	        _super.call(this, data);
+	        _super.call(this);
+	        this.buildCrc(data);
+	    }
+	    /**
+	     * Metodo responsavel por construir o hash crc32
+	     *
+	     * @param  data     dados que serão utilizados pra gerar o hash
+	     */
+	    Crc32.prototype.buildCrc = function (data) {
 	        var uintCrc = (new Uint32Array([this.crc32Str(data)]))[0];
 	        _super.prototype.setHash.call(this, uintCrc);
-	    }
-	    // TAKEN
+	    };
+	    // TAKEN FROM
 	    // modified version from from http://www.webtoolkit.info/    
 	    Crc32.prototype.Utf8Encode = function (data) {
 	        data = data.replace(/\r\n/g, "\n");
@@ -430,7 +505,7 @@
 	        }
 	        return utftext;
 	    };
-	    // TAKEN
+	    // TAKEN FROM
 	    // modified version from from http://www.webtoolkit.info/    
 	    Crc32.prototype.crc32Str = function (str) {
 	        str = this.Utf8Encode(str);
@@ -452,18 +527,22 @@
 
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
+	/**
+	 * Class Base, responsavel por armazenar e definir metodos relacionados
+	 * a geracao de hashs
+	 */
 	var Hash = (function () {
-	    function Hash(data) {
+	    function Hash() {
 	    }
-	    Hash.prototype.setHash = function (hash) {
-	        this.hash = hash;
-	    };
 	    Hash.prototype.getHexStrHash = function () {
 	        return '0x' + this.hash.toString(16);
+	    };
+	    Hash.prototype.setHash = function (hash) {
+	        this.hash = hash;
 	    };
 	    Hash.prototype.getHash = function () {
 	        return this.hash;
@@ -474,11 +553,126 @@
 
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(12);
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var sql_console_message_1 = __webpack_require__(6);
+	/**
+	 * Classe responsavel por especializar mensagens de erro
+	 * do console da aplicacao
+	 */
+	var SqlConsoleMsgError = (function (_super) {
+	    __extends(SqlConsoleMsgError, _super);
+	    function SqlConsoleMsgError(msg) {
+	        _super.call(this, 'error', msg);
+	    }
+	    return SqlConsoleMsgError;
+	}(sql_console_message_1.SqlConsoleMessage));
+	exports.SqlConsoleMsgError = SqlConsoleMsgError;
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var ServerProcess = (function () {
+	    function ServerProcess() {
+	        this.element = $("#server-process")[0];
+	    }
+	    ServerProcess.prototype.getElement = function () {
+	        return this.element;
+	    };
+	    ServerProcess.prototype.getElementOffset = function () {
+	        return $(this.element).offset();
+	    };
+	    ServerProcess.prototype.animateGetBlockFromDataFiles = function (dataFiles, delay) {
+	        var blockHtml = dataFiles.getNewBlockHtml();
+	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
+	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#data-files').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	        }, function () { });
+	        return blockHtml;
+	    };
+	    ServerProcess.prototype.animateStoreBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
+	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, 0, function () {
+	            // no inicio da animacao piscar server-process e db-buffer-cache 
+	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	        }, function () {
+	            // depois da animacao completa marcando o bloco como utilizado            
+	            dbBufferCache.setMemoryLocationUsed(memLocation);
+	        });
+	    };
+	    ServerProcess.prototype.animateGetNewBlockFromDbBufferCache = function (dbBufferCache, delay) {
+	        var blockHtml = dbBufferCache.getNewBlockHtml();
+	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
+	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	        }, function () { });
+	        return blockHtml;
+	    };
+	    ServerProcess.prototype.animateGetBlockFromDbBufferCache = function (blockHtml, dbBufferCache, delay) {
+	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
+	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	        }, function () { });
+	    };
+	    ServerProcess.prototype.animateSendBlockToUserProcess = function (blockHtml, userProcess, delay) {
+	        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay, 0, function () {
+	            //no inicio da animacao, piscar user-process e server-process     
+	            $('.arrow.from-serverp-2-userp').show();
+	            $('.arrow.from-serverp-2-userp').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1).wait().hide();
+	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#user-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#user img').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	        }, function () { });
+	    };
+	    return ServerProcess;
+	}());
+	exports.ServerProcess = ServerProcess;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var UserProcess = (function () {
+	    function UserProcess() {
+	        this.element = $("#user-process")[0];
+	    }
+	    UserProcess.prototype.getElement = function () {
+	        return this.element;
+	    };
+	    UserProcess.prototype.animateSendDataToServerProcess = function (delay) {
+	        Orasim.getAnimation().moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, function () {
+	            //no inicio da animacao, piscar user-process, server-process, e seta           
+	            $('.arrow.from-userp-2-serverp').show();
+	            $('#server-process').show();
+	            $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1).wait().hide();
+	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#user-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            $('#user img').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	        }, function () { });
+	    };
+	    return UserProcess;
+	}());
+	exports.UserProcess = UserProcess;
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var data_files_1 = __webpack_require__(13);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -492,11 +686,11 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(13);
+	var block_1 = __webpack_require__(14);
 	var DataFiles = (function () {
 	    function DataFiles() {
 	        this.block = new block_1.Block();
@@ -519,7 +713,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -543,11 +737,11 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(15);
+	var sga_1 = __webpack_require__(16);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -561,12 +755,12 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(16);
-	var shared_pool_1 = __webpack_require__(17);
+	var db_buffer_cache_1 = __webpack_require__(17);
+	var shared_pool_1 = __webpack_require__(18);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -584,11 +778,11 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(13);
+	var block_1 = __webpack_require__(14);
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
 	        this.numBlocks = 30;
@@ -628,19 +822,22 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	"use strict";
 	var SharedPool = (function () {
 	    function SharedPool() {
+	        this.lastHashInserted = null;
 	        this.hashCollection = [];
-	        this.hashHtmlTemplate = "<li class=\"hash\"></li>";
+	        this.element = "<li class=\"hash\"></li>";
 	    }
+	    SharedPool.prototype.animateAddHash = function () {
+	        $("#hash-ul-container").append($(this.element).append(this.lastHashInserted.getHexStrHash())[0].outerHTML);
+	    };
 	    SharedPool.prototype.addHash = function (hash) {
+	        this.lastHashInserted = hash;
 	        this.hashCollection.push(hash);
-	        //adding to view
-	        $("#hash-ul-container").append($(this.hashHtmlTemplate).append(hash.getHexStrHash())[0].outerHTML);
 	    };
 	    //getting index of some hash in collection
 	    SharedPool.prototype.getMemoryLocation = function (hs) {
@@ -652,6 +849,12 @@
 	            i++;
 	        }
 	        return -1;
+	    };
+	    SharedPool.prototype.getLastMemoryLocation = function () {
+	        return this.getMemoryLocation(this.lastHashInserted);
+	    };
+	    SharedPool.prototype.findLastHash = function () {
+	        return this.findHash(this.lastHashInserted);
 	    };
 	    //finding hash in collection
 	    SharedPool.prototype.findHash = function (hs) {

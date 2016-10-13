@@ -1,14 +1,26 @@
 import { Hash } from './hash'
 
+/**
+ * Classe responsavel por especializar um hash modelando o crc32
+ */
 export class Crc32 extends Hash {
 
     constructor(data: string) {
-        super(data)
+        super()
+        this.buildCrc(data)
+    }
+
+    /**
+     * Metodo responsavel por construir o hash crc32 
+     *   
+     * @param  data     dados que serão utilizados pra gerar o hash
+     */
+    buildCrc(data: string): void{
         let uintCrc = (new Uint32Array([this.crc32Str(data)]))[0]
         super.setHash(uintCrc)
     }
 
-    // TAKEN
+    // TAKEN FROM
     // modified version from from http://www.webtoolkit.info/    
     private Utf8Encode(data: string) {
 
@@ -46,7 +58,7 @@ export class Crc32 extends Hash {
         return utftext;
     }
 
-    // TAKEN
+    // TAKEN FROM
     // modified version from from http://www.webtoolkit.info/    
     private crc32Str(str): number {
 

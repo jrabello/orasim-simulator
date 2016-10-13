@@ -1,22 +1,26 @@
 import { Hash } from '../crypt/hash'
 
 export class SharedPool {
+    private lastHashInserted: Hash
     private hashCollection: Hash[]
-    private hashHtmlTemplate: string
+    private element: string
 
     constructor() {
+        this.lastHashInserted = null
         this.hashCollection = []
-        this.hashHtmlTemplate = `<li class="hash"></li>`
+        this.element = `<li class="hash"></li>`
+    }
+
+    animateAddHash(){        
+        $("#hash-ul-container").append(
+            $(this.element).append(this.lastHashInserted.getHexStrHash())[0].outerHTML)
     }
 
     addHash(hash: Hash): void {
-        this.hashCollection.push(hash)
-
-        //adding to view
-        $("#hash-ul-container").append(
-            $(this.hashHtmlTemplate).append(hash.getHexStrHash())[0].outerHTML)
+        this.lastHashInserted = hash
+        this.hashCollection.push(hash)    
     }
-
+        
     //getting index of some hash in collection
     getMemoryLocation(hs: Hash): number {
         let i = 0
@@ -28,6 +32,14 @@ export class SharedPool {
         }
 
         return -1
+    }
+
+    getLastMemoryLocation(): number{
+        return this.getMemoryLocation(this.lastHashInserted)
+    }
+
+    findLastHash(): boolean{
+        return this.findHash(this.lastHashInserted)
     }
 
     //finding hash in collection

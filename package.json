@@ -6,7 +6,8 @@
     "build": "webpack --progress",
     "build:prod": "webpack -p --progress",
     "serve": "webpack-dev-server --inline --progress",
-    "postinstall": "typings install"
+    "postinstall": "typings install",
+    "gen:doc": "typedoc --out ./doc ./src/ts --module amd --includeDeclarations --ignoreCompilerErrors"
   },
   "devDependencies": {
     "html-webpack-plugin": "^2.22.0",

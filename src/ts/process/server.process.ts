@@ -17,30 +17,51 @@ export class ServerProcess{
         return $(this.element).offset()
     }
 
-
-    getBlockFromDatFiles(dataFiles: DataFiles, delay: number): HTMLElement{
+    animateGetBlockFromDataFiles(dataFiles: DataFiles, delay: number): HTMLElement{
         let blockHtml = dataFiles.getNewBlockHtml()
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay)
+        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
+            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)                            
+            $('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+        }, () =>{})
         return blockHtml
-    }
-
-    //DbBufferCache
-    getNewBlockFromDbBufferCache(dbBufferCache: DbBufferCache, delay: number): HTMLElement{
-        let blockHtml = dbBufferCache.getNewBlockHtml()
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay)
-        return blockHtml
-    }
-    storeBlockInDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, memLocation: number, delay: number){
-        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, () => {
-            dbBufferCache.setMemoryLocationUsed(memLocation)
-        })
-    }
-    getBlockFromDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, delay: number){
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay)
     }
     
-    //UserProcess
-    sendDataToUserProcess(blockHtml: HTMLElement, userProcess: UserProcess, delay: number){
-        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay)
+    animateStoreBlockInDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, memLocation: number, delay: number){
+        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, 0, () =>{
+            // no inicio da animacao piscar server-process e db-buffer-cache 
+            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
+            $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
+        }, () => { 
+            // depois da animacao completa marcando o bloco como utilizado            
+            dbBufferCache.setMemoryLocationUsed(memLocation)            
+        })
+    }
+
+    animateGetNewBlockFromDbBufferCache(dbBufferCache: DbBufferCache, delay: number): HTMLElement{
+        let blockHtml = dbBufferCache.getNewBlockHtml()
+        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
+            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
+            $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1) 
+        }, () =>{})
+        return blockHtml
+    }
+
+    animateGetBlockFromDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, delay: number){
+        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
+            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
+            $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1) 
+        }, () => {})
+    }
+        
+    animateSendBlockToUserProcess(blockHtml: HTMLElement, userProcess: UserProcess, delay: number){
+        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay, 0, () => {
+            //no inicio da animacao, piscar user-process e server-process     
+            $('.arrow.from-serverp-2-userp').show()      
+            $('.arrow.from-serverp-2-userp').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1).wait().hide()
+            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+            $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+            $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+        }, 
+        () => {})
     }
 } 

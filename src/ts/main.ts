@@ -5,7 +5,10 @@ import { Animation } from './animation/animation'
 import { OracleDatabase } from './oracle-database/oracle.database'
 import { OracleInstance } from './oracle-instance/oracle.instance'
 
-
+/** 
+ * Classe Responsável por guardar instâncias de todos os metodos 
+ * que possuem caracteristica de SingleTon(uma unica e apenas uma instancia) 
+ */
 class Main {
     private sqlConsole: SqlConsole
     private animation: Animation
@@ -14,6 +17,7 @@ class Main {
     private serverProcess: ServerProcess
     private userProcess: UserProcess
 
+    // criando instancias de classes SingleTon 
     constructor() {
         this.sqlConsole = new SqlConsole()
         this.serverProcess = new ServerProcess()
@@ -48,5 +52,6 @@ class Main {
     }
 }
 
-//storing main instance into global namespace
-window.Orasim = new Main()
+// adicionando instancia da classe Main dentro de objeto global 
+// chamado Orasim(global namespace)
+(<any>window).Orasim = new Main()
