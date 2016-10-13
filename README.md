@@ -9,7 +9,7 @@ Digite "npm install" para que o npm faça download de todas as dependencias do p
 $ npm install
 ```
 
-Digite "npm run build", para rodar o script de build definido no package.json, desta forma, o WebPack chamará o compilador do tyescript, e criará a transpilação do codebase em typescript para javascript es5 no arquivo app.bundle.js dentro do diretório /dist 
+Digite "npm run build", para rodar o script de build definido no package.json, desta forma, o WebPack chamará o compilador do typescript, e criará a transpilação do codebase em typescript para javascript es5 no arquivo app.bundle.js dentro do diretório /dist 
 ```shell
 $ npm run build
 ```
