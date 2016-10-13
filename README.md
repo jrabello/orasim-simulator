@@ -19,4 +19,5 @@ Todo o código desenvolvido no projeto deverá estar dentro dos padrões definid
 https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines
 
 Com as seguintes exceções:
+
 1 - "Do not use "I" as a prefix for interface names."
