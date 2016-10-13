@@ -46,11 +46,11 @@
 
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
-	var server_process_1 = __webpack_require__(10);
-	var user_process_1 = __webpack_require__(11);
-	var animation_1 = __webpack_require__(3);
-	var oracle_database_1 = __webpack_require__(12);
-	var oracle_instance_1 = __webpack_require__(15);
+	var server_process_1 = __webpack_require__(11);
+	var user_process_1 = __webpack_require__(12);
+	var animation_1 = __webpack_require__(4);
+	var oracle_database_1 = __webpack_require__(13);
+	var oracle_instance_1 = __webpack_require__(16);
 	/**
 	 * Classe Responsável por guardar instâncias de todos os metodos
 	 * que possuem caracteristica de SingleTon(uma unica e apenas uma instancia)
@@ -96,7 +96,7 @@
 
 	"use strict";
 	var sql_parser_1 = __webpack_require__(2);
-	var sql_console_msg_error_1 = __webpack_require__(9);
+	var sql_console_msg_error_1 = __webpack_require__(10);
 	/**
 	 *  Classe responsavel por modelar o console que o usuário
 	 *  usará para interagir com a aplicação
@@ -151,9 +151,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var animation_1 = __webpack_require__(3);
-	var animation_select_1 = __webpack_require__(4);
-	var crc32_1 = __webpack_require__(7);
+	var animation_null_1 = __webpack_require__(3);
+	var animation_select_1 = __webpack_require__(5);
+	var crc32_1 = __webpack_require__(8);
 	/**
 	 * Classe Responsavel por fazer analise lexica e sintatica
 	 * de uma query sql
@@ -195,11 +195,17 @@
 	            case "insert":
 	                console.log('insert');
 	                this.isParsedSuccess = true;
-	                return new animation_1.Animation();
+	                return new animation_null_1.AnimationNull();
+	            case "update":
+	                return new animation_null_1.AnimationNull();
+	            case "delete":
+	                return new animation_null_1.AnimationNull();
+	            case "connect":
+	                return new animation_null_1.AnimationNull();
 	        }
-	        this.isParsedSuccess = false;
 	        // retorno default(nenhuma animacao sera executada)
-	        return new animation_1.Animation();
+	        this.isParsedSuccess = false;
+	        return new animation_null_1.AnimationNull();
 	        // codigo abaixo faz referencia a biblioteca utilizada para fazer parsing 
 	        // da query, no momento nao estamos utilizando a mesma
 	        // try{
@@ -221,6 +227,27 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var animation_1 = __webpack_require__(4);
+	var AnimationNull = (function (_super) {
+	    __extends(AnimationNull, _super);
+	    function AnimationNull() {
+	        _super.call(this);
+	    }
+	    return AnimationNull;
+	}(animation_1.Animation));
+	exports.AnimationNull = AnimationNull;
+
+
+/***/ },
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -257,15 +284,17 @@
 	        y = ($(destElem).offset().left - $(sourceElem).offset().left) + $(sourceElem).position().left;
 	        $(sourceElem).animate({ top: x, left: y }, { duration: duration,
 	            start: function () { return startCb(); },
-	            complete: function () { return completeCb(); } });
+	            complete: function () { return completeCb(); } }).delay(delayAfter);
 	    };
 	    Animation.prototype.sleep = function (delay) {
-	        //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})      
-	        return new Promise(function (resolve, reject) {
-	            setTimeout(function () {
-	                resolve(0);
-	            }, delay);
-	        });
+	        //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})
+	        //.fadeIn
+	        //$(".main-title").animate({"opacity":"0"},{duration:delay});
+	        // return new Promise<number>((resolve, reject) => {  
+	        //      setTimeout(() => {                
+	        //         resolve(0)
+	        //     }, delay)
+	        // })
 	    };
 	    return Animation;
 	}());
@@ -273,7 +302,7 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -282,8 +311,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var animation_1 = __webpack_require__(3);
-	var sql_console_msg_info_1 = __webpack_require__(5);
+	var animation_1 = __webpack_require__(4);
+	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
 	 * Classe responsavel por implementar animações
 	 * relacionadas ao select
@@ -360,6 +389,7 @@
 	            // animacao enviando dados para userProcess
 	            var blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, _this.animHashNotFoundDelay * 0.25);
 	            serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, _this.animHashNotFoundDelay * 0.25);
+	            //super.sleep(5000)
 	            serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, _this.animHashNotFoundDelay * 0.25);
 	            serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, _this.animHashNotFoundDelay * 0.25);
 	            setTimeout(function () {
@@ -401,7 +431,7 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -410,7 +440,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(6);
+	var sql_console_message_1 = __webpack_require__(7);
 	/**
 	 * Classe responsavel por especializar mensagens de informacao
 	 * da aplicacao
@@ -426,7 +456,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -455,7 +485,7 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -464,7 +494,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var hash_1 = __webpack_require__(8);
+	var hash_1 = __webpack_require__(9);
 	/**
 	 * Classe responsavel por especializar um hash modelando o crc32
 	 */
@@ -527,7 +557,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -553,7 +583,7 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -562,7 +592,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(6);
+	var sql_console_message_1 = __webpack_require__(7);
 	/**
 	 * Classe responsavel por especializar mensagens de erro
 	 * do console da aplicacao
@@ -578,7 +608,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -601,7 +631,7 @@
 	        return blockHtml;
 	    };
 	    ServerProcess.prototype.animateStoreBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
-	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, 0, function () {
+	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, delay / 6, function () {
 	            // no inicio da animacao piscar server-process e db-buffer-cache 
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -640,7 +670,7 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -652,15 +682,27 @@
 	        return this.element;
 	    };
 	    UserProcess.prototype.animateSendDataToServerProcess = function (delay) {
-	        Orasim.getAnimation().moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, function () {
-	            //no inicio da animacao, piscar user-process, server-process, e seta           
-	            $('.arrow.from-userp-2-serverp').show();
-	            $('#server-process').show();
-	            $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1).wait().hide();
-	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            $('#user-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            $('#user img').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	        }, function () { });
+	        $("html").animate({}, {
+	            duration: delay,
+	            start: function () {
+	                $('.arrow.from-userp-2-serverp').show();
+	                $('#server-process').show();
+	                $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1).wait().hide();
+	                $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	                $('#user-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	                $('#user img').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            }
+	        });
+	        // Orasim.getAnimation().moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {
+	        //     //no inicio da animacao, piscar user-process, server-process, e seta           
+	        //     $('.arrow.from-userp-2-serverp').show()
+	        //     $('#server-process').show()
+	        //     $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1).wait().hide()
+	        //     $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+	        //     $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+	        //     $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+	        // }, 
+	        // () => {})
 	    };
 	    return UserProcess;
 	}());
@@ -668,11 +710,11 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(13);
+	var data_files_1 = __webpack_require__(14);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -686,11 +728,11 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(14);
+	var block_1 = __webpack_require__(15);
 	var DataFiles = (function () {
 	    function DataFiles() {
 	        this.block = new block_1.Block();
@@ -716,7 +758,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -740,11 +782,11 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(16);
+	var sga_1 = __webpack_require__(17);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -758,12 +800,12 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(17);
-	var shared_pool_1 = __webpack_require__(18);
+	var db_buffer_cache_1 = __webpack_require__(18);
+	var shared_pool_1 = __webpack_require__(19);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -781,11 +823,11 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(14);
+	var block_1 = __webpack_require__(15);
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
 	        this.numBlocks = 30;
@@ -825,7 +867,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	"use strict";

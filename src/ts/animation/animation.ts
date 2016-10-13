@@ -55,17 +55,19 @@ export class Animation {
         $(sourceElem).animate( { top: x, left: y },        
                                { duration: duration,
                                  start:  () => startCb(),
-                                 complete: () => completeCb() })       
+                                 complete: () => completeCb() }).delay(delayAfter)       
     }
 
     sleep(delay: number){
-        //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})      
-        return new Promise<number>((resolve, reject) => {  
+        //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})
+        //.fadeIn
+        //$(".main-title").animate({"opacity":"0"},{duration:delay});
+        // return new Promise<number>((resolve, reject) => {  
              
-             setTimeout(() => {                
-                resolve(0)
-            }, delay)
-        })
+        //      setTimeout(() => {                
+        //         resolve(0)
+        //     }, delay)
+        // })
     }
 
     // animateSendDataFromUserProcessToServerProcess(): Promise<number> {

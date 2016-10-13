@@ -1,4 +1,5 @@
 import { Animation } from '../animation/animation'
+import { AnimationNull } from '../animation/animation.null'
 import { AnimationSelect } from '../animation/animation.select'
 import { Crc32 } from '../crypt/crc32'
 import { Hash } from '../crypt/hash'
@@ -59,19 +60,19 @@ export class SqlParser{
             case "insert":
                 console.log('insert')
                 this.isParsedSuccess = true
-                return new Animation()
+                return new AnimationNull()
                  
             case "update":
-                return new Animation()
+                return new AnimationNull()
             case "delete":
-                return new Animation()
+                return new AnimationNull()
             case "connect":
-                return new Animation()
+                return new AnimationNull()
         }
 
         // retorno default(nenhuma animacao sera executada)
         this.isParsedSuccess = false        
-        return new Animation()
+        return new AnimationNull()
 
         // codigo abaixo faz referencia a biblioteca utilizada para fazer parsing 
         // da query, no momento nao estamos utilizando a mesma

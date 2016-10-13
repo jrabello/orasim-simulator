@@ -27,7 +27,7 @@ export class ServerProcess{
     }
     
     animateStoreBlockInDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, memLocation: number, delay: number){
-        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, 0, () =>{
+        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, delay/6, () =>{
             // no inicio da animacao piscar server-process e db-buffer-cache 
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            

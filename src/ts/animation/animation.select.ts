@@ -28,8 +28,7 @@ export class AnimationSelect extends Animation{
         this.animHashFoundDelay = super.getDelay() * 8
     }
 
-    start(){
-        
+    start(){        
         // setando estado de inicio da animacao
         let userProcess: UserProcess = Orasim.getUserProcess()
         Orasim.getAnimation().setAnimating(true)
@@ -95,6 +94,7 @@ export class AnimationSelect extends Animation{
             // animacao enviando dados para userProcess
             let blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, this.animHashNotFoundDelay*0.25)
             serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, this.animHashNotFoundDelay*0.25)
+            //super.sleep(5000)
             serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, this.animHashNotFoundDelay*0.25)
             serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, this.animHashNotFoundDelay*0.25)
             
