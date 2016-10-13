@@ -8,7 +8,7 @@ export class SharedPool {
     constructor() {
         this.lastHashInserted = null
         this.hashCollection = []
-        this.element = `<li class="hash"></li>`
+        this.element = `<li class="sql-hash"></li>`
     }
 
     animateAddHash(){        

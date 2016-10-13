@@ -32,9 +32,7 @@ export class SqlConsole {
                 return
             }
             
-            // setando estado de inicio da animacao
-            Orasim.getAnimation().setAnimating(true)
-
+            
             // pegando valor digitado no input do console
             // fazendo parsing da query
             let userSqlCmd = $("#console-input").val()

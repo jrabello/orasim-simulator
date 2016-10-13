@@ -59,11 +59,18 @@ export class SqlParser{
             case "insert":
                 console.log('insert')
                 this.isParsedSuccess = true
-                return new Animation() 
+                return new Animation()
+                 
+            case "update":
+                return new Animation()
+            case "delete":
+                return new Animation()
+            case "connect":
+                return new Animation()
         }
 
-        this.isParsedSuccess = false
         // retorno default(nenhuma animacao sera executada)
+        this.isParsedSuccess = false        
         return new Animation()
 
         // codigo abaixo faz referencia a biblioteca utilizada para fazer parsing 
@@ -80,6 +87,4 @@ export class SqlParser{
         //     this.query = ""
         // }
     }
-
-    
 }

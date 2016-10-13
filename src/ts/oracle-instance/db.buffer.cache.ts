@@ -16,7 +16,7 @@ export class DbBufferCache {
         for (let i = 0; i < this.numBlocks; i++) {
             let block = new Block()
             this.blocks.push(block)
-            $('#db-buffer-cache').append(block.getElement())
+            $('#db-buffer-cache-container').append(block.getElement())
         }
     }
 

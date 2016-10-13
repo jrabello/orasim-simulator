@@ -29,8 +29,11 @@ export class AnimationSelect extends Animation{
     }
 
     start(){
+        
+        // setando estado de inicio da animacao
         let userProcess: UserProcess = Orasim.getUserProcess()
-
+        Orasim.getAnimation().setAnimating(true)
+        
         // executando animacoes dentro de promises
         // setando estado de termino da animacao
         new Promise<number>((resolve, reject) => {

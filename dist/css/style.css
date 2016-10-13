@@ -35,7 +35,7 @@ h1 {
 .console-view {
   border: none;
   background: black;
-  color: #00FF00;
+  color: white;
 }
 
 #animation-container {
@@ -93,7 +93,6 @@ h1 {
   left: 155px;
   height: 50px;
   width: 80px;
-  display: none;
 }
 
 #pga {
@@ -171,12 +170,12 @@ h1 {
   position: absolute;
   left: 248px;
   bottom: 15px;
-  -moz-border-radius: 20px/20px;
+/*-moz-border-radius: 20px/20px;
   -webkit-border-radius: 20px/20px;
   border-radius: 20px/20px;
   background-image: radial-gradient(black, black 1px, transparent 1px, transparent);
   background-size: 10px 5px;
-  background-attachment: fixed;
+  background-attachment: fixed;*/
 }
 
 #oracle-database-title {
@@ -194,14 +193,20 @@ h1 {
 
 #oracle-bds-container {
   width: 350px;
-  height: 100px;
+  height: 115px;
   position: absolute;
   left: 10px;
   top: 10px;
 }
 
+#oracle-bds-container > div {
+  position: absolute;
+  height: 80px;
+  top: 10px;
+}
+
 #oracle-log-container{
-  height: 100px;
+  height: 115px;
   width: 100px;
   position: absolute;
   right: 10px;
@@ -209,28 +214,33 @@ h1 {
 }
 
 #archived-log-files {
-  left: 20px;
-}
-
-.bd {
   position: absolute;
-  bottom: 10px;
-  width: 60px;
-  height: 60px;
-  background-image: url("../img/database.png");
-  background-size: 60px 60px;
+  width: 90px;
+  height: 83px;
+  background-size: 100% 100%;
+  left: 5px;
+  top: 30px;
 }
 
 #data-files {
-  left: 20px;
+  left: 5px;
 }
 
 #control-files {
-  left: 150px;
+  left: 140px;
 }
 
 #redo-log-files {
-  left: 270px;
+  left: 215px;
+}
+
+.redo-log-file {
+  text-align: center;
+}
+
+.redo-log-title {
+  top: 7px;
+  position: relative;
 }
 
 #undo {
@@ -302,24 +312,14 @@ h1 {
   left: 10px;
   bottom: 10px;
   line-height: 40px;
-  font-size: 13px;
-}
-
-#password-file {
-  width: 105px;
-  height: 40px;
-  position: absolute;
-  left: 120px;
-  bottom: 45px;
-  line-height: 40px;
 }
 
 .sql-hash {
-  color: white;
-  display: none;
+  color: white;  
   position: absolute;
   top: 1.5em;
-  left: 1em;
+  left: 1.3em;
+  font-weight: bold;
 }
 
 #cache-container {
@@ -330,24 +330,70 @@ h1 {
   display: inline-block;
 }
 
-.inline-block-container > li {
-  float:left;
-  margin: 3.5px;
+.bd {
+  background-image: url("../img/database.png");
+  font-size: 9px;
 }
 
-.hash {
-   margin: 5.5px;
+.bd-container .bd {
+  width: 60px;
+  height: 75px;
+  background-size: 100% 100%;
+}
+
+#control-files .bd {
+  width: 70px;
+  height: 30px;
+  background-size: 100% 100%;
+  margin: 5px 0px;
+  line-height: 35px;
+}
+
+.control-files-bar {
+  position: relative;
+  border: 1px solid grey;
+  background-color: #c2ddec;
+  height: 5px;
+  width: 40px;
+  margin-top: 1px;
+  top: 27px;
+  left: 9px;
+  background-image: linear-gradient(to right, #00b045 50%, #c2ddec 50%, #c2ddec);
+}
+
+.bd-container {
+  border: 1px solid grey;
+  background-color: #c2ddec;
+  width: 130px;
 }
 
 .bd-description {
-  color: white;
-  font-size: 10px;
-  width: 45px;
+  color: red;
+  font-size: 13px;
+  width: 85px;
   text-align: center;
   position: absolute;
-  left: 15px;
-  top: 25px;
   font-weight: bold;
+}
+
+#oracle-bds-container .bd-description {
+  top: 85px;
+}
+#data-files .bd-description {
+  left: 20px;
+}
+
+#control-files .bd-description {
+  left: -10px;
+}
+
+#redo-log-files .bd-description  {
+  left: 25px;
+}
+
+#oracle-log-container .bd-description  {
+  left: 5px;
+  bottom: 85px;
 }
 
 .footer-page {
@@ -379,78 +425,48 @@ h1 {
   font-weight: bold;
 }
 
-.console-li-info{
-  color: #FFFFFF;
+.log {
+  background-color: #cecece;
+  border: 1px solid black;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border-radius: 4px;
+  width: 50px;
+  height: 15px;
+  line-height: 15px;
+  position: relative;
+  margin: 2px auto;
+  top: 20px;
 }
 
-.console-li-error{
-  color: #ff0000;
+.archives {
+  display: flex;
+  flex-direction: column;
+  height: 50px;
+  width: 80px;
+  flex-wrap: wrap;
+  position: relative;
+  top: 28px;
+  left: 4px;
 }
 
-
-.arrow {
-  position: absolute;
-  /* margin:20px;  */
-  height:5px;
-  background:tomato; 
-  display: none;
+.archive {
+  background-color: #7b706d;
+  color: white;
+  font-weight: bold;
+  border: 1px solid black;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border-radius: 4px;
+  width: 38px;
+  height: 12px;
+  line-height: 12px;
+  margin: 1px;
 }
 
-.arrow:after{
-  position:absolute;
-  content:"";
-  transform:rotate(45deg);
-  top:-10px;
-  right:0;
-  width:20px;
-  height:20px;
-  background:transparent;
-  border-right:5px solid tomato;
-  border-top:5px solid tomato;
+.inline-block-container > li {
+    float: left;
+    margin: 3.5px;
 }
-
-/* arrows userp */
-.from-userp-2-listenerp{    
-    top: 110px;
-    left: 10px;
-    width:110px;
-    transform:rotate(295deg);
-}
-
-.from-userp-2-serverp{    
-    top: 260px;
-    left: 90px;
-    width: 55px;
-    transform:rotate(359deg);
-}
-
-/* arrows listenerp */
-.from-listenerp-2-serverp{    
-    top: 120px;
-    left: 100px;
-    width:140px;
-    transform:rotate(75deg);
-}
-
-.from-listenerp-2-userp{    
-    top: 110px;
-    left: 10px;
-    width:110px;
-    transform:rotate(115deg);
-}
-
-/* arrows serverp */
-.from-serverp-2-userp{    
-    top: 260px;
-    left: 90px;
-    width: 55px;
-    transform:rotate(179deg);
-}
-
-.from-serverp-2-listenerp{    
-    top: 120px;
-    left: 100px;
-    width:140px;
-    transform:rotate(255deg)
-}
-

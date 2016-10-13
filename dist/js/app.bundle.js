@@ -119,8 +119,6 @@
 	                this.addMsg(new sql_console_msg_error_1.SqlConsoleMsgError('Animação em andamento!'));
 	                return;
 	            }
-	            // setando estado de inicio da animacao
-	            Orasim.getAnimation().setAnimating(true);
 	            // pegando valor digitado no input do console
 	            // fazendo parsing da query
 	            var userSqlCmd = $("#console-input").val();
@@ -303,7 +301,9 @@
 	    }
 	    AnimationSelect.prototype.start = function () {
 	        var _this = this;
+	        // setando estado de inicio da animacao
 	        var userProcess = Orasim.getUserProcess();
+	        Orasim.getAnimation().setAnimating(true);
 	        // executando animacoes dentro de promises
 	        // setando estado de termino da animacao
 	        new Promise(function (resolve, reject) {
@@ -704,7 +704,10 @@
 	    // returns a new block, only for animation purposes
 	    DataFiles.prototype.getNewBlockHtml = function () {
 	        var newBlock = new block_1.Block();
-	        $(this.element).append(newBlock.getElement());
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.element).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        $(newBlock.getElement()).css("z-index", 100);
 	        return newBlock.getElement();
 	    };
 	    return DataFiles;
@@ -794,7 +797,7 @@
 	        for (var i = 0; i < this.numBlocks; i++) {
 	            var block = new block_1.Block();
 	            this.blocks.push(block);
-	            $('#db-buffer-cache').append(block.getElement());
+	            $('#db-buffer-cache-container').append(block.getElement());
 	        }
 	    };
 	    DbBufferCache.prototype.setMemoryLocationUsed = function (memLocation) {
@@ -830,7 +833,7 @@
 	    function SharedPool() {
 	        this.lastHashInserted = null;
 	        this.hashCollection = [];
-	        this.element = "<li class=\"hash\"></li>";
+	        this.element = "<li class=\"sql-hash\"></li>";
 	    }
 	    SharedPool.prototype.animateAddHash = function () {
 	        $("#hash-ul-container").append($(this.element).append(this.lastHashInserted.getHexStrHash())[0].outerHTML);

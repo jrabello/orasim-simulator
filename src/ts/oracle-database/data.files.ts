@@ -17,8 +17,13 @@ export class DataFiles{
 
     // returns a new block, only for animation purposes
     getNewBlockHtml(): HTMLElement{
-        let newBlock = new Block()        
-        $(this.element).append(newBlock.getElement())
+        let newBlock = new Block()  
+        
+        $(this.element).prepend(newBlock.getElement())
+        $(newBlock.getElement()).offset($(this.element).offset())
+        $(newBlock.getElement()).css("position", "absolute")
+        $(newBlock.getElement()).css("z-index", 100)
+
         return newBlock.getElement()
     } 
 }
