@@ -21,27 +21,32 @@ export class AnimationSelect extends Animation{
     private isHashFound: boolean
     private animHashNotFoundDelay: number
     private animHashFoundDelay: number
-    private animUserProcess: number
+    private animUserProcessDelay: number
 
     constructor(isHashFound: boolean){
         super()
+        this.buildAnimSelect(isHashFound)       
+    }
+
+    buildAnimSelect(isHashFound: boolean): void{
         this.isHashFound =  isHashFound
-        this.animUserProcess = super.getDelay() * 15
+        this.animUserProcessDelay = super.getDelay() * 15
         this.animHashNotFoundDelay = super.getDelay() * 12
         this.animHashFoundDelay = super.getDelay() * 8
     }
 
-    start(){        
+    start(): void{        
         // setando estado de inicio da animacao
         let userProcess: UserProcess = Orasim.getUserProcess()
         Orasim.getAnimation().setAnimating(true)
         
         // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
         // setando estado de termino da animacao
-        new Promise<number>((resolve, reject) => {            
-            userProcess.animateSendDataToServerProcess(this.animUserProcess)
-            setTimeout(() => { resolve(0) }, this.animUserProcess)
-        })
+        //new Promise<number>((resolve, reject) => {            
+        
+        //     setTimeout(() => { resolve(0) }, this.animUserProcessDelay)
+        // })
+        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
         .then((res) => {
             console.log('animateSelect')
             //breakpoint
@@ -103,7 +108,7 @@ export class AnimationSelect extends Animation{
             setTimeout(() => {                     
                 $(blockHtml).remove()
                 resolve(0) 
-            }, this.animHashNotFoundDelay);
+            }, this.animHashNotFoundDelay)
         })//end promise
     }    
 

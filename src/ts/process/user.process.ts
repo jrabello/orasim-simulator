@@ -11,9 +11,10 @@ export class UserProcess {
         return this.element
     }
 
-    animateSendDataToServerProcess(delay: number) {
+    animateSendDataToServerProcess(delay: number): Promise<number>{
         //delay = 5000
         //$("#user-process").animate({},{queue: "anim", start: () =>{
+        return new Promise<number>((resolve, reject) => {
             $("#user-process").fadeTo(delay*0.15, 0.1, () => {
                 $("#user-process").fadeTo(delay*0.15, 1, () => {
                     new Arrow('right', 240, 80, 80, delay*0.40).moveToRight(() => {
@@ -25,6 +26,10 @@ export class UserProcess {
                     })
                 })
             })
+            setTimeout(() => {
+                resolve(0) 
+            }, delay)
+        })
         //}})
         //breakpoint
 

@@ -317,11 +317,14 @@
 	    __extends(AnimationSelect, _super);
 	    function AnimationSelect(isHashFound) {
 	        _super.call(this);
+	        this.buildAnimSelect(isHashFound);
+	    }
+	    AnimationSelect.prototype.buildAnimSelect = function (isHashFound) {
 	        this.isHashFound = isHashFound;
-	        this.animUserProcess = _super.prototype.getDelay.call(this) * 15;
+	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 15;
 	        this.animHashNotFoundDelay = _super.prototype.getDelay.call(this) * 12;
 	        this.animHashFoundDelay = _super.prototype.getDelay.call(this) * 8;
-	    }
+	    };
 	    AnimationSelect.prototype.start = function () {
 	        var _this = this;
 	        // setando estado de inicio da animacao
@@ -329,10 +332,10 @@
 	        Orasim.getAnimation().setAnimating(true);
 	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
 	        // setando estado de termino da animacao
-	        new Promise(function (resolve, reject) {
-	            userProcess.animateSendDataToServerProcess(_this.animUserProcess);
-	            setTimeout(function () { resolve(0); }, _this.animUserProcess);
-	        })
+	        //new Promise<number>((resolve, reject) => {            
+	        //     setTimeout(() => { resolve(0) }, this.animUserProcessDelay)
+	        // })
+	        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
 	            .then(function (res) {
 	            console.log('animateSelect');
 	            //breakpoint
@@ -680,16 +683,21 @@
 	    UserProcess.prototype.animateSendDataToServerProcess = function (delay) {
 	        //delay = 5000
 	        //$("#user-process").animate({},{queue: "anim", start: () =>{
-	        $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
-	            $("#user-process").fadeTo(delay * 0.15, 1, function () {
-	                new arrow_1.Arrow('right', 240, 80, 80, delay * 0.40).moveToRight(function () {
-	                    $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
-	                        $("#server-process").fadeTo(delay * 0.15, 1, function () {
-	                            console.log('done');
+	        return new Promise(function (resolve, reject) {
+	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
+	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
+	                    new arrow_1.Arrow('right', 240, 80, 80, delay * 0.40).moveToRight(function () {
+	                        $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
+	                            $("#server-process").fadeTo(delay * 0.15, 1, function () {
+	                                console.log('done');
+	                            });
 	                        });
 	                    });
 	                });
 	            });
+	            setTimeout(function () {
+	                resolve(0);
+	            }, delay);
 	        });
 	        //}})
 	        //breakpoint
