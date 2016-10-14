@@ -22,7 +22,7 @@ export class DataFiles{
         $(this.element).prepend(newBlock.getElement())
         $(newBlock.getElement()).offset($(this.element).offset())
         $(newBlock.getElement()).css("position", "absolute")
-        $(newBlock.getElement()).css("z-index", 100)
+        // $(newBlock.getElement()).css("z-index", 100)
 
         return newBlock.getElement()
     } 

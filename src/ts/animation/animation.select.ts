@@ -14,16 +14,19 @@ import { UserProcess } from '../process/user.process'
  * relacionadas ao select
  * @attribute isHashFound Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false
  * @attribute animHashNotFoundDelay Delay da animacao do hash nao encontrado na shared-pool
- * @attribute animHashFoundDelay Delay da animacao do hash encontrado na shared-pool
+ * @attribute animHashFoundDelay Delay da anima
+ * cao do hash encontrado na shared-pool
  */
 export class AnimationSelect extends Animation{
     private isHashFound: boolean
     private animHashNotFoundDelay: number
     private animHashFoundDelay: number
+    private animUserProcess: number
 
     constructor(isHashFound: boolean){
         super()
         this.isHashFound =  isHashFound
+        this.animUserProcess = super.getDelay() * 15
         this.animHashNotFoundDelay = super.getDelay() * 12
         this.animHashFoundDelay = super.getDelay() * 8
     }
@@ -33,12 +36,11 @@ export class AnimationSelect extends Animation{
         let userProcess: UserProcess = Orasim.getUserProcess()
         Orasim.getAnimation().setAnimating(true)
         
-        // executando animacoes dentro de promises
+        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
         // setando estado de termino da animacao
-        new Promise<number>((resolve, reject) => {
-            let animationTime = super.getDelay() * 2
-            userProcess.animateSendDataToServerProcess(animationTime)
-            setTimeout(() => { resolve(0) }, animationTime)
+        new Promise<number>((resolve, reject) => {            
+            userProcess.animateSendDataToServerProcess(this.animUserProcess)
+            setTimeout(() => { resolve(0) }, this.animUserProcess)
         })
         .then((res) => {
             console.log('animateSelect')
@@ -107,7 +109,7 @@ export class AnimationSelect extends Animation{
 
     animateHashFound(): Promise<number>{
         return new Promise<number>((resolve, reject) => {
-            //let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+            let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
             let dataFiles: DataFiles = Orasim.getOracleDatabase().getDataFiles()            
             let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
             let sqlConsole: SqlConsole = Orasim.getSqlConsole()
@@ -116,15 +118,18 @@ export class AnimationSelect extends Animation{
 
             //hash found, server process getting data directly from dbBufferCache
             //let memoryLocation = dbBufferCache.getMemoryLocation(hashIndex)
-            console.log("hash encontrado")
-            // let memLocation = sharedPool.getMemoryLocation()
+            //console.log("hash encontrado")
+            
             // console.log('hashIndex: '+memLocation)
             // $('#server-process').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
             // $('#db-buffer-cache').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
             
+            // pegando localizacao do bloco 
+            let memLocation = sharedPool.getLastMemoryLocation()
+
             // animacao pegando dados do dbBufferCache
             // animacao enviando dados para userProcess
-            let blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache( dbBufferCache, this.animHashFoundDelay*0.5)
+            let blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache( dbBufferCache, memLocation, this.animHashFoundDelay*0.5)
             serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, this.animHashFoundDelay*0.5)
             //serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, super.getDelay())
             
@@ -134,5 +139,4 @@ export class AnimationSelect extends Animation{
             }, this.animHashFoundDelay);
         })//end promise
     }
-
 }

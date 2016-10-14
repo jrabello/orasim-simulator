@@ -14,6 +14,8 @@ import { UserProcess } from '../process/user.process'
 /**
  * Classe Base, responsavel por implementar animações 
  * em comum com classes filhas
+ * @property {delay} quantidade de milisegundos usado como base na animacao
+ * @property {animating} atributo que salva o estado booleano da animacao 
  */
 export class Animation {
     private delay: number
@@ -53,22 +55,22 @@ export class Animation {
         y = ($(destElem).offset().left - $(sourceElem).offset().left) +  $(sourceElem).position().left
         
         $(sourceElem).animate( { top: x, left: y },        
-                               { duration: duration,
+                               { duration: duration,                                 
                                  start:  () => startCb(),
                                  complete: () => completeCb() }).delay(delayAfter)       
     }
 
-    sleep(delay: number){
-        //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})
-        //.fadeIn
-        //$(".main-title").animate({"opacity":"0"},{duration:delay});
-        // return new Promise<number>((resolve, reject) => {  
+    // sleep(delay: number){
+    //     //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})
+    //     //.fadeIn
+    //     //$(".main-title").animate({"opacity":"0"},{duration:delay});
+    //     // return new Promise<number>((resolve, reject) => {  
              
-        //      setTimeout(() => {                
-        //         resolve(0)
-        //     }, delay)
-        // })
-    }
+    //     //      setTimeout(() => {                
+    //     //         resolve(0)
+    //     //     }, delay)
+    //     // })
+    // }
 
     // animateSendDataFromUserProcessToServerProcess(): Promise<number> {
     //     return new Promise<number>((resolve, reject) => {

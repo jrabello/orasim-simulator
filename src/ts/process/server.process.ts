@@ -21,13 +21,14 @@ export class ServerProcess{
         let blockHtml = dataFiles.getNewBlockHtml()
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)                            
-            $('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+            //$('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+            //$(blockHtml).repeat().fadeTo(delay/2, 1).fadeTo(delay/2, 1).until(1)
         }, () =>{})
         return blockHtml
     }
     
     animateStoreBlockInDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, memLocation: number, delay: number){
-        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, delay/6, () =>{
+        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocation].getElement(), delay, delay/6, () =>{
             // no inicio da animacao piscar server-process e db-buffer-cache 
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
@@ -37,8 +38,8 @@ export class ServerProcess{
         })
     }
 
-    animateGetNewBlockFromDbBufferCache(dbBufferCache: DbBufferCache, delay: number): HTMLElement{
-        let blockHtml = dbBufferCache.getNewBlockHtml()
+    animateGetNewBlockFromDbBufferCache(dbBufferCache: DbBufferCache, memLocation: number, delay: number): HTMLElement{
+        let blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation)        
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1) 
@@ -47,7 +48,7 @@ export class ServerProcess{
     }
 
     animateGetBlockFromDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, delay: number){
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
+        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1) 
         }, () => {})

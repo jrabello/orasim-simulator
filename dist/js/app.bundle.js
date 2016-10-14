@@ -49,8 +49,8 @@
 	var server_process_1 = __webpack_require__(11);
 	var user_process_1 = __webpack_require__(12);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(13);
-	var oracle_instance_1 = __webpack_require__(16);
+	var oracle_database_1 = __webpack_require__(14);
+	var oracle_instance_1 = __webpack_require__(17);
 	/**
 	 * Classe Responsável por guardar instâncias de todos os metodos
 	 * que possuem caracteristica de SingleTon(uma unica e apenas uma instancia)
@@ -254,6 +254,8 @@
 	/**
 	 * Classe Base, responsavel por implementar animações
 	 * em comum com classes filhas
+	 * @property {delay} quantidade de milisegundos usado como base na animacao
+	 * @property {animating} atributo que salva o estado booleano da animacao
 	 */
 	var Animation = (function () {
 	    function Animation() {
@@ -286,16 +288,6 @@
 	            start: function () { return startCb(); },
 	            complete: function () { return completeCb(); } }).delay(delayAfter);
 	    };
-	    Animation.prototype.sleep = function (delay) {
-	        //this.moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {}, () => {})
-	        //.fadeIn
-	        //$(".main-title").animate({"opacity":"0"},{duration:delay});
-	        // return new Promise<number>((resolve, reject) => {  
-	        //      setTimeout(() => {                
-	        //         resolve(0)
-	        //     }, delay)
-	        // })
-	    };
 	    return Animation;
 	}());
 	exports.Animation = Animation;
@@ -318,13 +310,15 @@
 	 * relacionadas ao select
 	 * @attribute isHashFound Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false
 	 * @attribute animHashNotFoundDelay Delay da animacao do hash nao encontrado na shared-pool
-	 * @attribute animHashFoundDelay Delay da animacao do hash encontrado na shared-pool
+	 * @attribute animHashFoundDelay Delay da anima
+	 * cao do hash encontrado na shared-pool
 	 */
 	var AnimationSelect = (function (_super) {
 	    __extends(AnimationSelect, _super);
 	    function AnimationSelect(isHashFound) {
 	        _super.call(this);
 	        this.isHashFound = isHashFound;
+	        this.animUserProcess = _super.prototype.getDelay.call(this) * 15;
 	        this.animHashNotFoundDelay = _super.prototype.getDelay.call(this) * 12;
 	        this.animHashFoundDelay = _super.prototype.getDelay.call(this) * 8;
 	    }
@@ -333,12 +327,11 @@
 	        // setando estado de inicio da animacao
 	        var userProcess = Orasim.getUserProcess();
 	        Orasim.getAnimation().setAnimating(true);
-	        // executando animacoes dentro de promises
+	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
 	        // setando estado de termino da animacao
 	        new Promise(function (resolve, reject) {
-	            var animationTime = _super.prototype.getDelay.call(_this) * 2;
-	            userProcess.animateSendDataToServerProcess(animationTime);
-	            setTimeout(function () { resolve(0); }, animationTime);
+	            userProcess.animateSendDataToServerProcess(_this.animUserProcess);
+	            setTimeout(function () { resolve(0); }, _this.animUserProcess);
 	        })
 	            .then(function (res) {
 	            console.log('animateSelect');
@@ -401,7 +394,7 @@
 	    AnimationSelect.prototype.animateHashFound = function () {
 	        var _this = this;
 	        return new Promise(function (resolve, reject) {
-	            //let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+	            var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	            var dataFiles = Orasim.getOracleDatabase().getDataFiles();
 	            var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
 	            var sqlConsole = Orasim.getSqlConsole();
@@ -409,14 +402,15 @@
 	            var userProcess = Orasim.getUserProcess();
 	            //hash found, server process getting data directly from dbBufferCache
 	            //let memoryLocation = dbBufferCache.getMemoryLocation(hashIndex)
-	            console.log("hash encontrado");
-	            // let memLocation = sharedPool.getMemoryLocation()
+	            //console.log("hash encontrado")
 	            // console.log('hashIndex: '+memLocation)
 	            // $('#server-process').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
 	            // $('#db-buffer-cache').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
+	            // pegando localizacao do bloco 
+	            var memLocation = sharedPool.getLastMemoryLocation();
 	            // animacao pegando dados do dbBufferCache
 	            // animacao enviando dados para userProcess
-	            var blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, _this.animHashFoundDelay * 0.5);
+	            var blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocation, _this.animHashFoundDelay * 0.5);
 	            serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, _this.animHashFoundDelay * 0.5);
 	            //serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, super.getDelay())
 	            setTimeout(function () {
@@ -569,7 +563,7 @@
 	    function Hash() {
 	    }
 	    Hash.prototype.getHexStrHash = function () {
-	        return '0x' + this.hash.toString(16);
+	        return this.hash.toString(16);
 	    };
 	    Hash.prototype.setHash = function (hash) {
 	        this.hash = hash;
@@ -626,12 +620,13 @@
 	        var blockHtml = dataFiles.getNewBlockHtml();
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            $('#data-files').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
+	            //$('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+	            //$(blockHtml).repeat().fadeTo(delay/2, 1).fadeTo(delay/2, 1).until(1)
 	        }, function () { });
 	        return blockHtml;
 	    };
 	    ServerProcess.prototype.animateStoreBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
-	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getElement(), delay, delay / 6, function () {
+	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocation].getElement(), delay, delay / 6, function () {
 	            // no inicio da animacao piscar server-process e db-buffer-cache 
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -640,8 +635,8 @@
 	            dbBufferCache.setMemoryLocationUsed(memLocation);
 	        });
 	    };
-	    ServerProcess.prototype.animateGetNewBlockFromDbBufferCache = function (dbBufferCache, delay) {
-	        var blockHtml = dbBufferCache.getNewBlockHtml();
+	    ServerProcess.prototype.animateGetNewBlockFromDbBufferCache = function (dbBufferCache, memLocation, delay) {
+	        var blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation);
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -671,9 +666,10 @@
 
 /***/ },
 /* 12 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var arrow_1 = __webpack_require__(13);
 	var UserProcess = (function () {
 	    function UserProcess() {
 	        this.element = $("#user-process")[0];
@@ -682,17 +678,38 @@
 	        return this.element;
 	    };
 	    UserProcess.prototype.animateSendDataToServerProcess = function (delay) {
-	        $("html").animate({}, {
-	            duration: delay,
-	            start: function () {
-	                $('.arrow.from-userp-2-serverp').show();
-	                $('#server-process').show();
-	                $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1).wait().hide();
-	                $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	                $('#user-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	                $('#user img').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            }
+	        //delay = 5000
+	        //$("#user-process").animate({},{queue: "anim", start: () =>{
+	        $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
+	            $("#user-process").fadeTo(delay * 0.15, 1, function () {
+	                new arrow_1.Arrow('right', 240, 80, 80, delay * 0.40).moveToRight(function () {
+	                    $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
+	                        $("#server-process").fadeTo(delay * 0.15, 1, function () {
+	                            console.log('done');
+	                        });
+	                    });
+	                });
+	            });
 	        });
+	        //}})
+	        //breakpoint
+	        // $("#user-process").animate({
+	        // },{
+	        //     duration: delay,
+	        //     start: () => {
+	        //         console.log("start")
+	        //         // $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+	        //         // $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+	        //     },
+	        //     complete:  () => {
+	        //         console.log("complete")
+	        //         //$('.arrow.from-userp-2-serverp').show()
+	        //         // $('#server-process').show()
+	        //         // $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1).wait().hide()
+	        //         // $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+	        //         new Arrow('right', 45, 45, 120, delay).moveToRight()                    
+	        //     }
+	        // })
 	        // Orasim.getAnimation().moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {
 	        //     //no inicio da animacao, piscar user-process, server-process, e seta           
 	        //     $('.arrow.from-userp-2-serverp').show()
@@ -711,10 +728,64 @@
 
 /***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Arrow = (function () {
+	    function Arrow(type, top, left, size, duration) {
+	        this.buildArrow(type, top, left, size, duration);
+	    }
+	    Arrow.prototype.buildArrow = function (type, top, left, size, duration) {
+	        this.element = $("<div class='" + type + "-arrow'>")[0];
+	        this.animContainer = $("#animation-container")[0];
+	        this.size = size;
+	        this.top = top;
+	        this.left = left;
+	        this.duration = duration;
+	    };
+	    Arrow.prototype.moveToRight = function (callback) {
+	        // Adicionando seta em seu elemento pai        
+	        var $arrow = $(this.element).css({
+	            "left": this.left + "px",
+	            "top": this.top + "px"
+	        });
+	        $(this.animContainer).append($arrow);
+	        // Divide o tempo total da animação para cada parte
+	        var eachTimePart = this.duration / 2;
+	        console.log('moveToRight: ', this.duration);
+	        // Iniciando animação da seta
+	        $arrow.animate({
+	            width: this.size + 'px'
+	        }, {
+	            duration: eachTimePart,
+	            // Iniciando segunda parte da animação da seta
+	            complete: function () {
+	                //console.log('moveToRight: ', 'segunda parte')
+	                $arrow.addClass("end");
+	                // Removendo seta do DOM
+	                $arrow.animate({
+	                    opacity: 0
+	                }, {
+	                    duration: eachTimePart
+	                });
+	                setTimeout(function () {
+	                    $arrow.remove();
+	                    callback();
+	                }, eachTimePart);
+	            }
+	        });
+	    };
+	    return Arrow;
+	}());
+	exports.Arrow = Arrow;
+
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(14);
+	var data_files_1 = __webpack_require__(15);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -728,11 +799,11 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(15);
+	var block_1 = __webpack_require__(16);
 	var DataFiles = (function () {
 	    function DataFiles() {
 	        this.block = new block_1.Block();
@@ -749,7 +820,7 @@
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.element).offset());
 	        $(newBlock.getElement()).css("position", "absolute");
-	        $(newBlock.getElement()).css("z-index", 100);
+	        // $(newBlock.getElement()).css("z-index", 100)
 	        return newBlock.getElement();
 	    };
 	    return DataFiles;
@@ -758,7 +829,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -782,11 +853,11 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(17);
+	var sga_1 = __webpack_require__(18);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -800,12 +871,12 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(18);
-	var shared_pool_1 = __webpack_require__(19);
+	var db_buffer_cache_1 = __webpack_require__(19);
+	var shared_pool_1 = __webpack_require__(20);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -823,11 +894,11 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(15);
+	var block_1 = __webpack_require__(16);
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
 	        this.numBlocks = 30;
@@ -835,6 +906,9 @@
 	        this.blocks = new Array();
 	        this.initBlocks();
 	    }
+	    DbBufferCache.prototype.getBlocks = function () {
+	        return this.blocks;
+	    };
 	    DbBufferCache.prototype.initBlocks = function () {
 	        for (var i = 0; i < this.numBlocks; i++) {
 	            var block = new block_1.Block();
@@ -858,6 +932,16 @@
 	        $(newBlock.getElement()).css("z-index", 100);
 	        return newBlock.getElement();
 	    };
+	    DbBufferCache.prototype.getNewBlockHtmlAt = function (memLocation) {
+	        var newBlock = new block_1.Block();
+	        //$(newBlock.getElement()).css("top", "0px") 
+	        //$(newBlock.getElement()).css('left', "0px")        
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        $(newBlock.getElement()).css("z-index", 100);
+	        return newBlock.getElement();
+	    };
 	    DbBufferCache.prototype.getElement = function () {
 	        return this.element;
 	    };
@@ -867,7 +951,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	"use strict";

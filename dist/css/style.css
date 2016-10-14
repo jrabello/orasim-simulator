@@ -318,12 +318,16 @@ h1 {
   color: white;  
   position: absolute;
   top: 1.5em;
-  left: 1.3em;
+  left: 2em;
   font-weight: bold;
 }
 
 #cache-container {
   margin-left: 5px;
+}
+
+#db-buffer-cache-container{
+  margin-left: 4px;
 }
 
 .inline-block-container > div {

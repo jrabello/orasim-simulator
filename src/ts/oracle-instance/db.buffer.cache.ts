@@ -12,6 +12,10 @@ export class DbBufferCache {
         this.initBlocks()
     }
 
+    getBlocks(): Block[]{
+        return this.blocks
+    }
+
     initBlocks(){
         for (let i = 0; i < this.numBlocks; i++) {
             let block = new Block()
@@ -37,6 +41,17 @@ export class DbBufferCache {
         $(newBlock.getElement()).css("z-index", 100)
         return newBlock.getElement()
     } 
+
+    getNewBlockHtmlAt(memLocation: number): HTMLElement{
+        let newBlock = new Block()
+        //$(newBlock.getElement()).css("top", "0px") 
+        //$(newBlock.getElement()).css('left', "0px")        
+        $(this.element).prepend(newBlock.getElement())
+        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset())
+        $(newBlock.getElement()).css("position", "absolute")
+        $(newBlock.getElement()).css("z-index", 100)
+        return newBlock.getElement()
+    }
 
     getElement() {
         return this.element

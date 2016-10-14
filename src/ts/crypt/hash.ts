@@ -9,7 +9,7 @@ export class Hash implements IHashable{
     }
 
     getHexStrHash(): string{
-        return '0x'+ this.hash.toString(16)
+        return this.hash.toString(16)
     }
 
     setHash(hash: number){
