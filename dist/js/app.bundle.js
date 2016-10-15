@@ -1118,13 +1118,11 @@
 	 * SharedPool
 	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
 	 * @attribute {lastHashInserted} ultimo hash inserido na hash collection
-	 * @attribute {hashCollection} array de hashes
 	 * @attribute {hashElement} objeto html que referencia o elemento hash
 	 * @attribute {element} objeto html que referencia o elemento shared-pool
 	 */
 	var SharedPool = (function () {
 	    function SharedPool() {
-	        this.lastHashInserted = null;
 	        this.hashCollection = [];
 	        this.element = $("#shared-pool")[0];
 	        this.hashElement = $("<li class=\"sql-hash\"></li>")[0];
@@ -1134,7 +1132,8 @@
 	     * Metodo responsavel por animar a inserção hash no hashContainer, dentro da shared-pool
 	     */
 	    SharedPool.prototype.animateAddHash = function () {
-	        $("#hash-ul-container").append($(this.hashElement).append(this.lastHashInserted.getHexStrHash())[0].outerHTML);
+	        //neste caso estamos apenas dando append, nao existe animacao ainda
+	        $("#hash-ul-container").append($(this.hashElement).append(this.hashCollection.slice(-1)[0].getHexStrHash())[0].outerHTML);
 	    };
 	    /**
 	     * addHash
@@ -1142,7 +1141,6 @@
 	     * @param {hash} hash que sera adicionado na collection da shared-pool
 	     */
 	    SharedPool.prototype.addHash = function (hash) {
-	        this.lastHashInserted = hash;
 	        this.hashCollection.push(hash);
 	    };
 	    /**
@@ -1162,17 +1160,11 @@
 	    };
 	    /**
 	     * getLastMemoryLocation
+	     * Metodo responsavel por retornar local de memoria do ultimo hash inserido
 	     * @returns local de memoria do ultimo hash inserido
 	     */
 	    SharedPool.prototype.getLastMemoryLocation = function () {
-	        return this.getMemoryLocation(this.lastHashInserted);
-	    };
-	    /**
-	     * findLastHash
-	     * @returns se o ultimo hash inserido ainda se encontra na collection
-	     */
-	    SharedPool.prototype.findLastHash = function () {
-	        return this.findHash(this.lastHashInserted);
+	        return this.getMemoryLocation(this.hashCollection.slice(-1)[0]);
 	    };
 	    /**
 	     * findHash

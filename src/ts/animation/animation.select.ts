@@ -35,7 +35,7 @@ export class AnimationSelect extends Animation{
      */
     buildAnimSelect(isHashFound: boolean): void{
         this.isHashFound =  isHashFound
-        this.animUserProcessDelay = super.getDelay() * 5
+        this.animUserProcessDelay = super.getDelay() * 10
         this.animHashNotFoundDelay = super.getDelay() * 12
         this.animHashFoundDelay = super.getDelay() * 8
     }
