@@ -3,7 +3,7 @@
  * Classe Responsavel modelar um bloco
  * @attribute {size} define o tamanho de um bloco
  * @attribute {element} objeto html que referencia o elemento user-process
- * @attribute {isUsed} flag que determina se o bloco esta em uso 
+ * @attribute {isUsed} flag que determina se o bloco esta em uso  
  */
 export class Block{
     private size: number    
