@@ -1,28 +1,32 @@
 import { Block } from '../block'
 
+/**
+ * DataFiles
+ * Classe responsavel por modelar o objeto Data-Files do oracle database
+ * @attribute {blocks} array de objetos que guarda os blocos do data-files
+ * @attribute {element} objeto html que referencia o elemento data-files 
+ */
 export class DataFiles{
-    private block: Block
+    private blocks: Block[]
     private element: HTMLElement
 
-    constructor(){
-        this.block = new Block()
-        this.element = $("#data-files")[0]
-        //$(this.element).append(this.block.getElement())
+    constructor(){    
+        this.blocks = new Array<Block>()
+        this.element = $("#data-files")[0]    
     }
-
-    // returns existing block
-    getBlock(): HTMLElement{
-        return this.block.getElement()
-    }
-
-    // returns a new block, only for animation purposes
+    
+    /**
+     * getNewBlockHtml
+     * Metodo responsavel por retornar novo objeto html que sera utilizado para animacao
+     * @returns retorna objeto html(Block) para ser animado  
+     */
     getNewBlockHtml(): HTMLElement{
         let newBlock = new Block()  
         
+        //criando block dentro do data-files        
         $(this.element).prepend(newBlock.getElement())
         $(newBlock.getElement()).offset($(this.element).offset())
         $(newBlock.getElement()).css("position", "absolute")
-        // $(newBlock.getElement()).css("z-index", 100)
 
         return newBlock.getElement()
     } 

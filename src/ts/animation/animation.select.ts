@@ -10,12 +10,12 @@ import { ServerProcess } from '../process/server.process'
 import { UserProcess } from '../process/user.process'
 
 /**
- * Classe responsavel por implementar animações 
- * relacionadas ao select
- * @attribute isHashFound Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false
- * @attribute animHashNotFoundDelay Delay da animacao do hash nao encontrado na shared-pool
- * @attribute animHashFoundDelay Delay da anima
- * cao do hash encontrado na shared-pool
+ * AnimationSelect
+ * Classe responsavel por implementar animações relacionadas ao select
+ * @attribute {isHashFound} Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false
+ * @attribute {animHashNotFoundDelay} Delay da animacao do hash nao encontrado na shared-pool
+ * @attribute {animHashFoundDelay} Delay da animacao hash encontrado
+ * @attribute {animUserProcessDelay} Delay da animacao do envio de dados para  
  */
 export class AnimationSelect extends Animation{
     private isHashFound: boolean
@@ -28,43 +28,49 @@ export class AnimationSelect extends Animation{
         this.buildAnimSelect(isHashFound)       
     }
 
+    /**
+     * buildAnimSelect
+     * inicializando elementos da classe
+     * @param {isHashFound} argumento passado pelo parser sinalizando se o hash foi encontrado na shared pool ou não
+     */
     buildAnimSelect(isHashFound: boolean): void{
         this.isHashFound =  isHashFound
-        this.animUserProcessDelay = super.getDelay() * 15
+        this.animUserProcessDelay = super.getDelay() * 5
         this.animHashNotFoundDelay = super.getDelay() * 12
         this.animHashFoundDelay = super.getDelay() * 8
     }
 
+    /**
+     * start
+     * Inicio da animacao do select
+     */
     start(): void{        
         // setando estado de inicio da animacao
         let userProcess: UserProcess = Orasim.getUserProcess()
         Orasim.getAnimation().setAnimating(true)
         
         // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
-        // setando estado de termino da animacao
-        //new Promise<number>((resolve, reject) => {            
-        
-        //     setTimeout(() => { resolve(0) }, this.animUserProcessDelay)
-        // })
+        // setando estado de termino da animacao        
         userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
-        .then((res) => {
-            console.log('animateSelect')
-            //breakpoint
+        .then((res) => {                        
             return this.animateSelect()
         })
-        .then((res) => {
-            console.log('setAnimating(false)')
+        .then((res) => {            
             return Orasim.getAnimation().setAnimating(false)            
         })
     }
 
+    /**
+     * animateSelect
+     * Verificando se o hash na shared pool existe, selecionando animacao especifica
+     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+     */
     private animateSelect(): Promise<number> {
         return new Promise<number>((resolve, reject) => {            
                         
             let animationTime = 0
 
-            // rodar animacao especifica se o hash foi encontrado 
-            // na shared-pool ou não             
+            // rodar animacao especifica se o hash foi encontrado na shared-pool ou não             
             if (this.isHashFound) {
                 this.animateHashFound()
                 animationTime = this.animHashFoundDelay
@@ -77,6 +83,11 @@ export class AnimationSelect extends Animation{
         })
     }
 
+    /**
+     * animateHashNotFound
+     * Animacao de hash not found
+     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+     */
     animateHashNotFound(): Promise<number>{
         return new Promise<number>((resolve, reject) => {
             let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
@@ -100,18 +111,24 @@ export class AnimationSelect extends Animation{
             // animacao pegando dados do dbBufferCache
             // animacao enviando dados para userProcess
             let blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, this.animHashNotFoundDelay*0.25)
-            serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, this.animHashNotFoundDelay*0.25)
-            //super.sleep(5000)
+            serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, this.animHashNotFoundDelay*0.25)            
             serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, this.animHashNotFoundDelay*0.25)
             serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, this.animHashNotFoundDelay*0.25)
-            
-            setTimeout(() => {                     
+
+            //termino da animacao        
+            setTimeout(() => {
+                //removendo block do DOM                     
                 $(blockHtml).remove()
                 resolve(0) 
             }, this.animHashNotFoundDelay)
         })//end promise
     }    
 
+    /**
+     * animateHashFound
+     * Animacao de hash found
+     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+     */
     animateHashFound(): Promise<number>{
         return new Promise<number>((resolve, reject) => {
             let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
@@ -120,15 +137,7 @@ export class AnimationSelect extends Animation{
             let sqlConsole: SqlConsole = Orasim.getSqlConsole()
             let serverProcess: ServerProcess = Orasim.getServerProcess()
             let userProcess: UserProcess = Orasim.getUserProcess()
-
-            //hash found, server process getting data directly from dbBufferCache
-            //let memoryLocation = dbBufferCache.getMemoryLocation(hashIndex)
-            //console.log("hash encontrado")
-            
-            // console.log('hashIndex: '+memLocation)
-            // $('#server-process').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
-            // $('#db-buffer-cache').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
-            
+           
             // pegando localizacao do bloco 
             let memLocation = sharedPool.getLastMemoryLocation()
 
@@ -136,9 +145,10 @@ export class AnimationSelect extends Animation{
             // animacao enviando dados para userProcess
             let blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache( dbBufferCache, memLocation, this.animHashFoundDelay*0.5)
             serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, this.animHashFoundDelay*0.5)
-            //serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, super.getDelay())
             
+            //termino da animacao
             setTimeout(() => {
+                //removendo block do DOM
                 blockHtml.remove()
                 resolve(0) 
             }, this.animHashFoundDelay);

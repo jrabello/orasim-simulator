@@ -6,6 +6,7 @@ import { OracleDatabase } from './oracle-database/oracle.database'
 import { OracleInstance } from './oracle-instance/oracle.instance'
 
 /** 
+ * Main
  * Classe Responsável por guardar instâncias de todos os metodos 
  * que possuem caracteristica de SingleTon(uma unica e apenas uma instancia) 
  */

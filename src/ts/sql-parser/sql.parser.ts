@@ -6,11 +6,13 @@ import { Hash } from '../crypt/hash'
 import { SharedPool } from '../oracle-instance/shared.pool'
 
 /**
- * Classe Responsavel por fazer analise lexica e sintatica 
- * de uma query sql
+ * SqlParser
+ * Classe Responsavel por fazer analise lexica e sintatica de uma query sql
+ * @attribute {queryTokenId} identificador da query(SELECT, INSERT...)
+ * @attribute {isParsedSuccess} flag que indica se a query foi parseada com sucesso
+ * @attribute {query} string que armazena a query completa(SELECT * FROM...) 
  */
-export class SqlParser{
-    //query identifier token(SELECT, INSERT, CREATE, UPDATE)[always uppercase]
+export class SqlParser{    
     private queryTokenId: string
     private isParsedSuccess: boolean
     private query: string    
@@ -34,8 +36,10 @@ export class SqlParser{
     }
 
     /**
+     * parse
      * Metodo responsavel por fazer parsing da sql query
      * @param   query   string contendo sql query inserida no console
+     * @returns uma instancia da classe Animation(ou classes filhas) 
      */
     parse(query: string): Animation {
         //.addMsg(new SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() +' )'))
@@ -45,6 +49,8 @@ export class SqlParser{
 
         // verificando qual query foi digitada
         switch(lowerQuery){
+            case "connect":
+                return new AnimationNull()
             case "select":
                 let hash: Hash = new Crc32(lowerQuery)
                 let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
@@ -65,9 +71,7 @@ export class SqlParser{
             case "update":
                 return new AnimationNull()
             case "delete":
-                return new AnimationNull()
-            case "connect":
-                return new AnimationNull()
+                return new AnimationNull()            
         }
 
         // retorno default(nenhuma animacao sera executada)

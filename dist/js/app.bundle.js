@@ -52,6 +52,7 @@
 	var oracle_database_1 = __webpack_require__(14);
 	var oracle_instance_1 = __webpack_require__(17);
 	/**
+	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
 	 * que possuem caracteristica de SingleTon(uma unica e apenas uma instancia)
 	 */
@@ -98,17 +99,17 @@
 	var sql_parser_1 = __webpack_require__(2);
 	var sql_console_msg_error_1 = __webpack_require__(10);
 	/**
-	 *  Classe responsavel por modelar o console que o usuário
-	 *  usará para interagir com a aplicação
+	 * SqlConsole
+	 * Classe responsavel por modelar o console que o usuário usa para interagir com a aplicação
+	 * @attribute {sqlParser} instancia da classe sql-parser que sera responsavel por fazer parsing da query
 	 */
 	var SqlConsole = (function () {
 	    function SqlConsole() {
 	        this.sqlParser = new sql_parser_1.SqlParser();
 	    }
 	    /**
-	     *  Responsável por fazer tratamento de qualquer tecla pressionada
-	     *  no input do console
-	     *
+	     *  handleKeyPress
+	     *  Metodo responsável por receber qualquer tecla pressionada no input do console
 	     *  @param   event   evento passado pelo browser de tecla pressionada
 	     */
 	    SqlConsole.prototype.handleKeyPress = function (event) {
@@ -134,9 +135,9 @@
 	        }
 	    };
 	    /**
+	     *  addMsg
 	     *  Responsável por adicionar mensagens no console
-	     *
-	     *  @param   msg     Mensagem a ser adicionada no console
+	     *  @param   {msg}     Mensagem a ser adicionada no console
 	     */
 	    SqlConsole.prototype.addMsg = function (msg) {
 	        $("#console-msg-list-container").append(msg.getMsg());
@@ -155,8 +156,11 @@
 	var animation_select_1 = __webpack_require__(5);
 	var crc32_1 = __webpack_require__(8);
 	/**
-	 * Classe Responsavel por fazer analise lexica e sintatica
-	 * de uma query sql
+	 * SqlParser
+	 * Classe Responsavel por fazer analise lexica e sintatica de uma query sql
+	 * @attribute {queryTokenId} identificador da query(SELECT, INSERT...)
+	 * @attribute {isParsedSuccess} flag que indica se a query foi parseada com sucesso
+	 * @attribute {query} string que armazena a query completa(SELECT * FROM...)
 	 */
 	var SqlParser = (function () {
 	    function SqlParser() {
@@ -174,8 +178,10 @@
 	        return this.queryTokenId;
 	    };
 	    /**
+	     * parse
 	     * Metodo responsavel por fazer parsing da sql query
 	     * @param   query   string contendo sql query inserida no console
+	     * @returns uma instancia da classe Animation(ou classes filhas)
 	     */
 	    SqlParser.prototype.parse = function (query) {
 	        //.addMsg(new SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() +' )'))
@@ -183,6 +189,8 @@
 	        var lowerQuery = query.toLowerCase();
 	        // verificando qual query foi digitada
 	        switch (lowerQuery) {
+	            case "connect":
+	                return new animation_null_1.AnimationNull();
 	            case "select":
 	                var hash = new crc32_1.Crc32(lowerQuery);
 	                var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
@@ -199,8 +207,6 @@
 	            case "update":
 	                return new animation_null_1.AnimationNull();
 	            case "delete":
-	                return new animation_null_1.AnimationNull();
-	            case "connect":
 	                return new animation_null_1.AnimationNull();
 	        }
 	        // retorno default(nenhuma animacao sera executada)
@@ -236,6 +242,10 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var animation_1 = __webpack_require__(4);
+	/**
+	 * AnimationNull
+	 * Classe filha, responsavel por implementar especializacao de uma animacao vazia(seguindo null object pattern)
+	 */
 	var AnimationNull = (function (_super) {
 	    __extends(AnimationNull, _super);
 	    function AnimationNull() {
@@ -252,6 +262,7 @@
 
 	"use strict";
 	/**
+	 * Animation
 	 * Classe Base, responsavel por implementar animações
 	 * em comum com classes filhas
 	 * @property {delay} quantidade de milisegundos usado como base na animacao
@@ -259,26 +270,48 @@
 	 */
 	var Animation = (function () {
 	    function Animation() {
-	        //miliseconds
 	        this.delay = 1000;
 	        this.animating = false;
 	    }
+	    /**
+	     * start
+	     * Este metodo desta classe base não executa nenhuma animação
+	     */
 	    Animation.prototype.start = function () {
-	        //if here query was parsed successfully       
-	        // if (sqlParser.getQueryTokenId() == "SELECT") {
-	        //     this.selectAnimation(sqlParser)
-	        // }
 	    };
+	    /**
+	     * isAnimating
+	     * @returns retorna estado atual da animacao
+	     */
 	    Animation.prototype.isAnimating = function () {
 	        return this.animating;
 	    };
+	    /**
+	     *
+	     * setAnimating
+	     * Muda o estado atual da animacao
+	     * @param {flag} identifica o estado atual da animacao
+	     */
 	    Animation.prototype.setAnimating = function (flag) {
 	        this.animating = flag;
 	    };
+	    /**
+	     * getDelay
+	     * @returns retorna o delay atual(milisegundos)
+	     */
 	    Animation.prototype.getDelay = function () {
 	        return this.delay;
 	    };
-	    // animate source to dest within delay
+	    /**
+	     * moveTo
+	     * Este metodo move um objeto html para a posicao de outro
+	     * @param {sourceElem} objeto de origem (que será movido)
+	     * @param {destElem} objeto de destino (para onde será movido)
+	     * @param {duration} duracao da animacao(milisegundos)
+	     * @param {delayAfter} pausar a animacao no final da mesma, por determinado tempo(milisegundos)
+	     * @param {startCb} callback de inicializacao da animação
+	     * @param {completeCb} callback de finalizacao da animação
+	     */
 	    Animation.prototype.moveTo = function (sourceElem, destElem, duration, delayAfter, startCb, completeCb) {
 	        var x;
 	        var y;
@@ -306,12 +339,12 @@
 	var animation_1 = __webpack_require__(4);
 	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
-	 * Classe responsavel por implementar animações
-	 * relacionadas ao select
-	 * @attribute isHashFound Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false
-	 * @attribute animHashNotFoundDelay Delay da animacao do hash nao encontrado na shared-pool
-	 * @attribute animHashFoundDelay Delay da anima
-	 * cao do hash encontrado na shared-pool
+	 * AnimationSelect
+	 * Classe responsavel por implementar animações relacionadas ao select
+	 * @attribute {isHashFound} Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false
+	 * @attribute {animHashNotFoundDelay} Delay da animacao do hash nao encontrado na shared-pool
+	 * @attribute {animHashFoundDelay} Delay da animacao hash encontrado
+	 * @attribute {animUserProcessDelay} Delay da animacao do envio de dados para
 	 */
 	var AnimationSelect = (function (_super) {
 	    __extends(AnimationSelect, _super);
@@ -319,39 +352,46 @@
 	        _super.call(this);
 	        this.buildAnimSelect(isHashFound);
 	    }
+	    /**
+	     * buildAnimSelect
+	     * inicializando elementos da classe
+	     * @param {isHashFound} argumento passado pelo parser sinalizando se o hash foi encontrado na shared pool ou não
+	     */
 	    AnimationSelect.prototype.buildAnimSelect = function (isHashFound) {
 	        this.isHashFound = isHashFound;
-	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 15;
+	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 5;
 	        this.animHashNotFoundDelay = _super.prototype.getDelay.call(this) * 12;
 	        this.animHashFoundDelay = _super.prototype.getDelay.call(this) * 8;
 	    };
+	    /**
+	     * start
+	     * Inicio da animacao do select
+	     */
 	    AnimationSelect.prototype.start = function () {
 	        var _this = this;
 	        // setando estado de inicio da animacao
 	        var userProcess = Orasim.getUserProcess();
 	        Orasim.getAnimation().setAnimating(true);
 	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
-	        // setando estado de termino da animacao
-	        //new Promise<number>((resolve, reject) => {            
-	        //     setTimeout(() => { resolve(0) }, this.animUserProcessDelay)
-	        // })
+	        // setando estado de termino da animacao        
 	        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
 	            .then(function (res) {
-	            console.log('animateSelect');
-	            //breakpoint
 	            return _this.animateSelect();
 	        })
 	            .then(function (res) {
-	            console.log('setAnimating(false)');
 	            return Orasim.getAnimation().setAnimating(false);
 	        });
 	    };
+	    /**
+	     * animateSelect
+	     * Verificando se o hash na shared pool existe, selecionando animacao especifica
+	     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+	     */
 	    AnimationSelect.prototype.animateSelect = function () {
 	        var _this = this;
 	        return new Promise(function (resolve, reject) {
 	            var animationTime = 0;
-	            // rodar animacao especifica se o hash foi encontrado 
-	            // na shared-pool ou não             
+	            // rodar animacao especifica se o hash foi encontrado na shared-pool ou não             
 	            if (_this.isHashFound) {
 	                _this.animateHashFound();
 	                animationTime = _this.animHashFoundDelay;
@@ -363,6 +403,11 @@
 	            setTimeout(function () { resolve(0); }, animationTime);
 	        });
 	    };
+	    /**
+	     * animateHashNotFound
+	     * Animacao de hash not found
+	     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+	     */
 	    AnimationSelect.prototype.animateHashNotFound = function () {
 	        var _this = this;
 	        return new Promise(function (resolve, reject) {
@@ -385,15 +430,21 @@
 	            // animacao enviando dados para userProcess
 	            var blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, _this.animHashNotFoundDelay * 0.25);
 	            serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, _this.animHashNotFoundDelay * 0.25);
-	            //super.sleep(5000)
 	            serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, _this.animHashNotFoundDelay * 0.25);
 	            serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, _this.animHashNotFoundDelay * 0.25);
+	            //termino da animacao        
 	            setTimeout(function () {
+	                //removendo block do DOM                     
 	                $(blockHtml).remove();
 	                resolve(0);
 	            }, _this.animHashNotFoundDelay);
 	        }); //end promise
 	    };
+	    /**
+	     * animateHashFound
+	     * Animacao de hash found
+	     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+	     */
 	    AnimationSelect.prototype.animateHashFound = function () {
 	        var _this = this;
 	        return new Promise(function (resolve, reject) {
@@ -403,20 +454,15 @@
 	            var sqlConsole = Orasim.getSqlConsole();
 	            var serverProcess = Orasim.getServerProcess();
 	            var userProcess = Orasim.getUserProcess();
-	            //hash found, server process getting data directly from dbBufferCache
-	            //let memoryLocation = dbBufferCache.getMemoryLocation(hashIndex)
-	            //console.log("hash encontrado")
-	            // console.log('hashIndex: '+memLocation)
-	            // $('#server-process').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
-	            // $('#db-buffer-cache').repeat().fadeTo(super.getDelay(), 0.1).fadeTo(super.getDelay(), 1).until(2)
 	            // pegando localizacao do bloco 
 	            var memLocation = sharedPool.getLastMemoryLocation();
 	            // animacao pegando dados do dbBufferCache
 	            // animacao enviando dados para userProcess
 	            var blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocation, _this.animHashFoundDelay * 0.5);
 	            serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, _this.animHashFoundDelay * 0.5);
-	            //serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, super.getDelay())
+	            //termino da animacao
 	            setTimeout(function () {
+	                //removendo block do DOM
 	                blockHtml.remove();
 	                resolve(0);
 	            }, _this.animHashFoundDelay);
@@ -439,8 +485,8 @@
 	};
 	var sql_console_message_1 = __webpack_require__(7);
 	/**
-	 * Classe responsavel por especializar mensagens de informacao
-	 * da aplicacao
+	 * SqlConsoleMsgInfo
+	 * Classe responsavel por especializar mensagens de informacao da aplicacao
 	 */
 	var SqlConsoleMsgInfo = (function (_super) {
 	    __extends(SqlConsoleMsgInfo, _super);
@@ -458,14 +504,15 @@
 
 	"use strict";
 	/**
-	 * Classe Base, responsavel por modelar as mensagens que serão inseridas
-	 * no console da aplicação
+	 * SqlConsoleMessage
+	 * Classe Base, responsavel por modelar as mensagens que serão inseridas no console da aplicação
 	 */
 	var SqlConsoleMessage = (function () {
 	    function SqlConsoleMessage(type, msg) {
 	        this.buildHtmlElement(type, msg);
 	    }
 	    /**
+	     * buildHtmlElement
 	     * Metodo responsavel por criar elemento html que sera inserido no console
 	     * @param   type    tipo da mensagem(info ou error)
 	     * @param   msg     mensagem que sera impressa no console
@@ -493,6 +540,7 @@
 	};
 	var hash_1 = __webpack_require__(9);
 	/**
+	 * Crc32
 	 * Classe responsavel por especializar um hash modelando o crc32
 	 */
 	var Crc32 = (function (_super) {
@@ -502,17 +550,24 @@
 	        this.buildCrc(data);
 	    }
 	    /**
+	     * buildCrc
 	     * Metodo responsavel por construir o hash crc32
 	     *
-	     * @param  data     dados que serão utilizados pra gerar o hash
+	     * @param  {data}     dados que serão utilizados pra gerar o hash
 	     */
 	    Crc32.prototype.buildCrc = function (data) {
 	        var uintCrc = (new Uint32Array([this.crc32Str(data)]))[0];
 	        _super.prototype.setHash.call(this, uintCrc);
 	    };
-	    // TAKEN FROM
-	    // modified version from from http://www.webtoolkit.info/    
+	    /**
+	     * Utf8Encode
+	     * Metodo utilizado pelo crc32Str para codificar a string em UTF8
+	     * @param {data} dados que serão utilizados para gerar a string em utf8
+	     * @returns string em utf8
+	     */
 	    Crc32.prototype.Utf8Encode = function (data) {
+	        // TAKEN FROM
+	        // modified version from from http://www.webtoolkit.info/
 	        data = data.replace(/\r\n/g, "\n");
 	        var utftext = "";
 	        for (var n = 0; n < data.length; n++) {
@@ -532,9 +587,14 @@
 	        }
 	        return utftext;
 	    };
-	    // TAKEN FROM
-	    // modified version from from http://www.webtoolkit.info/    
+	    /**
+	     * crc32Str
+	     * Metodo utilizado para gerar um crc32 checksum
+	     * @param {data} dados que serão utilizados pra gerar o hash
+	     */
 	    Crc32.prototype.crc32Str = function (str) {
+	        // TAKEN FROM
+	        // modified version from from http://www.webtoolkit.info/  
 	        str = this.Utf8Encode(str);
 	        var table = "00000000 77073096 EE0E612C 990951BA 076DC419 706AF48F E963A535 9E6495A3 0EDB8832 79DCB8A4 E0D5E91E 97D2D988 09B64C2B 7EB17CBD E7B82D07 90BF1D91 1DB71064 6AB020F2 F3B97148 84BE41DE 1ADAD47D 6DDDE4EB F4D4B551 83D385C7 136C9856 646BA8C0 FD62F97A 8A65C9EC 14015C4F 63066CD9 FA0F3D63 8D080DF5 3B6E20C8 4C69105E D56041E4 A2677172 3C03E4D1 4B04D447 D20D85FD A50AB56B 35B5A8FA 42B2986C DBBBC9D6 ACBCF940 32D86CE3 45DF5C75 DCD60DCF ABD13D59 26D930AC 51DE003A C8D75180 BFD06116 21B4F4B5 56B3C423 CFBA9599 B8BDA50F 2802B89E 5F058808 C60CD9B2 B10BE924 2F6F7C87 58684C11 C1611DAB B6662D3D 76DC4190 01DB7106 98D220BC EFD5102A 71B18589 06B6B51F 9FBFE4A5 E8B8D433 7807C9A2 0F00F934 9609A88E E10E9818 7F6A0DBB 086D3D2D 91646C97 E6635C01 6B6B51F4 1C6C6162 856530D8 F262004E 6C0695ED 1B01A57B 8208F4C1 F50FC457 65B0D9C6 12B7E950 8BBEB8EA FCB9887C 62DD1DDF 15DA2D49 8CD37CF3 FBD44C65 4DB26158 3AB551CE A3BC0074 D4BB30E2 4ADFA541 3DD895D7 A4D1C46D D3D6F4FB 4369E96A 346ED9FC AD678846 DA60B8D0 44042D73 33031DE5 AA0A4C5F DD0D7CC9 5005713C 270241AA BE0B1010 C90C2086 5768B525 206F85B3 B966D409 CE61E49F 5EDEF90E 29D9C998 B0D09822 C7D7A8B4 59B33D17 2EB40D81 B7BD5C3B C0BA6CAD EDB88320 9ABFB3B6 03B6E20C 74B1D29A EAD54739 9DD277AF 04DB2615 73DC1683 E3630B12 94643B84 0D6D6A3E 7A6A5AA8 E40ECF0B 9309FF9D 0A00AE27 7D079EB1 F00F9344 8708A3D2 1E01F268 6906C2FE F762575D 806567CB 196C3671 6E6B06E7 FED41B76 89D32BE0 10DA7A5A 67DD4ACC F9B9DF6F 8EBEEFF9 17B7BE43 60B08ED5 D6D6A3E8 A1D1937E 38D8C2C4 4FDFF252 D1BB67F1 A6BC5767 3FB506DD 48B2364B D80D2BDA AF0A1B4C 36034AF6 41047A60 DF60EFC3 A867DF55 316E8EEF 4669BE79 CB61B38C BC66831A 256FD2A0 5268E236 CC0C7795 BB0B4703 220216B9 5505262F C5BA3BBE B2BD0B28 2BB45A92 5CB36A04 C2D7FFA7 B5D0CF31 2CD99E8B 5BDEAE1D 9B64C2B0 EC63F226 756AA39C 026D930A 9C0906A9 EB0E363F 72076785 05005713 95BF4A82 E2B87A14 7BB12BAE 0CB61B38 92D28E9B E5D5BE0D 7CDCEFB7 0BDBDF21 86D3D2D4 F1D4E242 68DDB3F8 1FDA836E 81BE16CD F6B9265B 6FB077E1 18B74777 88085AE6 FF0F6A70 66063BCA 11010B5C 8F659EFF F862AE69 616BFFD3 166CCF45 A00AE278 D70DD2EE 4E048354 3903B3C2 A7672661 D06016F7 4969474D 3E6E77DB AED16A4A D9D65ADC 40DF0B66 37D83BF0 A9BCAE53 DEBB9EC5 47B2CF7F 30B5FFE9 BDBDF21C CABAC28A 53B39330 24B4A3A6 BAD03605 CDD70693 54DE5729 23D967BF B3667A2E C4614AB8 5D681B02 2A6F2B94 B40BBE37 C30C8EA1 5A05DF1B 2D02EF8D";
 	        var crc = 0;
@@ -559,12 +619,17 @@
 
 	"use strict";
 	/**
-	 * Class Base, responsavel por armazenar e definir metodos relacionados
-	 * a geracao de hashs
+	 * Hash
+	 * Class Base, responsavel por armazenar e definir metodos relacionados a geracao de hashs
+	 * @attribute {hash} hash armazenado na forma de um numero
 	 */
 	var Hash = (function () {
 	    function Hash() {
 	    }
+	    /**
+	     * getHexStrHash
+	     * @returns retorna representacao em hexadecimal do hash
+	     */
 	    Hash.prototype.getHexStrHash = function () {
 	        return this.hash.toString(16);
 	    };
@@ -591,6 +656,7 @@
 	};
 	var sql_console_message_1 = __webpack_require__(7);
 	/**
+	 * SqlConsoleMsgError
 	 * Classe responsavel por especializar mensagens de erro
 	 * do console da aplicacao
 	 */
@@ -609,6 +675,11 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	/**
+	 * ServerProcess
+	 * Classe responsavel por modelar o objeto ServerProcess da animacao
+	 * @attribute {element} objeto html que referencia o elemento shared-pool
+	 */
 	var ServerProcess = (function () {
 	    function ServerProcess() {
 	        this.element = $("#server-process")[0];
@@ -616,9 +687,21 @@
 	    ServerProcess.prototype.getElement = function () {
 	        return this.element;
 	    };
+	    /**
+	     * getElementOffset
+	     * Metodo responsavel por retornar posicao relativa do elemento ao documento
+	     * @returns coordenada jquery do elemento
+	     */
 	    ServerProcess.prototype.getElementOffset = function () {
 	        return $(this.element).offset();
 	    };
+	    /**
+	     * animateGetBlockFromDataFiles
+	     * Metodo responsavel por animar os blocks que o server-process pega do data-files
+	     * @param {dataFiles} objeto html que representa o DataFiles
+	     * @param {delay} tempo de animacao
+	     * @returns retorna o novo bloco criado(htmlElement) dentro do datafiles
+	     */
 	    ServerProcess.prototype.animateGetBlockFromDataFiles = function (dataFiles, delay) {
 	        var blockHtml = dataFiles.getNewBlockHtml();
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
@@ -628,6 +711,14 @@
 	        }, function () { });
 	        return blockHtml;
 	    };
+	    /**
+	     * animateStoreBlockInDbBufferCache
+	     * Metodo responsavel por animar o bloco sendo salvo no db-buffer-cache
+	     * @param {blockHtml} objeto html que representa o bloco animado
+	     * @param {dbBufferCache} objeto html que representa o db-buffer-cache
+	     * @param {memLocation} local de memoria de destino(onde o bloco sera salvo)
+	     * @param {delay} tempo de animacao
+	     */
 	    ServerProcess.prototype.animateStoreBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
 	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocation].getElement(), delay, delay / 6, function () {
 	            // no inicio da animacao piscar server-process e db-buffer-cache 
@@ -638,6 +729,16 @@
 	            dbBufferCache.setMemoryLocationUsed(memLocation);
 	        });
 	    };
+	    /**
+	     * animateGetNewBlockFromDbBufferCache
+	     * Metodo responsavel por animar o server-process extraindo um NOVO bloco do db-buffer-cache,
+	     * este novo bloco se faz necessario quando é preciso animar qualquer bloco que ja está dentro
+	     * do db-buffer-cache
+	     * @param {dbBufferCache} objeto html que representa o db-buffer-cache
+	     * @param {memLocation} local de memoria de destino(onde o bloco sera salvo)
+	     * @param {delay} tempo de animacao
+	     * @returns retorna novo bloco na posicao de memoria passada como argumento
+	     */
 	    ServerProcess.prototype.animateGetNewBlockFromDbBufferCache = function (dbBufferCache, memLocation, delay) {
 	        var blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation);
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
@@ -646,12 +747,27 @@
 	        }, function () { });
 	        return blockHtml;
 	    };
+	    /**
+	     * animateGetBlockFromDbBufferCache
+	     * Metodo responsavel por animar o server-process extraindo um bloco JA EXISTENTE(criado em outro lugar) do db-buffer-cache
+	     * @param {blockHtml} objeto html que representa o bloco animado
+	     * @param {dbBufferCache} objeto html que representa o db-buffer-cache
+	     * @param {memLocation} local de memoria de destino(onde o bloco sera salvo)
+	     * @param {delay} duracao de animacao
+	     */
 	    ServerProcess.prototype.animateGetBlockFromDbBufferCache = function (blockHtml, dbBufferCache, delay) {
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	        }, function () { });
 	    };
+	    /**
+	     * animateSendBlockToUserProcess
+	     * Metodo responsavel por enviar bloco ao user-process
+	     * @param {blockHtml} objeto html que representa o bloco animado
+	     * @param {userProcess} objeto html que representa o user-process
+	     * @param {delay} duracao da animacao
+	     */
 	    ServerProcess.prototype.animateSendBlockToUserProcess = function (blockHtml, userProcess, delay) {
 	        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay, 0, function () {
 	            //no inicio da animacao, piscar user-process e server-process     
@@ -673,6 +789,11 @@
 
 	"use strict";
 	var arrow_1 = __webpack_require__(13);
+	/**
+	 * UserProcess
+	 * Classe responsavel por modelar o objeto UserProcess da animacao
+	 * @attribute {element} objeto html que referencia o elemento user-process
+	 */
 	var UserProcess = (function () {
 	    function UserProcess() {
 	        this.element = $("#user-process")[0];
@@ -680,17 +801,19 @@
 	    UserProcess.prototype.getElement = function () {
 	        return this.element;
 	    };
+	    /**
+	     * animateSendDataToServerProcess
+	     * Metodo responsavel por animar o envio de dados ao server-process
+	     * @param {delay} duracao da animacao
+	     * @returns uma promise retornada logo apos o tempo de animacao
+	     */
 	    UserProcess.prototype.animateSendDataToServerProcess = function (delay) {
-	        //delay = 5000
-	        //$("#user-process").animate({},{queue: "anim", start: () =>{
 	        return new Promise(function (resolve, reject) {
 	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
 	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
 	                    new arrow_1.Arrow('right', 240, 80, 80, delay * 0.40).moveToRight(function () {
 	                        $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
-	                            $("#server-process").fadeTo(delay * 0.15, 1, function () {
-	                                console.log('done');
-	                            });
+	                            $("#server-process").fadeTo(delay * 0.15, 1);
 	                        });
 	                    });
 	                });
@@ -699,35 +822,6 @@
 	                resolve(0);
 	            }, delay);
 	        });
-	        //}})
-	        //breakpoint
-	        // $("#user-process").animate({
-	        // },{
-	        //     duration: delay,
-	        //     start: () => {
-	        //         console.log("start")
-	        //         // $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-	        //         // $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-	        //     },
-	        //     complete:  () => {
-	        //         console.log("complete")
-	        //         //$('.arrow.from-userp-2-serverp').show()
-	        //         // $('#server-process').show()
-	        //         // $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1).wait().hide()
-	        //         // $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-	        //         new Arrow('right', 45, 45, 120, delay).moveToRight()                    
-	        //     }
-	        // })
-	        // Orasim.getAnimation().moveTo($(".main-title")[0], $(".main-title")[0], delay, 0, () => {
-	        //     //no inicio da animacao, piscar user-process, server-process, e seta           
-	        //     $('.arrow.from-userp-2-serverp').show()
-	        //     $('#server-process').show()
-	        //     $('.arrow.from-userp-2-serverp').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1).wait().hide()
-	        //     $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-	        //     $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-	        //     $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-	        // }, 
-	        // () => {})
 	    };
 	    return UserProcess;
 	}());
@@ -739,10 +833,24 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	/**
+	 * Arrow
+	 * Classe responsavel por implementar animações relacionadas às setas
+	 * @attribute {element} objeto html do arrow
+	 * @attribute {animContainer} animation container(elemento ja existente usado como offset para animacao)
+	 * @attribute {size} tamanho da arrow
+	 * @attribute {top} posicao analoga ao eixo y(posicao inicial)
+	 * @attribute {left} posicao analoga ao eixo x(posicao inicial)
+	 * @attribute {duration} duracao da animacao
+	 */
 	var Arrow = (function () {
 	    function Arrow(type, top, left, size, duration) {
 	        this.buildArrow(type, top, left, size, duration);
 	    }
+	    /**
+	     * buildArrow
+	     * Inicializando os elementos da animacao
+	     */
 	    Arrow.prototype.buildArrow = function (type, top, left, size, duration) {
 	        this.element = $("<div class='" + type + "-arrow'>")[0];
 	        this.animContainer = $("#animation-container")[0];
@@ -751,6 +859,11 @@
 	        this.left = left;
 	        this.duration = duration;
 	    };
+	    /**
+	     * moveToRight
+	     * Metodo responsavel por mover a arrow para a direita, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
 	    Arrow.prototype.moveToRight = function (callback) {
 	        // Adicionando seta em seu elemento pai        
 	        var $arrow = $(this.element).css({
@@ -812,23 +925,28 @@
 
 	"use strict";
 	var block_1 = __webpack_require__(16);
+	/**
+	 * DataFiles
+	 * Classe responsavel por modelar o objeto Data-Files do oracle database
+	 * @attribute {blocks} array de objetos que guarda os blocos do data-files
+	 * @attribute {element} objeto html que referencia o elemento data-files
+	 */
 	var DataFiles = (function () {
 	    function DataFiles() {
-	        this.block = new block_1.Block();
+	        this.blocks = new Array();
 	        this.element = $("#data-files")[0];
-	        //$(this.element).append(this.block.getElement())
 	    }
-	    // returns existing block
-	    DataFiles.prototype.getBlock = function () {
-	        return this.block.getElement();
-	    };
-	    // returns a new block, only for animation purposes
+	    /**
+	     * getNewBlockHtml
+	     * Metodo responsavel por retornar novo objeto html que sera utilizado para animacao
+	     * @returns retorna objeto html(Block) para ser animado
+	     */
 	    DataFiles.prototype.getNewBlockHtml = function () {
 	        var newBlock = new block_1.Block();
+	        //criando block dentro do data-files        
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.element).offset());
 	        $(newBlock.getElement()).css("position", "absolute");
-	        // $(newBlock.getElement()).css("z-index", 100)
 	        return newBlock.getElement();
 	    };
 	    return DataFiles;
@@ -841,15 +959,26 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	/**
+	 * Block
+	 * Classe Responsavel modelar um bloco
+	 * @attribute {size} define o tamanho de um bloco
+	 * @attribute {element} objeto html que referencia o elemento user-process
+	 * @attribute {isUsed} flag que determina se o bloco esta em uso
+	 */
 	var Block = (function () {
 	    function Block() {
 	        this.element = $("<div class=\"cache-box\"></div>")[0];
-	        //this.element = $(`<div class="block"></div>`)[0]
 	        this.size = 4096;
-	        this.used = false;
+	        this.isUsed = false;
 	    }
+	    /**
+	     * setUsed
+	     * Metodo responsavel pela animacao de marcar o bloco como usado no db-buffer-cache
+	     * @param {flag} setando isUsed como usada ou livre
+	     */
 	    Block.prototype.setUsed = function (flag) {
-	        this.used = flag;
+	        this.isUsed = flag;
 	        $(this.element).css("background-color", "#f00");
 	    };
 	    Block.prototype.getElement = function () {
@@ -907,6 +1036,13 @@
 
 	"use strict";
 	var block_1 = __webpack_require__(16);
+	/**
+	 * DbBufferCache
+	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
+	 * @attribute {numBlocks} numero de blocks default que irao preencher o DbBufferCache
+	 * @attribute {element} objeto html que referencia o elemento db-buffer-cache
+	 * @attribute {blocks} array de objetos que guarda os blocos do data-files
+	 */
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
 	        this.numBlocks = 30;
@@ -914,9 +1050,10 @@
 	        this.blocks = new Array();
 	        this.initBlocks();
 	    }
-	    DbBufferCache.prototype.getBlocks = function () {
-	        return this.blocks;
-	    };
+	    /**
+	     * initBlocks
+	     * Metodo responsavel por adicionar dinamicamente os blocos dentro do db-buffer-cache
+	     */
 	    DbBufferCache.prototype.initBlocks = function () {
 	        for (var i = 0; i < this.numBlocks; i++) {
 	            var block = new block_1.Block();
@@ -924,34 +1061,48 @@
 	            $('#db-buffer-cache-container').append(block.getElement());
 	        }
 	    };
+	    /**
+	     * setMemoryLocationUsed
+	     * Metodo responsavel por marcar uma area de memoria como utilizada
+	     * @param {memLocation} numero de id da localizacao da memoria
+	     */
 	    DbBufferCache.prototype.setMemoryLocationUsed = function (memLocation) {
 	        this.blocks[memLocation].setUsed(true);
 	    };
-	    // getMemoryLocation(index: number): number {
-	    //     return 0
-	    // }
+	    /**
+	     * getNewBlockHtml
+	     * Metodo responsavel por retornar novo objeto html que sera utilizado para animacao
+	     * @returns retorna objeto html(Block) para ser animado
+	     */
 	    DbBufferCache.prototype.getNewBlockHtml = function () {
 	        var newBlock = new block_1.Block();
-	        //$(newBlock.getElement()).css("top", "0px") 
-	        //$(newBlock.getElement()).css('left', "0px")        
+	        //adicionando elemento no DOM dinamicamente        
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.element).offset());
 	        $(newBlock.getElement()).css("position", "absolute");
-	        $(newBlock.getElement()).css("z-index", 100);
+	        //$(newBlock.getElement()).css("z-index", 100)
 	        return newBlock.getElement();
 	    };
+	    /**
+	     * getNewBlockHtmlAt
+	     * Metodo responsavel por retornar novo objeto html que sera utilizado na animacao numa posicao de memoria especifica
+	     * @param {memLocation} numero de id da localizacao da memoria
+	     * @returns retorna objeto html(Block) para ser animado
+	     */
 	    DbBufferCache.prototype.getNewBlockHtmlAt = function (memLocation) {
 	        var newBlock = new block_1.Block();
-	        //$(newBlock.getElement()).css("top", "0px") 
-	        //$(newBlock.getElement()).css('left', "0px")        
+	        //adicionando elemento no DOM dinamicamente        
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset());
 	        $(newBlock.getElement()).css("position", "absolute");
-	        $(newBlock.getElement()).css("z-index", 100);
+	        //$(newBlock.getElement()).css("z-index", 100)
 	        return newBlock.getElement();
 	    };
 	    DbBufferCache.prototype.getElement = function () {
 	        return this.element;
+	    };
+	    DbBufferCache.prototype.getBlocks = function () {
+	        return this.blocks;
 	    };
 	    return DbBufferCache;
 	}());
@@ -963,20 +1114,42 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	/**
+	 * SharedPool
+	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
+	 * @attribute {lastHashInserted} ultimo hash inserido na hash collection
+	 * @attribute {hashCollection} array de hashes
+	 * @attribute {hashElement} objeto html que referencia o elemento hash
+	 * @attribute {element} objeto html que referencia o elemento shared-pool
+	 */
 	var SharedPool = (function () {
 	    function SharedPool() {
 	        this.lastHashInserted = null;
 	        this.hashCollection = [];
-	        this.element = "<li class=\"sql-hash\"></li>";
+	        this.element = $("#shared-pool")[0];
+	        this.hashElement = $("<li class=\"sql-hash\"></li>")[0];
 	    }
+	    /**
+	     * animateAddHash
+	     * Metodo responsavel por animar a inserção hash no hashContainer, dentro da shared-pool
+	     */
 	    SharedPool.prototype.animateAddHash = function () {
-	        $("#hash-ul-container").append($(this.element).append(this.lastHashInserted.getHexStrHash())[0].outerHTML);
+	        $("#hash-ul-container").append($(this.hashElement).append(this.lastHashInserted.getHexStrHash())[0].outerHTML);
 	    };
+	    /**
+	     * addHash
+	     * Adiciona hash na shared-pool
+	     * @param {hash} hash que sera adicionado na collection da shared-pool
+	     */
 	    SharedPool.prototype.addHash = function (hash) {
 	        this.lastHashInserted = hash;
 	        this.hashCollection.push(hash);
 	    };
-	    //getting index of some hash in collection
+	    /**
+	     * getMemoryLocation
+	     * @param {hs} hash que sera usado para busca de local da memoria
+	     * @returns local de memoria onde os dados estao armazenados
+	     */
 	    SharedPool.prototype.getMemoryLocation = function (hs) {
 	        var i = 0;
 	        for (var _i = 0, _a = this.hashCollection; _i < _a.length; _i++) {
@@ -987,13 +1160,25 @@
 	        }
 	        return -1;
 	    };
+	    /**
+	     * getLastMemoryLocation
+	     * @returns local de memoria do ultimo hash inserido
+	     */
 	    SharedPool.prototype.getLastMemoryLocation = function () {
 	        return this.getMemoryLocation(this.lastHashInserted);
 	    };
+	    /**
+	     * findLastHash
+	     * @returns se o ultimo hash inserido ainda se encontra na collection
+	     */
 	    SharedPool.prototype.findLastHash = function () {
 	        return this.findHash(this.lastHashInserted);
 	    };
-	    //finding hash in collection
+	    /**
+	     * findHash
+	     * @param {hs} hash que sera usado na busca
+	     * @returns se o hash passado como parametro foi encontrado ou nao
+	     */
 	    SharedPool.prototype.findHash = function (hs) {
 	        //searching for hash in collection
 	        for (var _i = 0, _a = this.hashCollection; _i < _a.length; _i++) {

@@ -5,8 +5,9 @@ import { SqlConsoleMsgInfo } from './sql.console.msg.info'
 import { SqlConsoleMsgError } from './sql.console.msg.error'
 
 /**
- *  Classe responsavel por modelar o console que o usuário
- *  usará para interagir com a aplicação  
+ * SqlConsole
+ * Classe responsavel por modelar o console que o usuário usa para interagir com a aplicação
+ * @attribute {sqlParser} instancia da classe sql-parser que sera responsavel por fazer parsing da query  
  */
 export class SqlConsole {
     private sqlParser: SqlParser
@@ -16,9 +17,8 @@ export class SqlConsole {
     }
 
     /**
-     *  Responsável por fazer tratamento de qualquer tecla pressionada 
-     *  no input do console 
-     * 
+     *  handleKeyPress
+     *  Metodo responsável por receber qualquer tecla pressionada no input do console 
      *  @param   event   evento passado pelo browser de tecla pressionada 
      */
     handleKeyPress(event: KeyboardEvent): void {
@@ -31,7 +31,6 @@ export class SqlConsole {
                 this.addMsg(new SqlConsoleMsgError('Animação em andamento!'))
                 return
             }
-            
             
             // pegando valor digitado no input do console
             // fazendo parsing da query
@@ -51,9 +50,9 @@ export class SqlConsole {
     }
 
     /**
+     *  addMsg
      *  Responsável por adicionar mensagens no console
-     * 
-     *  @param   msg     Mensagem a ser adicionada no console      
+     *  @param   {msg}     Mensagem a ser adicionada no console      
      */
     addMsg(msg: SqlConsoleMessage): void {
         $("#console-msg-list-container").append(msg.getMsg())
