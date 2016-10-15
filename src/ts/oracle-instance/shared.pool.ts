@@ -3,19 +3,16 @@ import { Hash } from '../crypt/hash'
 /**
  * SharedPool
  * Classe responsavel por modelar o objeto SharedPool do oracle instance
- * @attribute {lastHashInserted} ultimo hash inserido na hash collection 
- * @attribute {hashCollection} array de hashes 
+ * @attribute {lastHashInserted} ultimo hash inserido na hash collection  
  * @attribute {hashElement} objeto html que referencia o elemento hash
  * @attribute {element} objeto html que referencia o elemento shared-pool  
  */
 export class SharedPool {    
-    private hashCollection: Hash[]
-    private lastHashInserted: Hash
+    private hashCollection: Hash[]    
     private hashElement: HTMLElement
     private element: HTMLElement
 
-    constructor() {
-        this.lastHashInserted = null
+    constructor() {        
         this.hashCollection = []
         this.element = $(`#shared-pool`)[0]
         this.hashElement = $(`<li class="sql-hash"></li>`)[0]        
@@ -26,8 +23,9 @@ export class SharedPool {
      * Metodo responsavel por animar a inserção hash no hashContainer, dentro da shared-pool  
      */
     animateAddHash(): void{        
+        //neste caso estamos apenas dando append, nao existe animacao ainda
         $("#hash-ul-container").append(
-            $(this.hashElement).append(this.lastHashInserted.getHexStrHash())[0].outerHTML)
+            $(this.hashElement).append(this.hashCollection.slice(-1)[0].getHexStrHash())[0].outerHTML)
     }
 
     /**
@@ -59,18 +57,11 @@ export class SharedPool {
 
     /**
      * getLastMemoryLocation
+     * Metodo responsavel por retornar local de memoria do ultimo hash inserido
      * @returns local de memoria do ultimo hash inserido 
      */
     getLastMemoryLocation(): number{
-        return this.getMemoryLocation(this.lastHashInserted)
-    }
-
-    /**
-     * findLastHash
-     * @returns se o ultimo hash inserido ainda se encontra na collection 
-     */
-    findLastHash(): boolean{
-        return this.findHash(this.lastHashInserted)
+        return this.getMemoryLocation(this.hashCollection.slice(-1)[0])
     }
 
     /**
