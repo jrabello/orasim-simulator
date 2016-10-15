@@ -73,9 +73,20 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Classe Responsavel por fazer analise lexica e sintatica
-						de uma query sql</p>
+						<p>SqlParser
+						Classe Responsavel por fazer analise lexica e sintatica de uma query sql</p>
 					</div>
+					<dl class="tsd-comment-tags">
+						<dt>attribute</dt>
+						<dd><p>{queryTokenId} identificador da query(SELECT, INSERT...)</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{isParsedSuccess} flag que indica se a query foi parseada com sucesso</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{query} string que armazena a query completa(SELECT * FROM...)</p>
+						</dd>
+					</dl>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -128,7 +139,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L15">sql-parser/sql.parser.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L18">sql-parser/sql.parser.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_sql_parser_sql_parser_.sqlparser.html" class="tsd-signature-type">SqlParser</a></h4>
@@ -144,7 +155,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Parsed<wbr>Success<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L14">sql-parser/sql.parser.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L17">sql-parser/sql.parser.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -154,7 +165,7 @@
 					<div class="tsd-signature tsd-kind-icon">query<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L15">sql-parser/sql.parser.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L18">sql-parser/sql.parser.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -164,7 +175,7 @@
 					<div class="tsd-signature tsd-kind-icon">query<wbr>Token<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L13">sql-parser/sql.parser.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L16">sql-parser/sql.parser.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,7 +192,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L27">sql-parser/sql.parser.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L30">sql-parser/sql.parser.ts:30</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -198,7 +209,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L31">sql-parser/sql.parser.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L34">sql-parser/sql.parser.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -215,12 +226,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L39">sql-parser/sql.parser.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L44">sql-parser/sql.parser.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Metodo responsavel por fazer parsing da sql query</p>
+									<p>parse
+									Metodo responsavel por fazer parsing da sql query</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -233,6 +245,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_animation_animation_.animation.html" class="tsd-signature-type">Animation</a></h4>
+							<p>uma instancia da classe Animation(ou classes filhas)</p>
 						</li>
 					</ul>
 				</section>
@@ -246,7 +259,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/sql-parser/sql.parser.ts#L23">sql-parser/sql.parser.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/sql-parser/sql.parser.ts#L26">sql-parser/sql.parser.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -265,7 +278,13 @@
 						<a href="../modules/_animation_animation_.html">"animation/animation"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_animation_null_.html">"animation/animation.null"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_animation_animation_select_.html">"animation/animation.select"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_arrow_.html">"animation/arrow"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_block_.html">"block"</a>

@@ -70,6 +70,28 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>SharedPool
+						Classe responsavel por modelar o objeto SharedPool do oracle instance</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>attribute</dt>
+						<dd><p>{lastHashInserted} ultimo hash inserido na hash collection</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{hashCollection} array de hashes</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{hashElement} objeto html que referencia o elemento hash</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{element} objeto html que referencia o elemento shared-pool</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -93,6 +115,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_oracle_instance_shared_pool_.sharedpool.html#element" class="tsd-kind-icon">element</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_oracle_instance_shared_pool_.sharedpool.html#hashcollection" class="tsd-kind-icon">hash<wbr>Collection</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_oracle_instance_shared_pool_.sharedpool.html#hashelement" class="tsd-kind-icon">hash<wbr>Element</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_oracle_instance_shared_pool_.sharedpool.html#lasthashinserted" class="tsd-kind-icon">last<wbr>Hash<wbr>Inserted</a></li>
 							</ul>
 						</section>
@@ -122,7 +145,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L6">oracle-instance/shared.pool.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L15">oracle-instance/shared.pool.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_oracle_instance_shared_pool_.sharedpool.html" class="tsd-signature-type">SharedPool</a></h4>
@@ -135,10 +158,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="element" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> element</h3>
-					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L6">oracle-instance/shared.pool.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L15">oracle-instance/shared.pool.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -148,7 +171,17 @@
 					<div class="tsd-signature tsd-kind-icon">hash<wbr>Collection<span class="tsd-signature-symbol">:</span> <a href="_crypt_hash_.hash.html" class="tsd-signature-type">Hash</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L5">oracle-instance/shared.pool.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L12">oracle-instance/shared.pool.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="hashelement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> hash<wbr>Element</h3>
+					<div class="tsd-signature tsd-kind-icon">hash<wbr>Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L14">oracle-instance/shared.pool.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -158,7 +191,7 @@
 					<div class="tsd-signature tsd-kind-icon">last<wbr>Hash<wbr>Inserted<span class="tsd-signature-symbol">:</span> <a href="_crypt_hash_.hash.html" class="tsd-signature-type">Hash</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L4">oracle-instance/shared.pool.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L13">oracle-instance/shared.pool.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -175,13 +208,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L19">oracle-instance/shared.pool.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L38">oracle-instance/shared.pool.ts:38</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>addHash
+									Adiciona hash na shared-pool</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>hash: <a href="_crypt_hash_.hash.html" class="tsd-signature-type">Hash</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>que sera adicionado na collection da shared-pool</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -198,9 +240,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L14">oracle-instance/shared.pool.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L28">oracle-instance/shared.pool.ts:28</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateAddHash
+									Metodo responsavel por animar a inserção hash no hashContainer, dentro da shared-pool</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -215,9 +263,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L46">oracle-instance/shared.pool.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L81">oracle-instance/shared.pool.ts:81</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>findHash</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -225,6 +278,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>se o hash passado como parametro foi encontrado ou nao</p>
 						</li>
 					</ul>
 				</section>
@@ -238,10 +292,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L41">oracle-instance/shared.pool.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L72">oracle-instance/shared.pool.ts:72</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>findLastHash</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>se o ultimo hash inserido ainda se encontra na collection</p>
 						</li>
 					</ul>
 				</section>
@@ -255,10 +315,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L37">oracle-instance/shared.pool.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L64">oracle-instance/shared.pool.ts:64</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>getLastMemoryLocation</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>local de memoria do ultimo hash inserido</p>
 						</li>
 					</ul>
 				</section>
@@ -272,9 +338,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/oracle-instance/shared.pool.ts#L25">oracle-instance/shared.pool.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/oracle-instance/shared.pool.ts#L48">oracle-instance/shared.pool.ts:48</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>getMemoryLocation</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -282,6 +353,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>local de memoria onde os dados estao armazenados</p>
 						</li>
 					</ul>
 				</section>
@@ -297,7 +369,13 @@
 						<a href="../modules/_animation_animation_.html">"animation/animation"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_animation_null_.html">"animation/animation.null"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_animation_animation_select_.html">"animation/animation.select"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_arrow_.html">"animation/arrow"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_block_.html">"block"</a>
@@ -373,6 +451,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_oracle_instance_shared_pool_.sharedpool.html#hashcollection" class="tsd-kind-icon">hash<wbr>Collection</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_oracle_instance_shared_pool_.sharedpool.html#hashelement" class="tsd-kind-icon">hash<wbr>Element</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_oracle_instance_shared_pool_.sharedpool.html#lasthashinserted" class="tsd-kind-icon">last<wbr>Hash<wbr>Inserted</a>

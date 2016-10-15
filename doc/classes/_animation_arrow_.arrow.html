@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Animation | orasim</title>
+	<title>Arrow | orasim</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,13 +57,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_animation_animation_.html">&quot;animation/animation&quot;</a>
+					<a href="../modules/_animation_arrow_.html">&quot;animation/arrow&quot;</a>
 				</li>
 				<li>
-					<a href="_animation_animation_.animation.html">Animation</a>
+					<a href="_animation_arrow_.arrow.html">Arrow</a>
 				</li>
 			</ul>
-			<h1>Class Animation</h1>
+			<h1>Class Arrow</h1>
 		</div>
 	</div>
 </header>
@@ -73,16 +73,27 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Animation
-							Classe Base, responsavel por implementar animações
-						em comum com classes filhas</p>
+						<p>Arrow
+						Classe responsavel por implementar animações relacionadas às setas</p>
 					</div>
 					<dl class="tsd-comment-tags">
-						<dt>property</dt>
-						<dd><p>{delay} quantidade de milisegundos usado como base na animacao</p>
+						<dt>attribute</dt>
+						<dd><p>{element} objeto html do arrow</p>
 						</dd>
-						<dt>property</dt>
-						<dd><p>{animating} atributo que salva o estado booleano da animacao</p>
+						<dt>attribute</dt>
+						<dd><p>{animContainer} animation container(elemento ja existente usado como offset para animacao)</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{size} tamanho da arrow</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{top} posicao analoga ao eixo y(posicao inicial)</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{left} posicao analoga ao eixo x(posicao inicial)</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{duration} duracao da animacao</p>
 						</dd>
 					</dl>
 				</div>
@@ -91,15 +102,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Animation</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="_animation_animation_select_.animationselect.html" class="tsd-signature-type">AnimationSelect</a>
-							</li>
-							<li>
-								<a href="_animation_animation_null_.animationnull.html" class="tsd-signature-type">AnimationNull</a>
-							</li>
-						</ul>
+						<span class="target">Arrow</span>
 					</li>
 				</ul>
 			</section>
@@ -110,24 +113,25 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_animation_animation_.animation.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_animation_arrow_.arrow.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_animation_.animation.html#animating" class="tsd-kind-icon">animating</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_animation_.animation.html#delay" class="tsd-kind-icon">delay</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_arrow_.arrow.html#animcontainer" class="tsd-kind-icon">anim<wbr>Container</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_arrow_.arrow.html#duration" class="tsd-kind-icon">duration</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_arrow_.arrow.html#element" class="tsd-kind-icon">element</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_arrow_.arrow.html#left" class="tsd-kind-icon">left</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_arrow_.arrow.html#size" class="tsd-kind-icon">size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_arrow_.arrow.html#top" class="tsd-kind-icon">top</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_.animation.html#getdelay" class="tsd-kind-icon">get<wbr>Delay</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_.animation.html#isanimating" class="tsd-kind-icon">is<wbr>Animating</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_.animation.html#moveto" class="tsd-kind-icon">move<wbr>To</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_.animation.html#setanimating" class="tsd-kind-icon">set<wbr>Animating</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_.animation.html#start" class="tsd-kind-icon">start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_arrow_.arrow.html#buildarrow" class="tsd-kind-icon">build<wbr>Arrow</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_arrow_.arrow.html#movetoright" class="tsd-kind-icon">move<wbr>ToRight</a></li>
 							</ul>
 						</section>
 					</div>
@@ -139,16 +143,34 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Animation<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_animation_animation_.animation.html" class="tsd-signature-type">Animation</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Arrow<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, top<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, left<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_animation_arrow_.arrow.html" class="tsd-signature-type">Arrow</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L23">animation/animation.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L18">animation/arrow.ts:18</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_animation_animation_.animation.html" class="tsd-signature-type">Animation</a></h4>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>top: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>left: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>size: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>duration: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_animation_arrow_.arrow.html" class="tsd-signature-type">Arrow</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -156,22 +178,62 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="animating" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> animating</h3>
-					<div class="tsd-signature tsd-kind-icon">animating<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="animcontainer" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> anim<wbr>Container</h3>
+					<div class="tsd-signature tsd-kind-icon">anim<wbr>Container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L23">animation/animation.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L14">animation/arrow.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="delay" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> delay</h3>
-					<div class="tsd-signature tsd-kind-icon">delay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="duration" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> duration</h3>
+					<div class="tsd-signature tsd-kind-icon">duration<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L22">animation/animation.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L18">animation/arrow.ts:18</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="element" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> element</h3>
+					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L13">animation/arrow.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="left" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> left</h3>
+					<div class="tsd-signature tsd-kind-icon">left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L17">animation/arrow.ts:17</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="size" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> size</h3>
+					<div class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L15">animation/arrow.ts:15</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="top" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> top</h3>
+					<div class="tsd-signature tsd-kind-icon">top<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L16">animation/arrow.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,143 +241,71 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getdelay" class="tsd-anchor"></a>
-					<h3>get<wbr>Delay</h3>
+					<a name="buildarrow" class="tsd-anchor"></a>
+					<h3>build<wbr>Arrow</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Delay<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">build<wbr>Arrow<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, top<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, left<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L59">animation/animation.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L28">animation/arrow.ts:28</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>getDelay</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-							<p>retorna o delay atual(milisegundos)</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="isanimating" class="tsd-anchor"></a>
-					<h3>is<wbr>Animating</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Animating<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L41">animation/animation.ts:41</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>isAnimating</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>retorna estado atual da animacao</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="moveto" class="tsd-anchor"></a>
-					<h3>move<wbr>To</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">move<wbr>To<span class="tsd-signature-symbol">(</span>sourceElem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, destElem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, delayAfter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, startCb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span>, completeCb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L73">animation/animation.ts:73</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>moveTo
-									Este metodo move um objeto html para a posicao de outro</p>
+									<p>buildArrow
+									Inicializando os elementos da animacao</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>sourceElem: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>destElem: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>top: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>left: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>size: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
 									<h5>duration: <span class="tsd-signature-type">number</span></h5>
 								</li>
-								<li>
-									<h5>delayAfter: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>startCb: <span class="tsd-signature-type">Function</span></h5>
-								</li>
-								<li>
-									<h5>completeCb: <span class="tsd-signature-type">Function</span></h5>
-								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setanimating" class="tsd-anchor"></a>
-					<h3>set<wbr>Animating</h3>
+					<a name="movetoright" class="tsd-anchor"></a>
+					<h3>move<wbr>ToRight</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Animating<span class="tsd-signature-symbol">(</span>flag<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">move<wbr>ToRight<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L51">animation/animation.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/arrow.ts#L42">animation/arrow.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>setAnimating
-									Muda o estado atual da animacao</p>
+									<p>moveToRight
+									Metodo responsavel por mover a arrow para a direita, baseado nos atributos inicializados</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>flag: <span class="tsd-signature-type">boolean</span></h5>
+									<h5>callback: <span class="tsd-signature-type">Function</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="start" class="tsd-anchor"></a>
-					<h3>start</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L34">animation/animation.ts:34</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>start
-									Este metodo desta classe base não executa nenhuma animação</p>
-								</div>
-							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -328,7 +318,7 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_animation_animation_.html">"animation/animation"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -337,7 +327,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_animation_animation_select_.html">"animation/animation.select"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_animation_arrow_.html">"animation/arrow"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -404,31 +394,34 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_animation_animation_.animation.html" class="tsd-kind-icon">Animation</a>
+						<a href="_animation_arrow_.arrow.html" class="tsd-kind-icon">Arrow</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_animation_animation_.animation.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_animation_arrow_.arrow.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_animation_animation_.animation.html#animating" class="tsd-kind-icon">animating</a>
+								<a href="_animation_arrow_.arrow.html#animcontainer" class="tsd-kind-icon">anim<wbr>Container</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_animation_animation_.animation.html#delay" class="tsd-kind-icon">delay</a>
+								<a href="_animation_arrow_.arrow.html#duration" class="tsd-kind-icon">duration</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_animation_arrow_.arrow.html#element" class="tsd-kind-icon">element</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_animation_arrow_.arrow.html#left" class="tsd-kind-icon">left</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_animation_arrow_.arrow.html#size" class="tsd-kind-icon">size</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_animation_arrow_.arrow.html#top" class="tsd-kind-icon">top</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_animation_animation_.animation.html#getdelay" class="tsd-kind-icon">get<wbr>Delay</a>
+								<a href="_animation_arrow_.arrow.html#buildarrow" class="tsd-kind-icon">build<wbr>Arrow</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_animation_animation_.animation.html#isanimating" class="tsd-kind-icon">is<wbr>Animating</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_animation_animation_.animation.html#moveto" class="tsd-kind-icon">move<wbr>To</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_animation_animation_.animation.html#setanimating" class="tsd-kind-icon">set<wbr>Animating</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_animation_animation_.animation.html#start" class="tsd-kind-icon">start</a>
+								<a href="_animation_arrow_.arrow.html#movetoright" class="tsd-kind-icon">move<wbr>ToRight</a>
 							</li>
 						</ul>
 					</li>

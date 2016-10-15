@@ -70,6 +70,19 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>UserProcess
+						Classe responsavel por modelar o objeto UserProcess da animacao</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>attribute</dt>
+						<dd><p>{element} objeto html que referencia o elemento user-process</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -97,6 +110,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_user_process_.userprocess.html#animatesenddatatoserverprocess" class="tsd-kind-icon">animate<wbr>Send<wbr>Data<wbr>ToServer<wbr>Process</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_user_process_.userprocess.html#getelement" class="tsd-kind-icon">get<wbr>Element</a></li>
 							</ul>
 						</section>
@@ -115,7 +129,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/user.process.ts#L2">process/user.process.ts:2</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/user.process.ts#L9">process/user.process.ts:9</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_process_user_process_.userprocess.html" class="tsd-signature-type">UserProcess</a></h4>
@@ -131,13 +145,43 @@
 					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/user.process.ts#L2">process/user.process.ts:2</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/user.process.ts#L9">process/user.process.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="animatesenddatatoserverprocess" class="tsd-anchor"></a>
+					<h3>animate<wbr>Send<wbr>Data<wbr>ToServer<wbr>Process</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">animate<wbr>Send<wbr>Data<wbr>ToServer<wbr>Process<span class="tsd-signature-symbol">(</span>delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/user.process.ts#L25">process/user.process.ts:25</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateSendDataToServerProcess
+									Metodo responsavel por animar o envio de dados ao server-process</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>delay: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span></h4>
+							<p>uma promise retornada logo apos o tempo de animacao</p>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getelement" class="tsd-anchor"></a>
 					<h3>get<wbr>Element</h3>
@@ -148,7 +192,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/user.process.ts#L8">process/user.process.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/user.process.ts#L15">process/user.process.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLElement</span></h4>
@@ -167,7 +211,13 @@
 						<a href="../modules/_animation_animation_.html">"animation/animation"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_animation_null_.html">"animation/animation.null"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_animation_animation_select_.html">"animation/animation.select"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_arrow_.html">"animation/arrow"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_block_.html">"block"</a>
@@ -240,6 +290,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_process_user_process_.userprocess.html#element" class="tsd-kind-icon">element</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_process_user_process_.userprocess.html#animatesenddatatoserverprocess" class="tsd-kind-icon">animate<wbr>Send<wbr>Data<wbr>ToServer<wbr>Process</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_process_user_process_.userprocess.html#getelement" class="tsd-kind-icon">get<wbr>Element</a>

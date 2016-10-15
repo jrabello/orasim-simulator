@@ -70,6 +70,19 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>ServerProcess
+						Classe responsavel por modelar o objeto ServerProcess da animacao</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>attribute</dt>
+						<dd><p>{element} objeto html que referencia o elemento shared-pool</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -97,13 +110,13 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#getblockfromdatfiles" class="tsd-kind-icon">get<wbr>Block<wbr>From<wbr>Dat<wbr>Files</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#getblockfromdbbuffercache" class="tsd-kind-icon">get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#animategetblockfromdatafiles" class="tsd-kind-icon">animate<wbr>Get<wbr>Block<wbr>From<wbr>Data<wbr>Files</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#animategetblockfromdbbuffercache" class="tsd-kind-icon">animate<wbr>Get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#animategetnewblockfromdbbuffercache" class="tsd-kind-icon">animate<wbr>Get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#animatesendblocktouserprocess" class="tsd-kind-icon">animate<wbr>Send<wbr>Block<wbr>ToUser<wbr>Process</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#animatestoreblockindbbuffercache" class="tsd-kind-icon">animate<wbr>Store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#getelement" class="tsd-kind-icon">get<wbr>Element</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#getelementoffset" class="tsd-kind-icon">get<wbr>Element<wbr>Offset</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#getnewblockfromdbbuffercache" class="tsd-kind-icon">get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#senddatatouserprocess" class="tsd-kind-icon">send<wbr>Data<wbr>ToUser<wbr>Process</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_process_server_process_.serverprocess.html#storeblockindbbuffercache" class="tsd-kind-icon">store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache</a></li>
 							</ul>
 						</section>
 					</div>
@@ -121,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L6">process/server.process.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L11">process/server.process.ts:11</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_process_server_process_.serverprocess.html" class="tsd-signature-type">ServerProcess</a></h4>
@@ -137,7 +150,7 @@
 					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L6">process/server.process.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L11">process/server.process.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -145,18 +158,24 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getblockfromdatfiles" class="tsd-anchor"></a>
-					<h3>get<wbr>Block<wbr>From<wbr>Dat<wbr>Files</h3>
+					<a name="animategetblockfromdatafiles" class="tsd-anchor"></a>
+					<h3>animate<wbr>Get<wbr>Block<wbr>From<wbr>Data<wbr>Files</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>From<wbr>Dat<wbr>Files<span class="tsd-signature-symbol">(</span>dataFiles<span class="tsd-signature-symbol">: </span><a href="_oracle_database_data_files_.datafiles.html" class="tsd-signature-type">DataFiles</a>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
+						<li class="tsd-signature tsd-kind-icon">animate<wbr>Get<wbr>Block<wbr>From<wbr>Data<wbr>Files<span class="tsd-signature-symbol">(</span>dataFiles<span class="tsd-signature-symbol">: </span><a href="_oracle_database_data_files_.datafiles.html" class="tsd-signature-type">DataFiles</a>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L21">process/server.process.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L37">process/server.process.ts:37</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateGetBlockFromDataFiles
+									Metodo responsavel por animar os blocks que o server-process pega do data-files</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -167,22 +186,29 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLElement</span></h4>
+							<p>retorna o novo bloco criado(htmlElement) dentro do datafiles</p>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getblockfromdbbuffercache" class="tsd-anchor"></a>
-					<h3>get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</h3>
+					<a name="animategetblockfromdbbuffercache" class="tsd-anchor"></a>
+					<h3>animate<wbr>Get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache<span class="tsd-signature-symbol">(</span>blockHtml<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, dbBufferCache<span class="tsd-signature-symbol">: </span><a href="_oracle_instance_db_buffer_cache_.dbbuffercache.html" class="tsd-signature-type">DbBufferCache</a>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">animate<wbr>Get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache<span class="tsd-signature-symbol">(</span>blockHtml<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, dbBufferCache<span class="tsd-signature-symbol">: </span><a href="_oracle_instance_db_buffer_cache_.dbbuffercache.html" class="tsd-signature-type">DbBufferCache</a>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L38">process/server.process.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L94">process/server.process.ts:94</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateGetBlockFromDbBufferCache
+									Metodo responsavel por animar o server-process extraindo um bloco JA EXISTENTE(criado em outro lugar) do db-buffer-cache</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -200,78 +226,62 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getelement" class="tsd-anchor"></a>
-					<h3>get<wbr>Element</h3>
+					<a name="animategetnewblockfromdbbuffercache" class="tsd-anchor"></a>
+					<h3>animate<wbr>Get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Element<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
+						<li class="tsd-signature tsd-kind-icon">animate<wbr>Get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache<span class="tsd-signature-symbol">(</span>dbBufferCache<span class="tsd-signature-symbol">: </span><a href="_oracle_instance_db_buffer_cache_.dbbuffercache.html" class="tsd-signature-type">DbBufferCache</a>, memLocation<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L12">process/server.process.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L77">process/server.process.ts:77</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLElement</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getelementoffset" class="tsd-anchor"></a>
-					<h3>get<wbr>Element<wbr>Offset</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Element<wbr>Offset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">JQueryCoordinates</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L16">process/server.process.ts:16</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">JQueryCoordinates</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getnewblockfromdbbuffercache" class="tsd-anchor"></a>
-					<h3>get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache<span class="tsd-signature-symbol">(</span>dbBufferCache<span class="tsd-signature-symbol">: </span><a href="_oracle_instance_db_buffer_cache_.dbbuffercache.html" class="tsd-signature-type">DbBufferCache</a>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L28">process/server.process.ts:28</a></li>
-								</ul>
-							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateGetNewBlockFromDbBufferCache
+										Metodo responsavel por animar o server-process extraindo um NOVO bloco do db-buffer-cache,
+										este novo bloco se faz necessario quando é preciso animar qualquer bloco que ja está dentro
+									do db-buffer-cache</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>dbBufferCache: <a href="_oracle_instance_db_buffer_cache_.dbbuffercache.html" class="tsd-signature-type">DbBufferCache</a></h5>
 								</li>
 								<li>
+									<h5>memLocation: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
 									<h5>delay: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLElement</span></h4>
+							<p>retorna novo bloco na posicao de memoria passada como argumento</p>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="senddatatouserprocess" class="tsd-anchor"></a>
-					<h3>send<wbr>Data<wbr>ToUser<wbr>Process</h3>
+					<a name="animatesendblocktouserprocess" class="tsd-anchor"></a>
+					<h3>animate<wbr>Send<wbr>Block<wbr>ToUser<wbr>Process</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">send<wbr>Data<wbr>ToUser<wbr>Process<span class="tsd-signature-symbol">(</span>blockHtml<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, userProcess<span class="tsd-signature-symbol">: </span><a href="_process_user_process_.userprocess.html" class="tsd-signature-type">UserProcess</a>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">animate<wbr>Send<wbr>Block<wbr>ToUser<wbr>Process<span class="tsd-signature-symbol">(</span>blockHtml<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, userProcess<span class="tsd-signature-symbol">: </span><a href="_process_user_process_.userprocess.html" class="tsd-signature-type">UserProcess</a>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L43">process/server.process.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L107">process/server.process.ts:107</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateSendBlockToUserProcess
+									Metodo responsavel por enviar bloco ao user-process</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -289,18 +299,24 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="storeblockindbbuffercache" class="tsd-anchor"></a>
-					<h3>store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache</h3>
+					<a name="animatestoreblockindbbuffercache" class="tsd-anchor"></a>
+					<h3>animate<wbr>Store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache<span class="tsd-signature-symbol">(</span>blockHtml<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, dbBufferCache<span class="tsd-signature-symbol">: </span><a href="_oracle_instance_db_buffer_cache_.dbbuffercache.html" class="tsd-signature-type">DbBufferCache</a>, memLocation<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">animate<wbr>Store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache<span class="tsd-signature-symbol">(</span>blockHtml<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, dbBufferCache<span class="tsd-signature-symbol">: </span><a href="_oracle_instance_db_buffer_cache_.dbbuffercache.html" class="tsd-signature-type">DbBufferCache</a>, memLocation<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/process/server.process.ts#L33">process/server.process.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L56">process/server.process.ts:56</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateStoreBlockInDbBufferCache
+									Metodo responsavel por animar o bloco sendo salvo no db-buffer-cache</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -320,6 +336,47 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getelement" class="tsd-anchor"></a>
+					<h3>get<wbr>Element</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Element<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L17">process/server.process.ts:17</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLElement</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getelementoffset" class="tsd-anchor"></a>
+					<h3>get<wbr>Element<wbr>Offset</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Element<wbr>Offset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">JQueryCoordinates</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/process/server.process.ts#L26">process/server.process.ts:26</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>getElementOffset
+									Metodo responsavel por retornar posicao relativa do elemento ao documento</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">JQueryCoordinates</span></h4>
+							<p>coordenada jquery do elemento</p>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -332,7 +389,13 @@
 						<a href="../modules/_animation_animation_.html">"animation/animation"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_animation_null_.html">"animation/animation.null"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_animation_animation_select_.html">"animation/animation.select"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_arrow_.html">"animation/arrow"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_block_.html">"block"</a>
@@ -407,25 +470,25 @@
 								<a href="_process_server_process_.serverprocess.html#element" class="tsd-kind-icon">element</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_process_server_process_.serverprocess.html#getblockfromdatfiles" class="tsd-kind-icon">get<wbr>Block<wbr>From<wbr>Dat<wbr>Files</a>
+								<a href="_process_server_process_.serverprocess.html#animategetblockfromdatafiles" class="tsd-kind-icon">animate<wbr>Get<wbr>Block<wbr>From<wbr>Data<wbr>Files</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_process_server_process_.serverprocess.html#getblockfromdbbuffercache" class="tsd-kind-icon">get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a>
+								<a href="_process_server_process_.serverprocess.html#animategetblockfromdbbuffercache" class="tsd-kind-icon">animate<wbr>Get<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_process_server_process_.serverprocess.html#animategetnewblockfromdbbuffercache" class="tsd-kind-icon">animate<wbr>Get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_process_server_process_.serverprocess.html#animatesendblocktouserprocess" class="tsd-kind-icon">animate<wbr>Send<wbr>Block<wbr>ToUser<wbr>Process</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_process_server_process_.serverprocess.html#animatestoreblockindbbuffercache" class="tsd-kind-icon">animate<wbr>Store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_process_server_process_.serverprocess.html#getelement" class="tsd-kind-icon">get<wbr>Element</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_process_server_process_.serverprocess.html#getelementoffset" class="tsd-kind-icon">get<wbr>Element<wbr>Offset</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_process_server_process_.serverprocess.html#getnewblockfromdbbuffercache" class="tsd-kind-icon">get<wbr>New<wbr>Block<wbr>From<wbr>DbBuffer<wbr>Cache</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_process_server_process_.serverprocess.html#senddatatouserprocess" class="tsd-kind-icon">send<wbr>Data<wbr>ToUser<wbr>Process</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_process_server_process_.serverprocess.html#storeblockindbbuffercache" class="tsd-kind-icon">store<wbr>Block<wbr>InDb<wbr>Buffer<wbr>Cache</a>
 							</li>
 						</ul>
 					</li>

@@ -73,18 +73,21 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Classe responsavel por implementar animações
-						relacionadas ao select</p>
+						<p>AnimationSelect
+						Classe responsavel por implementar animações relacionadas ao select</p>
 					</div>
 					<dl class="tsd-comment-tags">
-						<dt>prop</dt>
-						<dd><p>isHashFound Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false</p>
+						<dt>attribute</dt>
+						<dd><p>{isHashFound} Caso o hash seja encontrado na shared-pool este atributo é marcado como true, caso contrário, false</p>
 						</dd>
-						<dt>property</dt>
-						<dd><p>animHashNotFoundDelay Delay da animacao do hash nao encontrado na shared-pool</p>
+						<dt>attribute</dt>
+						<dd><p>{animHashNotFoundDelay} Delay da animacao do hash nao encontrado na shared-pool</p>
 						</dd>
-						<dt>property</dt>
-						<dd><p>animHashFoundDelay Delay da animacao do hash encontrado na shared-pool</p>
+						<dt>attribute</dt>
+						<dd><p>{animHashFoundDelay} Delay da animacao hash encontrado</p>
+						</dd>
+						<dt>attribute</dt>
+						<dd><p>{animUserProcessDelay} Delay da animacao do envio de dados para</p>
 						</dd>
 					</dl>
 				</div>
@@ -117,6 +120,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_animation_select_.animationselect.html#animhashfounddelay" class="tsd-kind-icon">anim<wbr>Hash<wbr>Found<wbr>Delay</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_animation_select_.animationselect.html#animhashnotfounddelay" class="tsd-kind-icon">anim<wbr>Hash<wbr>Not<wbr>Found<wbr>Delay</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_animation_select_.animationselect.html#animuserprocessdelay" class="tsd-kind-icon">anim<wbr>User<wbr>Process<wbr>Delay</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_animation_animation_select_.animationselect.html#ishashfound" class="tsd-kind-icon">is<wbr>Hash<wbr>Found</a></li>
 							</ul>
 						</section>
@@ -126,7 +130,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_select_.animationselect.html#animatehashfound" class="tsd-kind-icon">animate<wbr>Hash<wbr>Found</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_select_.animationselect.html#animatehashnotfound" class="tsd-kind-icon">animate<wbr>Hash<wbr>Not<wbr>Found</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_animation_animation_select_.animationselect.html#animateselect" class="tsd-kind-icon">animate<wbr>Select</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_animation_animation_select_.animationselect.html#animatesenddatafromuserprocesstoserverprocess" class="tsd-kind-icon">animate<wbr>Send<wbr>Data<wbr>From<wbr>User<wbr>Process<wbr>ToServer<wbr>Process</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_animation_animation_select_.animationselect.html#buildanimselect" class="tsd-kind-icon">build<wbr>Anim<wbr>Select</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_animation_animation_select_.animationselect.html#getdelay" class="tsd-kind-icon">get<wbr>Delay</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_animation_animation_select_.animationselect.html#isanimating" class="tsd-kind-icon">is<wbr>Animating</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_animation_animation_select_.animationselect.html#moveto" class="tsd-kind-icon">move<wbr>To</a></li>
@@ -150,7 +154,7 @@
 							<aside class="tsd-sources">
 								<p>Overwrites <a href="_animation_animation_.animation.html">Animation</a>.<a href="_animation_animation_.animation.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in animation/animation.select.ts:22</li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L24">animation/animation.select.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -172,7 +176,7 @@
 					<div class="tsd-signature tsd-kind-icon">anim<wbr>Hash<wbr>Found<wbr>Delay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in animation/animation.select.ts:22</li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L23">animation/animation.select.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -182,7 +186,17 @@
 					<div class="tsd-signature tsd-kind-icon">anim<wbr>Hash<wbr>Not<wbr>Found<wbr>Delay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in animation/animation.select.ts:21</li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L22">animation/animation.select.ts:22</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="animuserprocessdelay" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> anim<wbr>User<wbr>Process<wbr>Delay</h3>
+					<div class="tsd-signature tsd-kind-icon">anim<wbr>User<wbr>Process<wbr>Delay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L24">animation/animation.select.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -192,7 +206,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Hash<wbr>Found<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in animation/animation.select.ts:20</li>
+							<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L21">animation/animation.select.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -209,10 +223,17 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in animation/animation.select.ts:106</li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L132">animation/animation.select.ts:132</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateHashFound
+									Animacao de hash found</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span></h4>
+							<p>Promise<number> uma promise é retornada devido a necessidade sincrona da animacao</p>
 						</li>
 					</ul>
 				</section>
@@ -226,10 +247,17 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in animation/animation.select.ts:64</li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L91">animation/animation.select.ts:91</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateHashNotFound
+									Animacao de hash not found</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span></h4>
+							<p>Promise<number> uma promise é retornada devido a necessidade sincrona da animacao</p>
 						</li>
 					</ul>
 				</section>
@@ -243,28 +271,46 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in animation/animation.select.ts:45</li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L68">animation/animation.select.ts:68</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>animateSelect
+									Verificando se o hash na shared pool existe, selecionando animacao especifica</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span></h4>
+							<p>Promise<number> uma promise é retornada devido a necessidade sincrona da animacao</p>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="animatesenddatafromuserprocesstoserverprocess" class="tsd-anchor"></a>
-					<h3>animate<wbr>Send<wbr>Data<wbr>From<wbr>User<wbr>Process<wbr>ToServer<wbr>Process</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">animate<wbr>Send<wbr>Data<wbr>From<wbr>User<wbr>Process<wbr>ToServer<wbr>Process<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="buildanimselect" class="tsd-anchor"></a>
+					<h3>build<wbr>Anim<wbr>Select</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">build<wbr>Anim<wbr>Select<span class="tsd-signature-symbol">(</span>isHashFound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_animation_animation_.animation.html">Animation</a>.<a href="_animation_animation_.animation.html#animatesenddatafromuserprocesstoserverprocess">animateSendDataFromUserProcessToServerProcess</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/animation/animation.ts#L60">animation/animation.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L36">animation/animation.select.ts:36</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span></h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>buildAnimSelect
+									inicializando elementos da classe</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>isHashFound: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -279,10 +325,16 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_animation_animation_.animation.html">Animation</a>.<a href="_animation_animation_.animation.html#getdelay">getDelay</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/animation/animation.ts#L43">animation/animation.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L59">animation/animation.ts:59</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>getDelay</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>retorna o delay atual(milisegundos)</p>
 						</li>
 					</ul>
 				</section>
@@ -297,10 +349,16 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_animation_animation_.animation.html">Animation</a>.<a href="_animation_animation_.animation.html#isanimating">isAnimating</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/animation/animation.ts#L35">animation/animation.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L41">animation/animation.ts:41</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>isAnimating</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>retorna estado atual da animacao</p>
 						</li>
 					</ul>
 				</section>
@@ -308,16 +366,22 @@
 					<a name="moveto" class="tsd-anchor"></a>
 					<h3>move<wbr>To</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">move<wbr>To<span class="tsd-signature-symbol">(</span>sourceElem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, destElem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">move<wbr>To<span class="tsd-signature-symbol">(</span>sourceElem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, destElem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, delayAfter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, startCb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span>, completeCb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_animation_animation_.animation.html">Animation</a>.<a href="_animation_animation_.animation.html#moveto">moveTo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/animation/animation.ts#L48">animation/animation.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L73">animation/animation.ts:73</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>moveTo
+									Este metodo move um objeto html para a posicao de outro</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -327,7 +391,16 @@
 									<h5>destElem: <span class="tsd-signature-type">HTMLElement</span></h5>
 								</li>
 								<li>
-									<h5>delay: <span class="tsd-signature-type">number</span></h5>
+									<h5>duration: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>delayAfter: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>startCb: <span class="tsd-signature-type">Function</span></h5>
+								</li>
+								<li>
+									<h5>completeCb: <span class="tsd-signature-type">Function</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -345,9 +418,15 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_animation_animation_.animation.html">Animation</a>.<a href="_animation_animation_.animation.html#setanimating">setAnimating</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/35480b1/src/ts/animation/animation.ts#L39">animation/animation.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.ts#L51">animation/animation.ts:51</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>setAnimating
+									Muda o estado atual da animacao</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -369,9 +448,15 @@
 							<aside class="tsd-sources">
 								<p>Overwrites <a href="_animation_animation_.animation.html">Animation</a>.<a href="_animation_animation_.animation.html#start">start</a></p>
 								<ul>
-									<li>Defined in animation/animation.select.ts:31</li>
+									<li>Defined in <a href="https://github.com/Ec-Tcc/orasim-emulator/blob/5b4e2c0/src/ts/animation/animation.select.ts#L47">animation/animation.select.ts:47</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>start
+									Inicio da animacao do select</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -387,8 +472,14 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_animation_animation_.html">"animation/animation"</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_animation_null_.html">"animation/animation.null"</a>
+					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_animation_animation_select_.html">"animation/animation.select"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_animation_arrow_.html">"animation/arrow"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_block_.html">"block"</a>
@@ -466,6 +557,9 @@
 								<a href="_animation_animation_select_.animationselect.html#animhashnotfounddelay" class="tsd-kind-icon">anim<wbr>Hash<wbr>Not<wbr>Found<wbr>Delay</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_animation_animation_select_.animationselect.html#animuserprocessdelay" class="tsd-kind-icon">anim<wbr>User<wbr>Process<wbr>Delay</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_animation_animation_select_.animationselect.html#ishashfound" class="tsd-kind-icon">is<wbr>Hash<wbr>Found</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -477,8 +571,8 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="_animation_animation_select_.animationselect.html#animateselect" class="tsd-kind-icon">animate<wbr>Select</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_animation_animation_select_.animationselect.html#animatesenddatafromuserprocesstoserverprocess" class="tsd-kind-icon">animate<wbr>Send<wbr>Data<wbr>From<wbr>User<wbr>Process<wbr>ToServer<wbr>Process</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_animation_animation_select_.animationselect.html#buildanimselect" class="tsd-kind-icon">build<wbr>Anim<wbr>Select</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_animation_animation_select_.animationselect.html#getdelay" class="tsd-kind-icon">get<wbr>Delay</a>
