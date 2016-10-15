@@ -33,8 +33,7 @@ export class SharedPool {
      * Adiciona hash na shared-pool
      * @param {hash} hash que sera adicionado na collection da shared-pool 
      */
-    addHash(hash: Hash): void {
-        this.lastHashInserted = hash
+    addHash(hash: Hash): void {        
         this.hashCollection.push(hash)    
     }
         
