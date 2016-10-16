@@ -1,3 +1,5 @@
+import { SqlConsole } from '../sql-console/sql.console'
+import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 import { Animation } from '../animation/animation'
 import { AnimationNull } from '../animation/animation.null'
 import { AnimationSelect } from '../animation/animation.select'
@@ -23,18 +25,6 @@ export class SqlParser{
         this.query = ""               
     }
 
-    parsedSuccess(): boolean{
-        return this.isParsedSuccess
-    }
-
-    getQuery(): string{
-        return this.query
-    }
-
-    getQueryTokenId(): string{
-        return this.queryTokenId
-    }
-
     /**
      * parse
      * Metodo responsavel por fazer parsing da sql query
@@ -42,7 +32,9 @@ export class SqlParser{
      * @returns uma instancia da classe Animation(ou classes filhas) 
      */
     parse(query: string): Animation {
-        //.addMsg(new SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() +' )'))
+        
+        let sqlConsole: SqlConsole = Orasim.getSqlConsole()
+        sqlConsole.addMsg(new SqlConsoleMsgInfo('Userprocess realizando parsing da query: (' + query +')'))
         
         // transformando a query em lower-case 
         let lowerQuery = query.toLowerCase();
@@ -53,9 +45,9 @@ export class SqlParser{
                 return new AnimationNull()
             case "select":
                 let hash: Hash = new Crc32(lowerQuery)
-                let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
-                let isHashFound = sharedPool.findHash(hash)
-                
+                let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()                
+                let isHashFound = sharedPool.findHash(hash)        
+
                 // caso o hash na seja encontrado, adicione na shared-pool 
                 if(!isHashFound)
                     sharedPool.addHash(hash)               
@@ -91,5 +83,17 @@ export class SqlParser{
         //     this.queryTokenId = ""
         //     this.query = ""
         // }
+    }
+
+    parsedSuccess(): boolean{
+        return this.isParsedSuccess
+    }
+
+    getQuery(): string{
+        return this.query
+    }
+
+    getQueryTokenId(): string{
+        return this.queryTokenId
     }
 }
