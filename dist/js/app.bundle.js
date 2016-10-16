@@ -359,7 +359,7 @@
 	     */
 	    AnimationSelect.prototype.buildAnimSelect = function (isHashFound) {
 	        this.isHashFound = isHashFound;
-	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 5;
+	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 10;
 	        this.animHashNotFoundDelay = _super.prototype.getDelay.call(this) * 12;
 	        this.animHashFoundDelay = _super.prototype.getDelay.call(this) * 8;
 	    };
