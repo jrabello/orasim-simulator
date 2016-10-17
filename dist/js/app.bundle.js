@@ -811,7 +811,7 @@
 	        return new Promise(function (resolve, reject) {
 	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
 	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
-	                    new arrow_1.Arrow(240, 80, 80, 0, delay * 0.40).moveToRight(function () {
+	                    new arrow_1.Arrow(240, 80, 80, 80, delay * 0.40).moveToRightUp(function () {
 	                        $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
 	                            $("#server-process").fadeTo(delay * 0.15, 1);
 	                        });
@@ -1100,6 +1100,7 @@
 	     * @param {$arrow} objeto JQuery que representa uma seta no DOM
 	     */
 	    Arrow.prototype.moveToTwoDirectionsVerticalFirst = function ($arrow, callback) {
+	        var _this = this;
 	        // Adicionando seta em seu elemento pai
 	        $(this.animContainer).append($arrow);
 	        // Divide o tempo total da animação para cada parte
@@ -1112,7 +1113,7 @@
 	            // Iniciando segunda parte da animação da seta
 	            complete: function () {
 	                $arrow.animate({
-	                    width: this.horizontalSize + 'px'
+	                    width: _this.horizontalSize + 'px'
 	                }, {
 	                    duration: eachTimePart,
 	                    complete: function () {
@@ -1139,6 +1140,7 @@
 	     * @param {$arrow} objeto JQuery que representa uma seta no DOM
 	     */
 	    Arrow.prototype.moveToTwoDirectionsHorizontalFirst = function ($arrow, callback) {
+	        var _this = this;
 	        // Adicionando seta em seu elemento pai
 	        $(this.animContainer).append($arrow);
 	        // Divide o tempo total da animação para cada parte
@@ -1151,7 +1153,7 @@
 	            // Iniciando segunda parte da animação da seta
 	            complete: function () {
 	                $arrow.animate({
-	                    height: this.verticalSize + 'px'
+	                    height: _this.verticalSize + 'px'
 	                }, {
 	                    duration: eachTimePart,
 	                    complete: function () {

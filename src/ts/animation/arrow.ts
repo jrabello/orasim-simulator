@@ -246,7 +246,7 @@ export class Arrow {
             duration: eachTimePart,
 
             // Iniciando segunda parte da animação da seta
-            complete: function () {
+            complete: () => {
                 $arrow.addClass("end")
 
                 // Removendo seta do DOM
@@ -255,7 +255,7 @@ export class Arrow {
                 }, {
                     duration: eachTimePart
                 });
-                setTimeout(function () {
+                setTimeout(() => {
                     $arrow.remove()
                     callback()
                 }, eachTimePart);
@@ -283,7 +283,7 @@ export class Arrow {
             duration: eachTimePart,
 
             // Iniciando segunda parte da animação da seta
-            complete: function () {
+            complete: () => {
                 $arrow.addClass("end")
 
                 // Removendo seta do DOM
@@ -292,7 +292,7 @@ export class Arrow {
                 }, {
                     duration: eachTimePart
                 });
-                setTimeout(function () {
+                setTimeout(() => {
                     $arrow.remove()
                     callback()
                 }, eachTimePart);
@@ -319,12 +319,12 @@ export class Arrow {
         }, {
             duration: eachTimePart,
             // Iniciando segunda parte da animação da seta
-            complete: function () {
+            complete: () => {
                 $arrow.animate({
                     width: this.horizontalSize + 'px'
                 }, {
                     duration: eachTimePart,
-                    complete: function () {
+                    complete: () => {
                         $arrow.addClass("end");
 
                         // Removendo seta do DOM
@@ -333,7 +333,7 @@ export class Arrow {
                         }, {
                             duration: eachTimePart
                         });
-                        setTimeout(function () {
+                        setTimeout(() => {
                                 $arrow.remove()
                                 callback()
                             },
@@ -363,12 +363,12 @@ export class Arrow {
         }, {
             duration: eachTimePart,
             // Iniciando segunda parte da animação da seta
-            complete: function () {
+            complete: () => {
                 $arrow.animate({
                     height: this.verticalSize + 'px'
                 }, {
                     duration: eachTimePart,
-                    complete: function () {
+                    complete: () => {
                         $arrow.addClass("end");
 
                         // Removendo seta do DOM
@@ -377,7 +377,7 @@ export class Arrow {
                         }, {
                             duration: eachTimePart
                         });
-                        setTimeout(function () {
+                        setTimeout(() => {
                                 $arrow.remove()
                                 callback()
                             },
