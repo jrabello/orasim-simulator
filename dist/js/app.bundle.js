@@ -359,7 +359,7 @@
 	     */
 	    AnimationSelect.prototype.buildAnimSelect = function (isHashFound) {
 	        this.isHashFound = isHashFound;
-	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 5;
+	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 10;
 	        this.animHashNotFoundDelay = _super.prototype.getDelay.call(this) * 12;
 	        this.animHashFoundDelay = _super.prototype.getDelay.call(this) * 8;
 	    };
@@ -811,7 +811,7 @@
 	        return new Promise(function (resolve, reject) {
 	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
 	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
-	                    new arrow_1.Arrow('right', 240, 80, 80, delay * 0.40).moveToRight(function () {
+	                    new arrow_1.Arrow(240, 80, 80, 0, delay * 0.40).moveToRight(function () {
 	                        $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
 	                            $("#server-process").fadeTo(delay * 0.15, 1);
 	                        });
@@ -836,52 +836,217 @@
 	/**
 	 * Arrow
 	 * Classe responsavel por implementar animações relacionadas às setas
-	 * @attribute {element} objeto html do arrow
 	 * @attribute {animContainer} animation container(elemento ja existente usado como offset para animacao)
-	 * @attribute {size} tamanho da arrow
-	 * @attribute {top} posicao analoga ao eixo y(posicao inicial)
-	 * @attribute {left} posicao analoga ao eixo x(posicao inicial)
+	 * @attribute {horizontalSize} tamanho da arrow no eixo x
+	 * @attribute {verticalSize} tamanho da arrow no eixo y
+	 * @attribute {vertical} posicao analoga ao eixo y(posicao inicial)
+	 * @attribute {horizontal} posicao analoga ao eixo x(posicao inicial)
 	 * @attribute {duration} duracao da animacao
 	 */
 	var Arrow = (function () {
-	    function Arrow(type, top, left, size, duration) {
-	        this.buildArrow(type, top, left, size, duration);
-	    }
 	    /**
-	     * buildArrow
-	     * Inicializando os elementos da animacao
+	     * constructor
+	     * Construindo objeto Arrow e inicializando os atributos do elemento
+	     * @param {vertical} posicao analoga ao eixo y(posicao inicial)
+	     * @param {horizontal} posicao analoga ao eixo x(posicao inicial)
+	     * @param {horizontalSize} tamanho da arrow no eixo x
+	     * @param {verticalSize} tamanho da arrow no eixo y
+	     * @param {duration} duracao da animacao
 	     */
-	    Arrow.prototype.buildArrow = function (type, top, left, size, duration) {
-	        this.element = $("<div class='" + type + "-arrow'>")[0];
+	    function Arrow(vertical, horizontal, horizontalSize, verticalSize, duration) {
 	        this.animContainer = $("#animation-container")[0];
-	        this.size = size;
-	        this.top = top;
-	        this.left = left;
+	        this.horizontalSize = horizontalSize;
+	        this.verticalSize = verticalSize;
+	        this.vertical = vertical;
+	        this.horizontal = horizontal;
 	        this.duration = duration;
-	    };
+	    }
 	    /**
 	     * moveToRight
 	     * Metodo responsavel por mover a arrow para a direita, baseado nos atributos inicializados
 	     * @param {callback} funcao chamada no termino da animacao
 	     */
 	    Arrow.prototype.moveToRight = function (callback) {
-	        // Adicionando seta em seu elemento pai        
-	        var $arrow = $(this.element).css({
-	            "left": this.left + "px",
-	            "top": this.top + "px"
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='right-arrow'>").css({
+	            "left": this.horizontal + "px",
+	            "top": this.vertical + "px"
 	        });
+	        // Executar aniacao
+	        this.moveToOneDirectionHorizontal($arrow, callback);
+	    };
+	    /**
+	     * moveToLeft
+	     * Metodo responsavel por mover a arrow para a esquerda, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToLeft = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='left-arrow'>").css({
+	            "right": this.horizontal + "px",
+	            "top": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToOneDirectionHorizontal($arrow, callback);
+	    };
+	    /**
+	     * moveToUp
+	     * Metodo responsavel por mover a arrow para cima, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToUp = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='up-arrow'>").css({
+	            "left": this.horizontal + "px",
+	            "bottom": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToOneDirectionVertical($arrow, callback);
+	    };
+	    /**
+	     * moveToDown
+	     * Metodo responsavel por mover a arrow para baixo, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToDown = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='down-arrow'>").css({
+	            "left": this.horizontal + "px",
+	            "top": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToOneDirectionVertical($arrow, callback);
+	    };
+	    /**
+	     * moveToUpLeft
+	     * Metodo responsavel por mover a arrow para cima primeiro, seguido pela movimentacao a esquerda, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToUpLeft = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='up-left-arrow'>").css({
+	            "right": this.horizontal + "px",
+	            "bottom": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsVerticalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToUpRight
+	     * Metodo responsavel por mover a arrow para cima primeiro, seguido pela movimentacao a direita, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToUpRight = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='up-right-arrow'>").css({
+	            "left": this.horizontal + "px",
+	            "bottom": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsVerticalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToDownLeft
+	     * Metodo responsavel por mover a arrow para baixo primeiro, seguido pela movimentacao a esquerda, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToDownLeft = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='down-left-arrow'>").css({
+	            "right": this.horizontal + "px",
+	            "top": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsVerticalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToDownRight
+	     * Metodo responsavel por mover a arrow para baixo primeiro, seguido pela movimentacao a direita, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToDownRight = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='down-right-arrow'>").css({
+	            "left": this.horizontal + "px",
+	            "top": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsVerticalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToLeftUp
+	     * Metodo responsavel por mover a arrow a esquerda primeiro, seguido pela movimentacao para cima, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToLeftUp = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='left-up-arrow'>").css({
+	            "right": this.horizontal + "px",
+	            "bottom": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsHorizontalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToLeftDown
+	     * Metodo responsavel por mover a arrow a esquerda primeiro, seguido pela movimentacao para baixo, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToLeftDown = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='left-down-arrow'>").css({
+	            "right": this.horizontal + "px",
+	            "top": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsHorizontalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToRightUp
+	     * Metodo responsavel por mover a arrow a direita primeiro, seguido pela movimentacao para cima, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToRightUp = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='right-up-arrow'>").css({
+	            "left": this.horizontal + "px",
+	            "bottom": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsHorizontalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToRightDown
+	     * Metodo responsavel por mover a arrow a direita primeiro, seguido pela movimentacao para baixo, baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     */
+	    Arrow.prototype.moveToRightDown = function (callback) {
+	        // Declarando a referencia de inicio da animacao da seta, posicao da seta no elemento pai. O elemento pai devera ter a propriedade 'position' declarada
+	        var $arrow = $("<div class='right-down-arrow'>").css({
+	            "left": this.horizontal + "px",
+	            "top": this.vertical + "px"
+	        });
+	        // Executar aniacao
+	        this.moveToTwoDirectionsHorizontalFirst($arrow, callback);
+	    };
+	    /**
+	     * moveToOneDirectionHorizontal
+	     * Metodo responsavel por mover a arrow no eixo x (horizontal), baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     * @param {$arrow} objeto JQuery que representa uma seta no DOM
+	     */
+	    Arrow.prototype.moveToOneDirectionHorizontal = function ($arrow, callback) {
+	        // Adicionando seta em seu elemento pai
 	        $(this.animContainer).append($arrow);
 	        // Divide o tempo total da animação para cada parte
 	        var eachTimePart = this.duration / 2;
-	        console.log('moveToRight: ', this.duration);
 	        // Iniciando animação da seta
 	        $arrow.animate({
-	            width: this.size + 'px'
+	            width: this.horizontalSize + 'px'
 	        }, {
 	            duration: eachTimePart,
 	            // Iniciando segunda parte da animação da seta
 	            complete: function () {
-	                //console.log('moveToRight: ', 'segunda parte')
 	                $arrow.addClass("end");
 	                // Removendo seta do DOM
 	                $arrow.animate({
@@ -893,6 +1058,116 @@
 	                    $arrow.remove();
 	                    callback();
 	                }, eachTimePart);
+	            }
+	        });
+	    };
+	    /**
+	     * moveToOneDirectionVertical
+	     * Metodo responsavel por mover a arrow no eixo y (vertical), baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     * @param {$arrow} objeto JQuery que representa uma seta no DOM
+	     */
+	    Arrow.prototype.moveToOneDirectionVertical = function ($arrow, callback) {
+	        // Adicionando seta em seu elemento pai
+	        $(this.animContainer).append($arrow);
+	        // Divide o tempo total da animação para cada parte
+	        var eachTimePart = this.duration / 2;
+	        // Iniciando animação da seta
+	        $arrow.animate({
+	            height: this.verticalSize + 'px'
+	        }, {
+	            duration: eachTimePart,
+	            // Iniciando segunda parte da animação da seta
+	            complete: function () {
+	                $arrow.addClass("end");
+	                // Removendo seta do DOM
+	                $arrow.animate({
+	                    opacity: 0
+	                }, {
+	                    duration: eachTimePart
+	                });
+	                setTimeout(function () {
+	                    $arrow.remove();
+	                    callback();
+	                }, eachTimePart);
+	            }
+	        });
+	    };
+	    /**
+	     * moveToTwoDirectionsVerticalFirst
+	     * Metodo responsavel por mover a arrow no eixo y (vertical) primeiro, seguido pela movimentacao no eixo x (horizontal), baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     * @param {$arrow} objeto JQuery que representa uma seta no DOM
+	     */
+	    Arrow.prototype.moveToTwoDirectionsVerticalFirst = function ($arrow, callback) {
+	        // Adicionando seta em seu elemento pai
+	        $(this.animContainer).append($arrow);
+	        // Divide o tempo total da animação para cada parte
+	        var eachTimePart = this.duration / 3;
+	        // Iniciando animação da seta
+	        $arrow.animate({
+	            height: this.verticalSize + 'px'
+	        }, {
+	            duration: eachTimePart,
+	            // Iniciando segunda parte da animação da seta
+	            complete: function () {
+	                $arrow.animate({
+	                    width: this.horizontalSize + 'px'
+	                }, {
+	                    duration: eachTimePart,
+	                    complete: function () {
+	                        $arrow.addClass("end");
+	                        // Removendo seta do DOM
+	                        $arrow.animate({
+	                            opacity: 0
+	                        }, {
+	                            duration: eachTimePart
+	                        });
+	                        setTimeout(function () {
+	                            $arrow.remove();
+	                            callback();
+	                        }, eachTimePart);
+	                    }
+	                });
+	            }
+	        });
+	    };
+	    /**
+	     * moveToTwoDirectionsHorizontalFirst
+	     * Metodo responsavel por mover a arrow no eixo x (horizontal) primeiro, seguido pela movimentacao no eixo y (vertical), baseado nos atributos inicializados
+	     * @param {callback} funcao chamada no termino da animacao
+	     * @param {$arrow} objeto JQuery que representa uma seta no DOM
+	     */
+	    Arrow.prototype.moveToTwoDirectionsHorizontalFirst = function ($arrow, callback) {
+	        // Adicionando seta em seu elemento pai
+	        $(this.animContainer).append($arrow);
+	        // Divide o tempo total da animação para cada parte
+	        var eachTimePart = this.duration / 3;
+	        // Iniciando animação da seta
+	        $arrow.animate({
+	            width: this.horizontalSize + 'px'
+	        }, {
+	            duration: eachTimePart,
+	            // Iniciando segunda parte da animação da seta
+	            complete: function () {
+	                $arrow.animate({
+	                    height: this.verticalSize + 'px'
+	                }, {
+	                    duration: eachTimePart,
+	                    complete: function () {
+	                        $arrow.addClass("end");
+	                        // Removendo seta do DOM
+	                        $arrow.animate({
+	                            opacity: 0
+	                        }, {
+	                            duration: eachTimePart
+	                        });
+	                        setTimeout(function () {
+	                            $arrow.remove();
+	                            callback();
+	                        }, eachTimePart);
+	                    }
+	                });
 	            }
 	        });
 	    };
