@@ -1,4 +1,5 @@
 import { Arrow } from '../animation/arrow'
+import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 
 /**
  * UserProcess
@@ -23,8 +24,9 @@ export class UserProcess {
      * @returns uma promise retornada logo apos o tempo de animacao
      */    
     animateSendDataToServerProcess(delay: number): Promise<number>{
-        return new Promise<number>((resolve, reject) => {
+        return new Promise<number>((resolve, reject) => {                     
             $("#user-process").fadeTo(delay*0.15, 0.1, () => {
+                Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('Userprocess Enviando dados para ServerProcess'))
                 $("#user-process").fadeTo(delay*0.15, 1, () => {
                     new Arrow(240, 80, 80, 80, delay*0.40).moveToRight(() => {
                         $("#server-process").fadeTo(delay*0.15, 0.1, () => {
