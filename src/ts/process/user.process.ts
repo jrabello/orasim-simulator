@@ -26,7 +26,7 @@ export class UserProcess {
         return new Promise<number>((resolve, reject) => {
             $("#user-process").fadeTo(delay*0.15, 0.1, () => {
                 $("#user-process").fadeTo(delay*0.15, 1, () => {
-                    new Arrow('right', 240, 80, 80, delay*0.40).moveToRight(() => {
+                    new Arrow(240, 80, 80, 80, delay*0.40).moveToRight(() => {
                         $("#server-process").fadeTo(delay*0.15, 0.1, () => {
                             $("#server-process").fadeTo(delay*0.15, 1)
                         })

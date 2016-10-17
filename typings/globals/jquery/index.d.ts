@@ -1149,6 +1149,10 @@ interface JQueryStatic {
      * @param keepScripts A Boolean indicating whether to include scripts passed in the HTML string
      */
     parseHTML(data: string, context?: Document, keepScripts?: boolean): any[];
+
+    queue(queueName: string, callback: Function): JQuery;
+
+    repeat(): any
 }
 
 /**
