@@ -48,7 +48,7 @@
 	var sql_console_1 = __webpack_require__(1);
 	var server_process_1 = __webpack_require__(11);
 	var user_process_1 = __webpack_require__(12);
-	var animation_1 = __webpack_require__(4);
+	var animation_1 = __webpack_require__(6);
 	var oracle_database_1 = __webpack_require__(14);
 	var oracle_instance_1 = __webpack_require__(17);
 	/**
@@ -152,8 +152,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var animation_null_1 = __webpack_require__(3);
-	var animation_select_1 = __webpack_require__(5);
+	var sql_console_msg_info_1 = __webpack_require__(3);
+	var animation_null_1 = __webpack_require__(5);
+	var animation_select_1 = __webpack_require__(7);
 	var crc32_1 = __webpack_require__(8);
 	/**
 	 * SqlParser
@@ -168,15 +169,6 @@
 	        this.isParsedSuccess = false;
 	        this.query = "";
 	    }
-	    SqlParser.prototype.parsedSuccess = function () {
-	        return this.isParsedSuccess;
-	    };
-	    SqlParser.prototype.getQuery = function () {
-	        return this.query;
-	    };
-	    SqlParser.prototype.getQueryTokenId = function () {
-	        return this.queryTokenId;
-	    };
 	    /**
 	     * parse
 	     * Metodo responsavel por fazer parsing da sql query
@@ -184,7 +176,8 @@
 	     * @returns uma instancia da classe Animation(ou classes filhas)
 	     */
 	    SqlParser.prototype.parse = function (query) {
-	        //.addMsg(new SqlConsoleMsgInfo('( ' + this.sqlParser.getQuery() +' )'))
+	        var sqlConsole = Orasim.getSqlConsole();
+	        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('Userprocess realizando parsing da query: (' + query + ')'));
 	        // transformando a query em lower-case 
 	        var lowerQuery = query.toLowerCase();
 	        // verificando qual query foi digitada
@@ -226,6 +219,15 @@
 	        //     this.query = ""
 	        // }
 	    };
+	    SqlParser.prototype.parsedSuccess = function () {
+	        return this.isParsedSuccess;
+	    };
+	    SqlParser.prototype.getQuery = function () {
+	        return this.query;
+	    };
+	    SqlParser.prototype.getQueryTokenId = function () {
+	        return this.queryTokenId;
+	    };
 	    return SqlParser;
 	}());
 	exports.SqlParser = SqlParser;
@@ -241,7 +243,62 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var animation_1 = __webpack_require__(4);
+	var sql_console_message_1 = __webpack_require__(4);
+	/**
+	 * SqlConsoleMsgInfo
+	 * Classe responsavel por especializar mensagens de informacao da aplicacao
+	 */
+	var SqlConsoleMsgInfo = (function (_super) {
+	    __extends(SqlConsoleMsgInfo, _super);
+	    function SqlConsoleMsgInfo(msg) {
+	        _super.call(this, 'info', msg);
+	    }
+	    return SqlConsoleMsgInfo;
+	}(sql_console_message_1.SqlConsoleMessage));
+	exports.SqlConsoleMsgInfo = SqlConsoleMsgInfo;
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+	/**
+	 * SqlConsoleMessage
+	 * Classe Base, responsavel por modelar as mensagens que serão inseridas no console da aplicação
+	 */
+	var SqlConsoleMessage = (function () {
+	    function SqlConsoleMessage(type, msg) {
+	        this.buildHtmlElement(type, msg);
+	    }
+	    /**
+	     * buildHtmlElement
+	     * Metodo responsavel por criar elemento html que sera inserido no console
+	     * @param   type    tipo da mensagem(info ou error)
+	     * @param   msg     mensagem que sera impressa no console
+	     */
+	    SqlConsoleMessage.prototype.buildHtmlElement = function (type, msg) {
+	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
+	    };
+	    SqlConsoleMessage.prototype.getMsg = function () {
+	        return this.msgElement;
+	    };
+	    return SqlConsoleMessage;
+	}());
+	exports.SqlConsoleMessage = SqlConsoleMessage;
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var animation_1 = __webpack_require__(6);
 	/**
 	 * AnimationNull
 	 * Classe filha, responsavel por implementar especializacao de uma animacao vazia(seguindo null object pattern)
@@ -257,7 +314,7 @@
 
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -327,7 +384,7 @@
 
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -336,8 +393,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var animation_1 = __webpack_require__(4);
-	var sql_console_msg_info_1 = __webpack_require__(6);
+	var animation_1 = __webpack_require__(6);
+	var sql_console_msg_info_1 = __webpack_require__(3);
 	/**
 	 * AnimationSelect
 	 * Classe responsavel por implementar animações relacionadas ao select
@@ -474,61 +531,6 @@
 
 
 /***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var sql_console_message_1 = __webpack_require__(7);
-	/**
-	 * SqlConsoleMsgInfo
-	 * Classe responsavel por especializar mensagens de informacao da aplicacao
-	 */
-	var SqlConsoleMsgInfo = (function (_super) {
-	    __extends(SqlConsoleMsgInfo, _super);
-	    function SqlConsoleMsgInfo(msg) {
-	        _super.call(this, 'info', msg);
-	    }
-	    return SqlConsoleMsgInfo;
-	}(sql_console_message_1.SqlConsoleMessage));
-	exports.SqlConsoleMsgInfo = SqlConsoleMsgInfo;
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-	/**
-	 * SqlConsoleMessage
-	 * Classe Base, responsavel por modelar as mensagens que serão inseridas no console da aplicação
-	 */
-	var SqlConsoleMessage = (function () {
-	    function SqlConsoleMessage(type, msg) {
-	        this.buildHtmlElement(type, msg);
-	    }
-	    /**
-	     * buildHtmlElement
-	     * Metodo responsavel por criar elemento html que sera inserido no console
-	     * @param   type    tipo da mensagem(info ou error)
-	     * @param   msg     mensagem que sera impressa no console
-	     */
-	    SqlConsoleMessage.prototype.buildHtmlElement = function (type, msg) {
-	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
-	    };
-	    SqlConsoleMessage.prototype.getMsg = function () {
-	        return this.msgElement;
-	    };
-	    return SqlConsoleMessage;
-	}());
-	exports.SqlConsoleMessage = SqlConsoleMessage;
-
-
-/***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -654,7 +656,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(7);
+	var sql_console_message_1 = __webpack_require__(4);
 	/**
 	 * SqlConsoleMsgError
 	 * Classe responsavel por especializar mensagens de erro
@@ -811,7 +813,7 @@
 	        return new Promise(function (resolve, reject) {
 	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
 	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
-	                    new arrow_1.Arrow(240, 80, 80, 80, delay * 0.40).moveToRightUp(function () {
+	                    new arrow_1.Arrow(80, 80, 80, 80, delay * 0.40).moveToRight(function () {
 	                        $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
 	                            $("#server-process").fadeTo(delay * 0.15, 1);
 	                        });
