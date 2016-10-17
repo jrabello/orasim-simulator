@@ -674,9 +674,10 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var sql_console_msg_info_1 = __webpack_require__(3);
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
@@ -705,6 +706,7 @@
 	     * @returns retorna o novo bloco criado(htmlElement) dentro do datafiles
 	     */
 	    ServerProcess.prototype.animateGetBlockFromDataFiles = function (dataFiles, delay) {
+	        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'));
 	        var blockHtml = dataFiles.getNewBlockHtml();
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -722,6 +724,7 @@
 	     * @param {delay} tempo de animacao
 	     */
 	    ServerProcess.prototype.animateStoreBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
+	        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'));
 	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocation].getElement(), delay, delay / 6, function () {
 	            // no inicio da animacao piscar server-process e db-buffer-cache 
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -742,6 +745,7 @@
 	     * @returns retorna novo bloco na posicao de memoria passada como argumento
 	     */
 	    ServerProcess.prototype.animateGetNewBlockFromDbBufferCache = function (dbBufferCache, memLocation, delay) {
+	        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'));
 	        var blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation);
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -758,6 +762,7 @@
 	     * @param {delay} duracao de animacao
 	     */
 	    ServerProcess.prototype.animateGetBlockFromDbBufferCache = function (blockHtml, dbBufferCache, delay) {
+	        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'));
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -771,6 +776,7 @@
 	     * @param {delay} duracao da animacao
 	     */
 	    ServerProcess.prototype.animateSendBlockToUserProcess = function (blockHtml, userProcess, delay) {
+	        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess enviando dados para UserProcess'));
 	        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay, 0, function () {
 	            //no inicio da animacao, piscar user-process e server-process     
 	            $('.arrow.from-serverp-2-userp').show();
@@ -791,6 +797,7 @@
 
 	"use strict";
 	var arrow_1 = __webpack_require__(13);
+	var sql_console_msg_info_1 = __webpack_require__(3);
 	/**
 	 * UserProcess
 	 * Classe responsavel por modelar o objeto UserProcess da animacao
@@ -811,9 +818,10 @@
 	     */
 	    UserProcess.prototype.animateSendDataToServerProcess = function (delay) {
 	        return new Promise(function (resolve, reject) {
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('Userprocess Enviando dados para ServerProcess'));
 	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
 	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
-	                    new arrow_1.Arrow(80, 80, 80, 80, delay * 0.40).moveToRight(function () {
+	                    new arrow_1.Arrow(240, 80, 80, 80, delay * 0.40).moveToRight(function () {
 	                        $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
 	                            $("#server-process").fadeTo(delay * 0.15, 1);
 	                        });
