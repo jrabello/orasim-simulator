@@ -32,7 +32,9 @@ export class SqlParser{
      * @returns uma instancia da classe Animation(ou classes filhas) 
      */
     parse(query: string): Animation {        
-    
+        let sqlConsole: SqlConsole = Orasim.getSqlConsole()
+        sqlConsole.addMsg(new SqlConsoleMsgInfo('Userprocess realizando parsing da query: (' + query +')'))        
+
         // transformando a query em lower-case 
         let lowerQuery = query.toLowerCase();
 
