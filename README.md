@@ -2,7 +2,13 @@
 Oracle SGBD Emulator
 
 ## Instalação
-Dependências: (Nodejs 6.x.x e Npm 3.x.x)
+Dependências: (Vscode, Nodejs 6.x.x e Npm 3.x.x)
+
+vscode:
+https://code.visualstudio.com/
+npm:
+https://nodejs.org/en/download/
+
 
 1 - Digite "npm install" para que o npm faça download de todas as dependencias do projeto, que estão definidas no package.json
 ```shell
