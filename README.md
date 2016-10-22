@@ -1,3 +1,4 @@
+# TESTE GITHUB
 # sgbd-emulator
 Oracle SGBD Emulator
 
@@ -10,7 +11,7 @@ https://code.visualstudio.com/
 npm:
 https://nodejs.org/en/download/
 
-
+# TESTE GITHUB
 
 1 - Digite "npm install" para que o npm faça download de todas as dependencias do projeto, que estão definidas no package.json
 ```shell
@@ -40,3 +41,5 @@ https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines
 Com as seguintes exceções:
 
 1 - "Do not use "I" as a prefix for interface names."
+
+# TESTE GITHUB
