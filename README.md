@@ -6,6 +6,7 @@ Dependências: (Vscode, Nodejs 6.x.x e Npm 3.x.x)
 
 vscode:
 https://code.visualstudio.com/
+
 npm:
 https://nodejs.org/en/download/
 
