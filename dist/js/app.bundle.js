@@ -432,10 +432,10 @@
 	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
 	        // setando estado de termino da animacao        
 	        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
-	            .then(function (res) {
+	            .then(function (result) {
 	            return _this.animateSelect();
 	        })
-	            .then(function (res) {
+	            .then(function (result) {
 	            return Orasim.getAnimation().setAnimating(false);
 	        });
 	    };
