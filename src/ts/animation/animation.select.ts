@@ -52,10 +52,10 @@ export class AnimationSelect extends Animation{
         // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
         // setando estado de termino da animacao        
         userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
-        .then((res) => {                        
+        .then((result: number) => {                        
             return this.animateSelect()
         })
-        .then((res) => {            
+        .then((result: number) => {            
             return Orasim.getAnimation().setAnimating(false)            
         })
     }
@@ -66,7 +66,7 @@ export class AnimationSelect extends Animation{
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
     private animateSelect(): Promise<number> {
-        return new Promise<number>((resolve, reject) => {            
+        return new Promise<number>((resolve: Function, reject: Function) => {            
                         
             let animationTime = 0
 
