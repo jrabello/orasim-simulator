@@ -17,9 +17,9 @@ export class UserProcess {
             content: {
                         title: {
                             text: 'User Process',
-                            button: true
+                            button: true                            
                         },
-                        text: 'Olá, eu sou o user-process!',                        
+                        text: 'Olá, eu sou o user-process!'
                     },
             show: { event: 'click' },
             style: { classes: 'qtip-light' },

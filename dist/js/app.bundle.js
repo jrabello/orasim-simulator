@@ -811,13 +811,13 @@
 	            suppress: false,
 	            content: {
 	                title: {
-	                    text: 'User Process',
+	                    text: 'User Proces',
 	                    button: true
 	                },
-	                text: 'Olá, eu sou o user-process!',
+	                text: 'Olá, eu sou o user-process!'
 	            },
 	            show: { event: 'click' },
-	            style: { classes: 'qtip-light', 'font-size': 22 },
+	            style: { classes: 'qtip-light' },
 	            hide: { event: 'click' }
 	        });
 	    }

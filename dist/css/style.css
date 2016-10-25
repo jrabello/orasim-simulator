@@ -599,6 +599,10 @@ h1 {
     z-index:99
    }
 
-.qtip-content {
-  font-size:22px;
+.qtip-title{
+  font-size: 14px
+}
+
+.qtip-content{
+  font-size: 14px
 }
