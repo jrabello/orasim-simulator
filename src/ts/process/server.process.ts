@@ -39,7 +39,8 @@ export class ServerProcess{
         let blockHtml = dataFiles.getNewBlockHtml()
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))                            
+            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))   
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DbBufferCache</span>"))                         
             //$('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
             //$(blockHtml).repeat().fadeTo(delay/2, 1).fadeTo(delay/2, 1).until(1)
         }, () =>{})
@@ -60,7 +61,7 @@ export class ServerProcess{
             // no inicio da animacao piscar server-process e db-buffer-cache 
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
+            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
         }, () => { 
             // depois da animacao completa marcando o bloco como utilizado            
             dbBufferCache.setMemoryLocationUsed(memLocation)            
@@ -82,7 +83,7 @@ export class ServerProcess{
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache')) 
+            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache')) 
         }, () =>{})
         return blockHtml
     }
@@ -99,7 +100,8 @@ export class ServerProcess{
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache')) 
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>"))
+            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
         }, () => {})
     }
     /**
@@ -117,8 +119,14 @@ export class ServerProcess{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
             $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
             $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess enviando dados para UserProcess'))
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Retornando resultado para <span style='font-weight: bold'>UserProcess</span>"))
+            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess enviando dados para UserProcess'))
         }, 
-        () => {})
+        () => {
+            //no final da animacao
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Comando executado com sucesso'))
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Aguardando nova solicitação...'))
+            
+        })
     }
 } 
