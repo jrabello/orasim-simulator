@@ -11,6 +11,23 @@ export class UserProcess {
 
     constructor() {
         this.element = $("#user-process")[0]
+        // criando tooltip para user-process
+        $('#user-process').qtip({
+            suppress: false,
+            content: {
+                        text: 'A great way to show a persistent tooltip with an easy close method',
+                        title: {
+                            text: 'Combined title and button',
+                            button: true
+                        }
+                    },
+            show: { event: 'click' },
+            style: { classes: 'qtip-light' },
+            hide:{ 
+                event: 'click',
+                inactive: 1500
+            }
+        })
     }
 
     getElement() {
