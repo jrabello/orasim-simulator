@@ -567,3 +567,34 @@ h1 {
 	0% { opacity:0; }
 	100% { opacity:100%; }
 }
+
+
+
+.tooltip{display:inline;position:relative}
+.tooltip:hover{text-decoration:none}
+
+.tooltip:active:after{
+   background:#111;
+   background:rgba(0,0,0,.8);
+   border-radius:5px;
+   bottom:18px;
+   color:#fff;
+   content:attr(title);
+   display:block;
+   left:50%;
+   padding:5px 15px;
+   position:absolute;
+   white-space:nowrap;
+   z-index:98
+  }
+.tooltip:active:before{
+    border:solid;
+    border-color:#111 transparent;
+    border-width:6px 6px 0 6px;
+    bottom:12px;
+    content:"";
+    display:block;
+    left:75%;
+    position:absolute;
+    z-index:99
+   }
