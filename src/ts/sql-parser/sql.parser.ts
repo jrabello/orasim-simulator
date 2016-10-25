@@ -33,7 +33,7 @@ export class SqlParser{
      */
     parse(query: string): Animation {        
         let sqlConsole: SqlConsole = Orasim.getSqlConsole()
-        sqlConsole.addMsg(new SqlConsoleMsgInfo('Userprocess realizando parsing da query: (' + query +')'))        
+        //sqlConsole.addMsg(new SqlConsoleMsgInfo('Userprocess realizando parsing da query: (' + query +')'))        
 
         // transformando a query em lower-case 
         let lowerQuery = query.toLowerCase();
@@ -43,11 +43,13 @@ export class SqlParser{
             case "connect":
                 return new AnimationNull()
             case "select":
-                let hash: Hash = new Crc32(lowerQuery)
-                let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()                
+                //gerando hash
+                //procurando hash na shared pool      
+                let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()                          
+                let hash: Hash = new Crc32(lowerQuery)                
                 let isHashFound = sharedPool.findHash(hash)        
 
-                // caso o hash na seja encontrado, adicione na shared-pool 
+                // caso o hash nao seja encontrado, adicione na shared-pool 
                 if(!isHashFound)
                     sharedPool.addHash(hash)               
                 

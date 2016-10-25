@@ -48,7 +48,7 @@
 	var sql_console_1 = __webpack_require__(1);
 	var server_process_1 = __webpack_require__(11);
 	var user_process_1 = __webpack_require__(12);
-	var animation_1 = __webpack_require__(6);
+	var animation_1 = __webpack_require__(4);
 	var oracle_database_1 = __webpack_require__(14);
 	var oracle_instance_1 = __webpack_require__(17);
 	/**
@@ -152,9 +152,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sql_console_msg_info_1 = __webpack_require__(3);
-	var animation_null_1 = __webpack_require__(5);
-	var animation_select_1 = __webpack_require__(7);
+	var animation_null_1 = __webpack_require__(3);
+	var animation_select_1 = __webpack_require__(5);
 	var crc32_1 = __webpack_require__(8);
 	/**
 	 * SqlParser
@@ -177,7 +176,7 @@
 	     */
 	    SqlParser.prototype.parse = function (query) {
 	        var sqlConsole = Orasim.getSqlConsole();
-	        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('Userprocess realizando parsing da query: (' + query + ')'));
+	        //sqlConsole.addMsg(new SqlConsoleMsgInfo('Userprocess realizando parsing da query: (' + query +')'))        
 	        // transformando a query em lower-case 
 	        var lowerQuery = query.toLowerCase();
 	        // verificando qual query foi digitada
@@ -185,10 +184,12 @@
 	            case "connect":
 	                return new animation_null_1.AnimationNull();
 	            case "select":
-	                var hash = new crc32_1.Crc32(lowerQuery);
+	                //gerando hash
+	                //procurando hash na shared pool      
 	                var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	                var hash = new crc32_1.Crc32(lowerQuery);
 	                var isHashFound = sharedPool.findHash(hash);
-	                // caso o hash na seja encontrado, adicione na shared-pool 
+	                // caso o hash nao seja encontrado, adicione na shared-pool 
 	                if (!isHashFound)
 	                    sharedPool.addHash(hash);
 	                this.isParsedSuccess = true;
@@ -243,62 +244,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(4);
-	/**
-	 * SqlConsoleMsgInfo
-	 * Classe responsavel por especializar mensagens de informacao da aplicacao
-	 */
-	var SqlConsoleMsgInfo = (function (_super) {
-	    __extends(SqlConsoleMsgInfo, _super);
-	    function SqlConsoleMsgInfo(msg) {
-	        _super.call(this, 'info', msg);
-	    }
-	    return SqlConsoleMsgInfo;
-	}(sql_console_message_1.SqlConsoleMessage));
-	exports.SqlConsoleMsgInfo = SqlConsoleMsgInfo;
-
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	"use strict";
-	/**
-	 * SqlConsoleMessage
-	 * Classe Base, responsavel por modelar as mensagens que serão inseridas no console da aplicação
-	 */
-	var SqlConsoleMessage = (function () {
-	    function SqlConsoleMessage(type, msg) {
-	        this.buildHtmlElement(type, msg);
-	    }
-	    /**
-	     * buildHtmlElement
-	     * Metodo responsavel por criar elemento html que sera inserido no console
-	     * @param   type    tipo da mensagem(info ou error)
-	     * @param   msg     mensagem que sera impressa no console
-	     */
-	    SqlConsoleMessage.prototype.buildHtmlElement = function (type, msg) {
-	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
-	    };
-	    SqlConsoleMessage.prototype.getMsg = function () {
-	        return this.msgElement;
-	    };
-	    return SqlConsoleMessage;
-	}());
-	exports.SqlConsoleMessage = SqlConsoleMessage;
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var animation_1 = __webpack_require__(6);
+	var animation_1 = __webpack_require__(4);
 	/**
 	 * AnimationNull
 	 * Classe filha, responsavel por implementar especializacao de uma animacao vazia(seguindo null object pattern)
@@ -314,7 +260,7 @@
 
 
 /***/ },
-/* 6 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -384,7 +330,7 @@
 
 
 /***/ },
-/* 7 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -393,8 +339,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var animation_1 = __webpack_require__(6);
-	var sql_console_msg_info_1 = __webpack_require__(3);
+	var animation_1 = __webpack_require__(4);
+	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
 	 * AnimationSelect
 	 * Classe responsavel por implementar animações relacionadas ao select
@@ -431,11 +377,11 @@
 	        Orasim.getAnimation().setAnimating(true);
 	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
 	        // setando estado de termino da animacao        
-	        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
-	            .then(function (res) {
+	        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay, "<span style='font-weight: bold'>SELECT</span>")
+	            .then(function (result) {
 	            return _this.animateSelect();
 	        })
-	            .then(function (res) {
+	            .then(function (result) {
 	            return Orasim.getAnimation().setAnimating(false);
 	        });
 	    };
@@ -475,8 +421,9 @@
 	            var serverProcess = Orasim.getServerProcess();
 	            var userProcess = Orasim.getUserProcess();
 	            // hash nao encontrado
-	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"));
-	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("ServerProcess criando hash da user query"));
+	            //sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"))
+	            //sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess criando hash da user query"))
+	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD</span> parse concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + sharedPool.getLastHash().getHexStrHash()));
 	            // animacao adicionando hash na shared pool
 	            // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache            
 	            sharedPool.animateAddHash();
@@ -528,6 +475,61 @@
 	    return AnimationSelect;
 	}(animation_1.Animation));
 	exports.AnimationSelect = AnimationSelect;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var sql_console_message_1 = __webpack_require__(7);
+	/**
+	 * SqlConsoleMsgInfo
+	 * Classe responsavel por especializar mensagens de informacao da aplicacao
+	 */
+	var SqlConsoleMsgInfo = (function (_super) {
+	    __extends(SqlConsoleMsgInfo, _super);
+	    function SqlConsoleMsgInfo(msg) {
+	        _super.call(this, 'info', msg);
+	    }
+	    return SqlConsoleMsgInfo;
+	}(sql_console_message_1.SqlConsoleMessage));
+	exports.SqlConsoleMsgInfo = SqlConsoleMsgInfo;
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+	/**
+	 * SqlConsoleMessage
+	 * Classe Base, responsavel por modelar as mensagens que serão inseridas no console da aplicação
+	 */
+	var SqlConsoleMessage = (function () {
+	    function SqlConsoleMessage(type, msg) {
+	        this.buildHtmlElement(type, msg);
+	    }
+	    /**
+	     * buildHtmlElement
+	     * Metodo responsavel por criar elemento html que sera inserido no console
+	     * @param   type    tipo da mensagem(info ou error)
+	     * @param   msg     mensagem que sera impressa no console
+	     */
+	    SqlConsoleMessage.prototype.buildHtmlElement = function (type, msg) {
+	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
+	    };
+	    SqlConsoleMessage.prototype.getMsg = function () {
+	        return this.msgElement;
+	    };
+	    return SqlConsoleMessage;
+	}());
+	exports.SqlConsoleMessage = SqlConsoleMessage;
 
 
 /***/ },
@@ -656,7 +658,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(4);
+	var sql_console_message_1 = __webpack_require__(7);
 	/**
 	 * SqlConsoleMsgError
 	 * Classe responsavel por especializar mensagens de erro
@@ -677,7 +679,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sql_console_msg_info_1 = __webpack_require__(3);
+	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
@@ -709,7 +711,8 @@
 	        var blockHtml = dataFiles.getNewBlockHtml();
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'));
+	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))   
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DbBufferCache</span>"));
 	            //$('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
 	            //$(blockHtml).repeat().fadeTo(delay/2, 1).fadeTo(delay/2, 1).until(1)
 	        }, function () { });
@@ -728,7 +731,7 @@
 	            // no inicio da animacao piscar server-process e db-buffer-cache 
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'));
+	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
 	        }, function () {
 	            // depois da animacao completa marcando o bloco como utilizado            
 	            dbBufferCache.setMemoryLocationUsed(memLocation);
@@ -749,7 +752,7 @@
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'));
+	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache')) 
 	        }, function () { });
 	        return blockHtml;
 	    };
@@ -765,7 +768,8 @@
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'));
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>"));
+	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
 	        }, function () { });
 	    };
 	    /**
@@ -783,8 +787,13 @@
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#user-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#user img').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('ServerProcess enviando dados para UserProcess'));
-	        }, function () { });
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando resultado para <span style='font-weight: bold'>UserProcess</span>"));
+	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess enviando dados para UserProcess'))
+	        }, function () {
+	            //no final da animacao
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< UP > Comando executado com sucesso'));
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< UP > Aguardando nova solicitação...'));
+	        });
 	    };
 	    return ServerProcess;
 	}());
@@ -797,7 +806,7 @@
 
 	"use strict";
 	var arrow_1 = __webpack_require__(13);
-	var sql_console_msg_info_1 = __webpack_require__(3);
+	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
 	 * UserProcess
 	 * Classe responsavel por modelar o objeto UserProcess da animacao
@@ -806,6 +815,20 @@
 	var UserProcess = (function () {
 	    function UserProcess() {
 	        this.element = $("#user-process")[0];
+	        // criando tooltip para user-process
+	        $('#user-process').qtip({
+	            suppress: false,
+	            content: {
+	                title: {
+	                    text: 'User Process',
+	                    button: true
+	                },
+	                text: 'Olá, eu sou o user-process!'
+	            },
+	            show: { event: 'click' },
+	            style: { classes: 'qtip-light' },
+	            hide: { event: 'click' }
+	        });
 	    }
 	    UserProcess.prototype.getElement = function () {
 	        return this.element;
@@ -814,14 +837,16 @@
 	     * animateSendDataToServerProcess
 	     * Metodo responsavel por animar o envio de dados ao server-process
 	     * @param {delay} duracao da animacao
+	     * @param {nameComando} nome do comando que sera enviado para server process
 	     * @returns uma promise retornada logo apos o tempo de animacao
 	     */
-	    UserProcess.prototype.animateSendDataToServerProcess = function (delay) {
+	    UserProcess.prototype.animateSendDataToServerProcess = function (delay, nameComando) {
 	        return new Promise(function (resolve, reject) {
 	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
-	                Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('Userprocess Enviando dados para ServerProcess'));
 	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
+	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< UP > Enviando comando ' + nameComando + ' para <span style="font-weight: bold">ServerProcess</span>'));
 	                    new arrow_1.Arrow(240, 80, 80, 80, delay * 0.40).moveToRight(function () {
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse e criando plano de execução da query'));
 	                        $("#server-process").fadeTo(delay * 0.15, 0.1, function () {
 	                            $("#server-process").fadeTo(delay * 0.15, 1);
 	                        });
@@ -1429,6 +1454,13 @@
 	     */
 	    SharedPool.prototype.addHash = function (hash) {
 	        this.hashCollection.push(hash);
+	    };
+	    /**
+	     * getLastHash
+	     * Metodo responsavel por retornar ultimo hash inserido na shared pool
+	     */
+	    SharedPool.prototype.getLastHash = function () {
+	        return this.hashCollection[this.hashCollection.length - 1];
 	    };
 	    /**
 	     * getMemoryLocation

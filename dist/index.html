@@ -5,8 +5,10 @@
 	<title>ORASIM</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/jquery.qtip.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/arrow.css">
+	
 	<link rel="icon" href="img/database.ico">
 </head>
 
@@ -26,10 +28,14 @@
 		<div id="animation-container">
 			<div id="user">
 				<img src="img/user.png" alt="Usuário">
-			</div>
+			</div>			
 			<div class="grey-bg oval" id="user-process">
+				<!--tooltip-->
+				<!--<div class="help-tip" style="top: -50px; right: -10px;">-->
+					<!--<p>Este é o user process!</p>-->
+				<!--</div>-->
 				user process
-			</div>
+			</div>			
 			<div class="grey-bg oval" id="listener-process">
 				listener process
 			</div>
@@ -37,8 +43,16 @@
 			<div id="client-server-line"></div>
 
 			<div class="grey-bg oval" id="server-process">
+				<!--<div class="help-tip" style="top: -20px; right: 1px;">-->
+					<!--<p>Este é o Server Process!</p>-->
+				<!--</div>-->
 				server process
-				<div class="black-bg" id="pga">pga</div>
+				<div class="black-bg" id="pga">
+					<!--<div class="help-tip" style="top: -10px; right: 40px;">-->
+						<!--<p>Este é o PGA!</p>-->
+					<!--</div>-->
+					pga
+				</div>
 			</div>
 
 			<div class="black-bg" id="oracle-instance">
@@ -215,8 +229,9 @@
 	<!--<script src="js/third-party/jquery-1.12.0.min.js"></script>-->
 	<script src="js/third-party/jquery-3.1.min.js"></script>
 	<script src="js/third-party/jquery-timing.min.js"></script>
+	<script src="js/third-party/jquery.qtip.js"></script>
 	<!--<script src="js/third-party/jquery.fxqueues-2.0.3.js"></script>-->
-	<script src="js/third-party/sql-parser.min.js"></script>
+	<!--<script src="js/third-party/sql-parser.min.js"></script>-->
 	<script type="text/javascript" src="js/app.bundle.js"></script>
 
 </body>

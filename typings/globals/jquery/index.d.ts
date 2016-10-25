@@ -3218,6 +3218,7 @@ interface JQuery {
     queue(queueName: string, callback: Function): JQuery;
 
     repeat(): any
+    qtip(obj: Object): any
 }
 declare module "jquery" {
     export = $;

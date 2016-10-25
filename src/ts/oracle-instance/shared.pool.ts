@@ -38,6 +38,14 @@ export class SharedPool {
     }
         
     /**
+     * getLastHash
+     * Metodo responsavel por retornar ultimo hash inserido na shared pool 
+     */
+    getLastHash(): Hash{
+        return this.hashCollection[this.hashCollection.length-1]
+    }
+
+    /**
      * getMemoryLocation
      * @param {hs} hash que sera usado para busca de local da memoria
      * @returns local de memoria onde os dados estao armazenados
