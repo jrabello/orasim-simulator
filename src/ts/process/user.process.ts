@@ -15,18 +15,15 @@ export class UserProcess {
         $('#user-process').qtip({
             suppress: false,
             content: {
-                        text: 'A great way to show a persistent tooltip with an easy close method',
                         title: {
-                            text: 'Combined title and button',
+                            text: 'User Process',
                             button: true
-                        }
+                        },
+                        text: 'Olá, eu sou o user-process!',                        
                     },
             show: { event: 'click' },
             style: { classes: 'qtip-light' },
-            hide:{ 
-                event: 'click',
-                inactive: 1500
-            }
+            hide:{ event: 'click' }
         })
     }
 

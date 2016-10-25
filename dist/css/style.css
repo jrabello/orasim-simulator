@@ -598,3 +598,7 @@ h1 {
     position:absolute;
     z-index:99
    }
+
+.qtip-content {
+  font-size:22px;
+}
