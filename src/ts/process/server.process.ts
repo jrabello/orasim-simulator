@@ -83,7 +83,8 @@ export class ServerProcess{
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache')) 
+            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'))
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>")) 
         }, () =>{})
         return blockHtml
     }

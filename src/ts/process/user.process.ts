@@ -1,3 +1,4 @@
+import { Tooltip } from '../utils/tooltip'
 import { Arrow } from '../animation/arrow'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 
@@ -12,19 +13,7 @@ export class UserProcess {
     constructor() {
         this.element = $("#user-process")[0]
         // criando tooltip para user-process
-        $('#user-process').qtip({
-            suppress: false,
-            content: {
-                        title: {
-                            text: 'User Process',
-                            button: true                            
-                        },
-                        text: 'Olá, eu sou o user-process!'
-                    },
-            show: { event: 'click' },
-            style: { classes: 'qtip-light' },
-            hide:{ event: 'click' }
-        })
+        new Tooltip("#user-process","User Process", "Eu sou o user-process!")
     }
 
     getElement() {
@@ -56,4 +45,28 @@ export class UserProcess {
             }, delay)
         })
     }
+
+     /**
+     * animateSendDataToListener
+     * Metodo responsavel por animar o envio de dados ao listener     
+     * @param {delay} duracao da animacao
+     * @returns uma promise retornada logo apos o tempo de animacao
+     */    
+    animateSendDataToListener(delay: number): Promise<number>{
+        return new Promise<number>((resolve, reject) => {
+            $("#user-process").fadeTo(delay*0.15, 0.1, () => {
+                $("#user-process").fadeTo(delay*0.15, 1, () => {
+                    new Arrow(240, 80, 80, 0, delay*0.40).moveToUpRight(() => {
+                        $("#listener-process").fadeTo(delay*0.15, 0.1, () => {
+                            $("#listener-process").fadeTo(delay*0.15, 1)
+                        })
+                    })
+                })
+            })
+            setTimeout(() => {
+                resolve(0) 
+            }, delay)
+        })
+    }
+
 }

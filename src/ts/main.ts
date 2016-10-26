@@ -1,4 +1,5 @@
 import { SqlConsole } from './sql-console/sql.console'
+import { SqlButtons } from './sql-buttons/sql.buttons'
 import { ServerProcess } from './process/server.process'
 import { UserProcess } from './process/user.process'
 import { Animation } from './animation/animation'
@@ -12,20 +13,26 @@ import { OracleInstance } from './oracle-instance/oracle.instance'
  */
 class Main {
     private sqlConsole: SqlConsole
+    private sqlButtons: SqlButtons
     private animation: Animation
     private oracleInstance: OracleInstance
     private oracleDatabase: OracleDatabase
     private serverProcess: ServerProcess
     private userProcess: UserProcess
-
+    
     // criando instancias de classes SingleTon 
     constructor() {
         this.sqlConsole = new SqlConsole()
+        this.sqlButtons = new SqlButtons()
         this.serverProcess = new ServerProcess()
         this.userProcess = new UserProcess()
         this.animation = new Animation()
         this.oracleInstance = new OracleInstance()
         this.oracleDatabase = new OracleDatabase()
+    }
+
+    getSqlButton(): SqlButtons{
+        return this.sqlButtons
     }
 
     getUserProcess(): UserProcess {
