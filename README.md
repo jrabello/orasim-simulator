@@ -22,6 +22,7 @@ $ npm install
 interface JQueryStatic {
     ...    
     repeat(): any
+    qtip(obj: Object): any
 }
 ```
 
