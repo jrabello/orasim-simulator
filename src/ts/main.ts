@@ -20,7 +20,6 @@ class Main {
     private serverProcess: ServerProcess
     private userProcess: UserProcess
     
-
     // criando instancias de classes SingleTon 
     constructor() {
         this.sqlConsole = new SqlConsole()

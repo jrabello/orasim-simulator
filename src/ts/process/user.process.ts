@@ -1,3 +1,4 @@
+import { Tooltip } from '../utils/tooltip'
 import { Arrow } from '../animation/arrow'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 
@@ -12,19 +13,7 @@ export class UserProcess {
     constructor() {
         this.element = $("#user-process")[0]
         // criando tooltip para user-process
-        $('#user-process').qtip({
-            suppress: false,
-            content: {
-                        title: {
-                            text: 'User Process',
-                            button: true                            
-                        },
-                        text: 'Olá, eu sou o user-process!'
-                    },
-            show: { event: 'click' },
-            style: { classes: 'qtip-light' },
-            hide:{ event: 'click' }
-        })
+        new Tooltip("#user-process","User Process", "Eu sou o user-process!")
     }
 
     getElement() {

@@ -1,9 +1,9 @@
 export class SqlButton{
     constructor(){
-
+        $("btnConnect-div").on('click', this.handleConnect)
     }
 
-    handleConnect(){
-        
+    handleConnect(): void{
+        console.log('clicked!')
     }
 }

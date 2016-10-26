@@ -9,7 +9,7 @@ import { UserProcess } from '../process/user.process'
 export class AnimationConnect extends Animation{
     private animUserProcessDelay: number
 
-    constructor(isHashFound: boolean){
+    constructor(){
         super()
         this.animUserProcessDelay = super.getDelay() * 10
     }
