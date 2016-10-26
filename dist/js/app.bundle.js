@@ -1514,6 +1514,7 @@
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
+	        //tooltip do pmon
 	        $('#pmon').qtip({
 	            suppress: false,
 	            content: {
