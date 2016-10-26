@@ -1307,9 +1307,11 @@
 
 	"use strict";
 	var sga_1 = __webpack_require__(18);
+	var pmon_1 = __webpack_require__(21);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
+	        this.pmon = new pmon_1.Pmon();
 	    }
 	    OracleInstance.prototype.getSga = function () {
 	        return this.sga;
@@ -1502,6 +1504,33 @@
 	    return SharedPool;
 	}());
 	exports.SharedPool = SharedPool;
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Pmon = (function () {
+	    function Pmon() {
+	        this.element = $('#pmon')[0];
+	        $('#pmon').qtip({
+	            suppress: false,
+	            content: {
+	                title: {
+	                    text: 'Pmon',
+	                    button: true
+	                },
+	                text: 'Olá, eu sou o pmon!'
+	            },
+	            show: { event: 'click' },
+	            style: { classes: 'qtip-light' },
+	            hide: { event: 'click' }
+	        });
+	    }
+	    return Pmon;
+	}());
+	exports.Pmon = Pmon;
 
 
 /***/ }
