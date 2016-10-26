@@ -4,6 +4,7 @@
 <head>
 	<title>ORASIM</title>
 	<meta charset="UTF-8">
+	<!--styles-->
 	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/jquery.qtip.css">
 	<link rel="stylesheet" href="css/style.css">
@@ -16,6 +17,7 @@
 	<main>
 		<!--console-->
 		<div id="console-container">
+			<!--<input id="console-input" onkeypress="Orasim.getSqlConsole().handleKeyPress(event)" class="console-view" type="text" placeholder="Digite o comando (SELECT, DELETE, UPDATE, INSERT)">-->
 			<div id="btnConnect-div">
           		<a id="btnConnect" href="#">CONNECT</a>
        		</div>
@@ -26,116 +28,73 @@
 		</div>
 
 		<div id="animation-container">
-
 			<div id="user">
 				<img src="img/user.png" alt="Usuário">
 			</div>
-
-			<div class="grey-bg oval process" id="user-process">
+			<div class="grey-bg oval" id="user-process">
 				User Process
 			</div>
-
+			
 			<div id="orelha">
 				<img src="img/orelha.png" alt="orelha">
 			</div>
 
-			<div class="grey-bg oval process" id="listener-process">
-				Listener
+			<div class="grey-bg oval" id="listener-process">
+				Listener Process
 			</div>
 
 			<div id="client-server-line"></div>
 
-			<div class="grey-bg oval process" id="server-process">
+			<div class="grey-bg oval" id="server-process">
 				Server Process
+				<!--<div class="black-bg" id="pga">
+					pga
+				</div>-->
 			</div>
 
-			<div class="black-bg" id="pga">PGA</div>
-
 			<div class="black-bg" id="oracle-instance">
-				<p class="content-title-instance">Oracle Instance</p>
-
+				<p class="content-title">oracle instance</p>
 				<div class="yellow-bg" id="sga">
-					<p class="content-title-sga">SGA</p>
-
+					<p class="content-title">sga</p>
 					<ul class="inline-block-container">
-
-						<!--<div class="green-bg" id="shared-pool">
-                <p class="content-title">shared pool</p>
-                <ul id="hash-ul-container"></ul>
-              </div>-->
-
 						<li id="shared-pool" class="green-bg">
-							<p class="content-title-sga-blocks">Shared Pool</p>
+							<p class="content-title">shared pool</p>
 							<ul id="hash-ul-container">
 							</ul>
 						</li>
 
-						<li id="db-buffer-cache" class="green-bg" >
-							<p class="content-title-sga-blocks">DB Buffer Cache</p>
-
+						<li id="db-buffer-cache" class="green-bg">
+							<p class="content-title">db buffer cache</p>
 							<div id="db-buffer-cache-container">
-								<!--<div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>
-                    <div class="cache-box"></div>-->
 							</div>
 						</li>
 
-						<li id="redo-log-buffer" class="green-bg" >
-							<p class="content-title-sga-blocks">Redo Log Buffer</p>
+						<li id="redo-log-buffer" class="green-bg">
+							<p class="content-title">redo log buffer</p>
 
 							<div id="cache-container">
 								<div class="buffer-box"></div>
 								<div class="buffer-box"></div>
-
 								<div class="buffer-box"></div>
 								<div class="buffer-box"></div>
-
-								<!--<div class="buffer-box"></div>
-								<div class="buffer-box"></div>
-
 								<div class="buffer-box"></div>
 								<div class="buffer-box"></div>
-
 								<div class="buffer-box"></div>
-								<div class="buffer-box"></div>-->
+								<div class="buffer-box"></div>
+								<div class="buffer-box"></div>
+								<div class="buffer-box"></div>
 							</div>
 						</li>
-
 					</ul>
-
 				</div>
 
-				<div class="inline-block-container process-instance">
-					<div class="blue-bg oval">PMON</div>
-					<div class="blue-bg oval">SMON</div>
-					<div class="blue-bg oval">DBWR</div>
-					<div class="blue-bg oval">CKPT</div>
-					<div class="blue-bg oval">LGWR</div>
-					<div class="blue-bg oval">ARCn</div>
+				<div class="inline-block-container process">
+					<div id="pmon" class="grey-bg oval">pmon</div>
+					<div class="grey-bg oval">smon</div>
+					<div class="grey-bg oval">dbwr</div>
+					<div class="grey-bg oval">ckpt</div>
+					<div class="grey-bg oval">lgwr</div>
+					<div class="grey-bg oval">arcn</div>
 				</div>
 
 			</div>
@@ -195,26 +154,25 @@
 
 						<div class="archives">
 							<div class="archive" id="arc01">arc01</div>
-							<div class="archive hiddenArc" id="arc02">arc02</div>
-							<div class="archive hiddenArc" id="arc03">arc03</div>
-							<div class="archive hiddenArc" id="arc04">arc04</div>
-							<div class="archive hiddenArc" id="arc05">arc05</div>
-							<div class="archive hiddenArc" id="arc06">arc06</div>
+							<div class="archive" id="arc02">arc02</div>
+							<div class="archive" id="arc03">arc03</div>
+							<div class="archive" id="arc04">arc04</div>
+							<div class="archive" id="arc05">arc05</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="dark-grey-bg bottom-left-radius" id="parameter-file">parameter-file</div>
 
-				<p class="content-title" id="oracle-database-title">Oracle Database</p>
+				<p class="content-title" id="oracle-database-title">oracle database</p>
 			</div>
 
 			<div id="client-title">
-				Client
+				client
 			</div>
 
 			<div id="server-title">
-				Server
+				server
 			</div>
 
 		</div>
@@ -223,11 +181,12 @@
 	<!-- <footer class="footer-page">© TCC UAM 2016</footer> -->
 	<!-- includes -->
 
-	
+	<!--<script src="js/third-party/jquery-1.12.0.min.js"></script>-->
 	<script src="js/third-party/jquery-3.1.min.js"></script>
 	<script src="js/third-party/jquery-timing.min.js"></script>
-	<script src="js/third-party/jquery.qtip.js"></script>	
-	<script src="js/third-party/sql-parser.min.js"></script>
+	<script src="js/third-party/jquery.qtip.js"></script>
+	<!--<script src="js/third-party/jquery.fxqueues-2.0.3.js"></script>-->
+	<!--<script src="js/third-party/sql-parser.min.js"></script>-->
 	<script type="text/javascript" src="js/app.bundle.js"></script>
 
 </body>

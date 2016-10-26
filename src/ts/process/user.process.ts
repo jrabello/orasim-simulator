@@ -56,4 +56,28 @@ export class UserProcess {
             }, delay)
         })
     }
+
+     /**
+     * animateSendDataToListener
+     * Metodo responsavel por animar o envio de dados ao listener     
+     * @param {delay} duracao da animacao
+     * @returns uma promise retornada logo apos o tempo de animacao
+     */    
+    animateSendDataToListener(delay: number): Promise<number>{
+        return new Promise<number>((resolve, reject) => {
+            $("#user-process").fadeTo(delay*0.15, 0.1, () => {
+                $("#user-process").fadeTo(delay*0.15, 1, () => {
+                    new Arrow(240, 80, 80, 0, delay*0.40).moveToUpRight(() => {
+                        $("#listener-process").fadeTo(delay*0.15, 0.1, () => {
+                            $("#listener-process").fadeTo(delay*0.15, 1)
+                        })
+                    })
+                })
+            })
+            setTimeout(() => {
+                resolve(0) 
+            }, delay)
+        })
+    }
+
 }

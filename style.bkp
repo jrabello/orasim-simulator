@@ -3,17 +3,25 @@ body {
 }
 
 h1 {
-  text-transform: uppercase;
-  font-size: 3em;
+    text-transform: uppercase;
+    font-size: 3em;
 }
 
 .main-title {
-  font-family: sans-serif;
-  text-align: center;
-  background-color: #404040;
-  color: #FFF;
-  padding: 2rem;
-  border-bottom: .5rem solid #000;
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #404040;
+    color: #FFF;
+    padding: 2rem;
+    border-bottom: .5rem solid #000;
+}
+
+.console-li-info{
+  color: #FFFFFF;
+}
+
+.console-li-error{
+  color: #ff0000;
 }
 
 #console-container {
@@ -22,45 +30,20 @@ h1 {
   position: relative;
 }
 
-#btnConnect {
-  background: #34d939;
-  background-image: -webkit-linear-gradient(top, #34d939, #53b82b);
-  background-image: -moz-linear-gradient(top, #34d939, #53b82b);
-  background-image: -ms-linear-gradient(top, #34d939, #53b82b);
-  background-image: -o-linear-gradient(top, #34d939, #53b82b);
-  background-image: linear-gradient(to bottom, #34d939, #53b82b);
-  -webkit-border-radius: 5;
-  -moz-border-radius: 5;
-  border-radius: 5px;
-  color: #ffffff;
-  font-size: 20px;
-  padding: 5px 150px;
-  float: left;
-  margin-bottom: 5px;
-  text-decoration: none;
-  font-family: sans-serif;
-}
-
-#btnConnect:hover {
-  background: #53b82b;
-  background-image: -webkit-linear-gradient(top, #53b82b, #34d939);
-  background-image: -moz-linear-gradient(top, #53b82b, #34d939);
-  background-image: -ms-linear-gradient(top, #53b82b, #34d939);
-  background-image: -o-linear-gradient(top, #53b82b, #34d939);
-  background-image: linear-gradient(to bottom, #53b82b, #34d939);
-  text-decoration: none;
-}
-
 #console {
-  height: 515px;
+  height: 480px;
   width: 400px;
   overflow: auto;
+}
+
+#console-input {
+  width: 398px;
 }
 
 .console-view {
   border: none;
   background: black;
-  color: #00FF00;
+  color: white;
 }
 
 #animation-container {
@@ -81,37 +64,17 @@ h1 {
   position: absolute;
 }
 
-#user img {
+#user img{
   width: 70px;
   height: 70px;
 }
 
 #user-process {
+  position: absolute;
   bottom: 200px;
   top: 240px;
-}
-
-#orelha {
-  position: absolute;
-  top: 0px;
-  left: 75px;
-}
-
-#listener-process {
-  top: 0px;
-  left: 100px;
-}
-
-#server-process {
-  top: 240px;
-  left: 145px;
-}
-
-.process {
-  position: absolute;
   height: 50px;
-  width: 90px;
-  line-height: 50px;
+  width: 80px;
 }
 
 #client-server-line {
@@ -123,14 +86,27 @@ h1 {
   top: 55px;
 }
 
+#listener-process {
+  position: absolute;
+  bottom: 200px;
+  top: 0px;
+  left: 80px;
+  height: 50px;
+  width: 80px;
+}
+
+#server-process {
+  position: absolute;
+  top: 240px;
+  left: 155px;
+  height: 50px;
+  width: 80px;
+}
+
 #pga {
-  top: 280px;
-  left: 145px;
   width: 40px;
   height: 20px;
   position: absolute;
-  font-size: 12px;
-  line-height: 20px;
 }
 
 #oracle-instance {
@@ -138,7 +114,7 @@ h1 {
   height: 300px;
   position: absolute;
   left: 250px;
-  top: 15px;
+  top:  15px;
 }
 
 #sga {
@@ -147,9 +123,7 @@ h1 {
   height: 215px;
 }
 
-#shared-pool,
-#db-buffer-cache,
-#redo-log-buffer {
+#shared-pool, #db-buffer-cache, #redo-log-buffer {
   width: 150px;
   height: 160px;
   position: relative;
@@ -190,7 +164,7 @@ h1 {
   margin-top: 2px;
 }
 
-.process-instance>div {
+.process > div {
   width: 75px;
   height: 40px;
   margin: 10px 0px;
@@ -204,7 +178,7 @@ h1 {
   position: absolute;
   left: 248px;
   bottom: 15px;
-  /*-moz-border-radius: 20px/20px;
+/*-moz-border-radius: 20px/20px;
   -webkit-border-radius: 20px/20px;
   border-radius: 20px/20px;
   background-image: radial-gradient(black, black 1px, transparent 1px, transparent);
@@ -219,7 +193,6 @@ h1 {
   color: red;
   font-size: 25px;
 }
-
 .red-dashed-border-grey-bg {
   background-color: #D9D9D9;
   border: 2px dashed red;
@@ -234,13 +207,13 @@ h1 {
   top: 10px;
 }
 
-#oracle-bds-container>div {
+#oracle-bds-container > div {
   position: absolute;
   height: 80px;
   top: 10px;
 }
 
-#oracle-log-container {
+#oracle-log-container{
   height: 115px;
   width: 100px;
   position: absolute;
@@ -286,26 +259,9 @@ h1 {
   position: absolute;
 }
 
-.content-title-instance {
+.content-title {
   margin: auto;
   font-weight: bold;
-  font-size: 16px;
-  line-height: 25px;
-}
-
-.content-title-sga {
-  margin: auto;
-  font-weight: bold;
-  font-size: 14px;
-  color: red;
-  line-height: 25px;
-}
-
-.content-title-sga-blocks {
-  margin: auto;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 25px;
 }
 
 .black-bg {
@@ -318,7 +274,6 @@ h1 {
   text-align: center;
   background-color: #5B9BD5;
   color: white;
-  font-size: 12px;
 }
 
 .yellow-bg {
@@ -331,7 +286,6 @@ h1 {
   text-align: center;
   background-color: #A6A6A6;
   color: white;
-  font-size: 12px;
 }
 
 .dark-grey-bg {
@@ -339,6 +293,7 @@ h1 {
   background-color: #404040;
   color: white;
 }
+
 
 .green-bg {
   text-align: center;
@@ -359,7 +314,7 @@ h1 {
 }
 
 #parameter-file {
-  width: 105px;
+  width: 105px; 
   height: 40px;
   position: absolute;
   left: 10px;
@@ -368,7 +323,7 @@ h1 {
 }
 
 .sql-hash {
-  color: white;
+  color: white;  
   position: absolute;
   top: 1.5em;
   left: 2em;
@@ -379,11 +334,11 @@ h1 {
   margin-left: 5px;
 }
 
-#db-buffer-cache-container {
+#db-buffer-cache-container{
   margin-left: 4px;
 }
 
-.inline-block-container>div {
+.inline-block-container > div {
   display: inline-block;
 }
 
@@ -436,7 +391,6 @@ h1 {
 #oracle-bds-container .bd-description {
   top: 85px;
 }
-
 #data-files .bd-description {
   left: 20px;
 }
@@ -445,25 +399,25 @@ h1 {
   left: -10px;
 }
 
-#redo-log-files .bd-description {
+#redo-log-files .bd-description  {
   left: 25px;
 }
 
-#oracle-log-container .bd-description {
+#oracle-log-container .bd-description  {
   left: 5px;
   bottom: 85px;
 }
 
 .footer-page {
-  background-color: black;
-  color: #F2FFFC;
-  padding: 1em;
-  clear: both;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
+    background-color: black;
+    color: #F2FFFC;
+    padding: 1em;
+    clear: both;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #server-title {
@@ -478,8 +432,7 @@ h1 {
   left: 50px;
 }
 
-#client-title,
-#server-title {
+#client-title, #server-title {
   color: red;
   font-weight: bold;
 }
@@ -525,14 +478,126 @@ h1 {
   margin: 1px;
 }
 
-.inline-block-container>li {
-  float: left;
-  margin: 3.5px;
+.inline-block-container > li {
+    float: left;
+    margin: 3.5px;
 }
 
-.hiddenArc {
-  visibility: hidden;
+
+/*tooltip*/
+.help-tip{
+	position: absolute;
+	top: 18px;
+	right: 18px;
+	text-align: center;
+	background-color: #BCDBEA;
+	border-radius: 50%;
+	width: 24px;
+	height: 24px;
+	font-size: 14px;
+	line-height: 26px;
+	cursor: default;
 }
+
+.help-tip:before{
+	content:'?';
+	font-weight: bold;
+	color:#fff;
+}
+
+.help-tip:hover p{
+	display:block;
+	transform-origin: 100% 0%;
+
+	-webkit-animation: fadeIn 0.3s ease-in-out;
+	animation: fadeIn 0.3s ease-in-out;
+
+}
+
+.help-tip p{	/* The tooltip */
+	display: none;
+	text-align: left;
+	background-color: #1E2021;
+	padding: 20px;
+	width: 300px;
+	position: absolute;
+	border-radius: 3px;
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+	right: -4px;
+	color: #FFF;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.help-tip p:before{ /* The pointer of the tooltip */
+	position: absolute;
+	content: '';
+	width:0;
+	height: 0;
+	border:6px solid transparent;
+	border-bottom-color:#1E2021;
+	right:10px;
+	top:-12px;
+}
+
+.help-tip p:after{ /* Prevents the tooltip from being hidden */
+	width:100%;
+	height:40px;
+	content:'';
+	position: absolute;
+	top:-40px;
+	left:0;
+}
+
+/* CSS animation */
+
+@-webkit-keyframes fadeIn {
+	0% { 
+		opacity:0; 
+		transform: scale(0.6);
+	}
+
+	100% {
+		opacity:100%;
+		transform: scale(1);
+	}
+}
+
+@keyframes fadeIn {
+	0% { opacity:0; }
+	100% { opacity:100%; }
+}
+
+
+
+.tooltip{display:inline;position:relative}
+.tooltip:hover{text-decoration:none}
+
+.tooltip:active:after{
+   background:#111;
+   background:rgba(0,0,0,.8);
+   border-radius:5px;
+   bottom:18px;
+   color:#fff;
+   content:attr(title);
+   display:block;
+   left:50%;
+   padding:5px 15px;
+   position:absolute;
+   white-space:nowrap;
+   z-index:98
+  }
+.tooltip:active:before{
+    border:solid;
+    border-color:#111 transparent;
+    border-width:6px 6px 0 6px;
+    bottom:12px;
+    content:"";
+    display:block;
+    left:75%;
+    position:absolute;
+    z-index:99
+   }
 
 .qtip-title{
   font-size: 14px
