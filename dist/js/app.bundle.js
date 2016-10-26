@@ -46,12 +46,12 @@
 
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
-	var sql_button_1 = __webpack_require__(11);
-	var server_process_1 = __webpack_require__(12);
-	var user_process_1 = __webpack_require__(13);
+	var sql_buttons_1 = __webpack_require__(11);
+	var server_process_1 = __webpack_require__(14);
+	var user_process_1 = __webpack_require__(15);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(15);
-	var oracle_instance_1 = __webpack_require__(18);
+	var oracle_database_1 = __webpack_require__(18);
+	var oracle_instance_1 = __webpack_require__(21);
 	/**
 	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
@@ -61,7 +61,7 @@
 	    // criando instancias de classes SingleTon 
 	    function Main() {
 	        this.sqlConsole = new sql_console_1.SqlConsole();
-	        this.sqlButton = new sql_button_1.SqlButton();
+	        this.sqlButtons = new sql_buttons_1.SqlButtons();
 	        this.serverProcess = new server_process_1.ServerProcess();
 	        this.userProcess = new user_process_1.UserProcess();
 	        this.animation = new animation_1.Animation();
@@ -69,7 +69,7 @@
 	        this.oracleDatabase = new oracle_database_1.OracleDatabase();
 	    }
 	    Main.prototype.getSqlButton = function () {
-	        return this.sqlButton;
+	        return this.sqlButtons;
 	    };
 	    Main.prototype.getUserProcess = function () {
 	        return this.userProcess;
@@ -681,21 +681,108 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var SqlButton = (function () {
-	    function SqlButton() {
+	var sql_button_select_1 = __webpack_require__(12);
+	var animation_connect_1 = __webpack_require__(13);
+	var SqlButtons = (function () {
+	    function SqlButtons() {
+	        var _this = this;
+	        //adicionando connect event handler        
+	        $("#btnConnect").on('click', function () {
+	            _this.handleConnect();
+	        });
+	        //criando instancia de button select
+	        this.sqlButtonSelect = new sql_button_select_1.SqlButtonSelect();
 	    }
-	    SqlButton.prototype.handleConnect = function () {
+	    SqlButtons.prototype.handleConnect = function () {
+	        new animation_connect_1.AnimationConnect().start();
 	    };
-	    return SqlButton;
+	    return SqlButtons;
 	}());
-	exports.SqlButton = SqlButton;
+	exports.SqlButtons = SqlButtons;
 
 
 /***/ },
 /* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var animation_select_1 = __webpack_require__(5);
+	var crc32_1 = __webpack_require__(8);
+	var SqlButtonSelect = (function () {
+	    function SqlButtonSelect() {
+	        var _this = this;
+	        //adicionando select event handler        
+	        $("#btnSelect").on('click', function () {
+	            _this.handleSelect();
+	        });
+	    }
+	    SqlButtonSelect.prototype.handleSelect = function () {
+	        //gerando o mesmo hash(crc do 'select') para todos os clicks
+	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	        var query = 'select';
+	        var hash = new crc32_1.Crc32(query);
+	        var isHashFound = sharedPool.findHash(hash);
+	        // caso o hash nao seja encontrado, adicione na shared-pool 
+	        if (!isHashFound)
+	            sharedPool.addHash(hash);
+	        new animation_select_1.AnimationSelect(isHashFound).start();
+	    };
+	    return SqlButtonSelect;
+	}());
+	exports.SqlButtonSelect = SqlButtonSelect;
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var animation_1 = __webpack_require__(4);
+	/**
+	 * AnimationConnect
+	 * Classe responsavel por implementar animações relacionadas ao comando connect
+	 * @attribute {animUserProcessDelay} Delay da animacao do envio de dados para
+	 */
+	var AnimationConnect = (function (_super) {
+	    __extends(AnimationConnect, _super);
+	    function AnimationConnect() {
+	        _super.call(this);
+	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 10;
+	    }
+	    /**
+	     * start
+	     * Inicio da animacao connect
+	     */
+	    AnimationConnect.prototype.start = function () {
+	        // setando estado de inicio da animacao
+	        var userProcess = Orasim.getUserProcess();
+	        Orasim.getAnimation().setAnimating(true);
+	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
+	        // setando estado de termino da animacao        
+	        userProcess.animateSendDataToListener(this.animUserProcessDelay)
+	            .then(function (res) {
+	            return Orasim.getAnimation().setAnimating(false);
+	            // return this.animateSelect()
+	        })
+	            .then(function (res) {
+	            return Orasim.getAnimation().setAnimating(false);
+	        });
+	    };
+	    return AnimationConnect;
+	}(animation_1.Animation));
+	exports.AnimationConnect = AnimationConnect;
+
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -772,7 +859,8 @@
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache')) 
+	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'))
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>"));
 	        }, function () { });
 	        return blockHtml;
 	    };
@@ -821,11 +909,12 @@
 
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var arrow_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(16);
+	var arrow_1 = __webpack_require__(17);
 	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
 	 * UserProcess
@@ -836,19 +925,7 @@
 	    function UserProcess() {
 	        this.element = $("#user-process")[0];
 	        // criando tooltip para user-process
-	        $('#user-process').qtip({
-	            suppress: false,
-	            content: {
-	                title: {
-	                    text: 'User Process',
-	                    button: true
-	                },
-	                text: 'Olá, eu sou o user-process!'
-	            },
-	            show: { event: 'click' },
-	            style: { classes: 'qtip-light' },
-	            hide: { event: 'click' }
-	        });
+	        new tooltip_1.Tooltip("#user-process", "User Process", "Eu sou o user-process!");
 	    }
 	    UserProcess.prototype.getElement = function () {
 	        return this.element;
@@ -906,7 +983,41 @@
 
 
 /***/ },
-/* 14 */
+/* 16 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Tooltip = (function () {
+	    /**
+	     * constructor
+	     * Metodo responsavel por incluir a tooltip nos elementos
+	     * @param {idElement} id seletor do elemento html que recebera a tooltip
+	     * @param {title} titulo da janela
+	     * @param {text} texto dentro da janela
+	     */
+	    function Tooltip(idElement, title, text) {
+	        // criando tooltip para elemento
+	        $(idElement).qtip({
+	            suppress: false,
+	            content: {
+	                title: {
+	                    text: title,
+	                    button: true
+	                },
+	                text: text
+	            },
+	            show: { event: 'click' },
+	            style: { classes: 'qtip-light' },
+	            hide: { event: 'click' }
+	        });
+	    }
+	    return Tooltip;
+	}());
+	exports.Tooltip = Tooltip;
+
+
+/***/ },
+/* 17 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1256,11 +1367,11 @@
 
 
 /***/ },
-/* 15 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(16);
+	var data_files_1 = __webpack_require__(19);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -1274,11 +1385,11 @@
 
 
 /***/ },
-/* 16 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(17);
+	var block_1 = __webpack_require__(20);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -1309,7 +1420,7 @@
 
 
 /***/ },
-/* 17 */
+/* 20 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1344,12 +1455,12 @@
 
 
 /***/ },
-/* 18 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(19);
-	var pmon_1 = __webpack_require__(22);
+	var sga_1 = __webpack_require__(22);
+	var pmon_1 = __webpack_require__(25);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -1364,12 +1475,12 @@
 
 
 /***/ },
-/* 19 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(20);
-	var shared_pool_1 = __webpack_require__(21);
+	var db_buffer_cache_1 = __webpack_require__(23);
+	var shared_pool_1 = __webpack_require__(24);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -1387,11 +1498,11 @@
 
 
 /***/ },
-/* 20 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(17);
+	var block_1 = __webpack_require__(20);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -1466,7 +1577,7 @@
 
 
 /***/ },
-/* 21 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1549,27 +1660,16 @@
 
 
 /***/ },
-/* 22 */
-/***/ function(module, exports) {
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var tooltip_1 = __webpack_require__(16);
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
 	        //tooltip do pmon
-	        $('#pmon').qtip({
-	            suppress: false,
-	            content: {
-	                title: {
-	                    text: 'Pmon',
-	                    button: true
-	                },
-	                text: 'Olá, eu sou o pmon!'
-	            },
-	            show: { event: 'click' },
-	            style: { classes: 'qtip-light' },
-	            hide: { event: 'click' }
-	        });
+	        new tooltip_1.Tooltip("#pmon", "Process Monitor", "Olá, eu sou o pmon!");
 	    }
 	    return Pmon;
 	}());

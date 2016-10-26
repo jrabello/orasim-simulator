@@ -51,6 +51,35 @@ h1 {
   text-decoration: none;
 }
 
+#btnSelect {
+  background: #f4d939;
+  background-image: -webkit-linear-gradient(top, #f4d939, #f3b82b);
+  background-image: -moz-linear-gradient(top, #f4d939, #f3b82b);
+  background-image: -ms-linear-gradient(top, #f4d939, #f3b82b);
+  background-image: -o-linear-gradient(top, #f4d939, #f3b82b);
+  background-image: linear-gradient(to bottom, #f4d939, #f3b82b);
+  -webkit-border-radius: 5;
+  -moz-border-radius: 5;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 5px 150px;
+  float: left;
+  margin-bottom: 5px;
+  text-decoration: none;
+  font-family: sans-serif;
+}
+
+#btnSelect:hover {
+  background: #f3b82b;
+  background-image: -webkit-linear-gradient(top, #f3b82b, #f4d939);
+  background-image: -moz-linear-gradient(top, #f3b82b, #f4d939);
+  background-image: -ms-linear-gradient(top, #f3b82b, #f4d939);
+  background-image: -o-linear-gradient(top, #f3b82b, #f4d939);
+  background-image: linear-gradient(to bottom, #f3b82b, #f4d939);
+  text-decoration: none;
+}
+
 #console {
   height: 515px;
   width: 400px;

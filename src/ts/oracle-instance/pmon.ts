@@ -6,6 +6,6 @@ export class Pmon{
     constructor(){
         this.element = $('#pmon')[0]
         //tooltip do pmon
-        new Tooltip("#user-process","Process Monitor", "Olá, eu sou o pmon!")        
+        new Tooltip("#pmon","Process Monitor", "Olá, eu sou o pmon!")        
     }
 }
