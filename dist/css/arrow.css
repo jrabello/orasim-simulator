@@ -1,0 +1,103 @@
+/*--------------------------------------------------------------------------------
+Estilo do corpo das setas
+--------------------------------------------------------------------------------*/
+
+.down-arrow, .up-arrow,
+.left-arrow, .right-arrow,
+.left-up-arrow, .left-down-arrow,
+.right-up-arrow, .right-down-arrow,
+.up-left-arrow, .up-right-arrow,
+.down-right-arrow, .down-left-arrow {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+}
+
+.down-arrow, .up-arrow, 
+.left-up-arrow, .left-down-arrow,
+.down-right-arrow, .up-right-arrow {
+  border-left: 2px solid red;
+}
+
+.left-arrow, .right-arrow,
+.left-down-arrow, .right-down-arrow,
+.up-left-arrow, .up-right-arrow {
+  border-top: 2px solid red;
+}
+
+.left-up-arrow, .right-up-arrow,
+.down-right-arrow, .down-left-arrow {
+  border-bottom: 2px solid red;
+}
+
+.right-up-arrow, .right-down-arrow,
+.up-left-arrow, .down-left-arrow {
+  border-right: 2px solid red;
+}
+
+/*--------------------------------------------------------------------------------
+Estilo da cabeça das setas
+--------------------------------------------------------------------------------*/
+
+.down-arrow.end:before, .up-arrow.end:before,
+.left-arrow.end:before, .right-arrow.end:before,
+.left-up-arrow.end:before, .left-down-arrow.end:before,
+.right-up-arrow.end:before, .right-down-arrow.end:before,
+.up-left-arrow.end:before, .up-right-arrow.end:before,
+.down-right-arrow.end:before, .down-left-arrow.end:before {
+  content: '';
+  height: 5px;
+  width: 5px;
+  border: 2.5px solid transparent;
+  position: absolute;
+  border-bottom-color: red;
+  border-right-color: red;
+}
+
+.right-arrow.end:before,
+.up-right-arrow.end:before {
+  left: 100%;
+  transform: rotate(-45deg) translate(-15%, -100%);
+}
+
+.right-down-arrow.end:before {
+  left: 102%;
+  top: 100%;
+  transform: rotate(45deg) translate(-100%, -15%);
+}
+
+.down-left-arrow.end:before {
+  left: 0%;
+  top: 102%;
+  transform: rotate(-225deg) translate(-40%, 50%);
+}
+
+.up-arrow.end:before,
+.left-up-arrow.end:before {
+  top: 0%;
+  transform: rotate(225deg) translate(50%, -40%);
+}
+
+.down-right-arrow.end:before {
+  left: 100%;
+  top: 102%;
+  transform: rotate(-45deg) translate(-15%, -100%);
+}
+
+.right-up-arrow.end:before {
+  top: 0%;
+  left:102%;
+  transform: rotate(225deg) translate(50%, -40%);
+}
+
+.left-arrow.end:before,
+.up-left-arrow.end:before {
+  left: 0%;
+  transform: rotate(-225deg) translate(-40%, 50%);
+}
+
+.down-arrow.end:before,
+.left-down-arrow.end:before {
+  top: 100%;
+  transform: rotate(45deg) translate(-100%, -15%);
+}
