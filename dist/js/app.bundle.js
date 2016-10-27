@@ -49,9 +49,10 @@
 	var sql_buttons_1 = __webpack_require__(11);
 	var server_process_1 = __webpack_require__(14);
 	var user_process_1 = __webpack_require__(15);
+	var listener_process_1 = __webpack_require__(18);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(18);
-	var oracle_instance_1 = __webpack_require__(21);
+	var oracle_database_1 = __webpack_require__(19);
+	var oracle_instance_1 = __webpack_require__(22);
 	/**
 	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
@@ -64,11 +65,12 @@
 	        this.sqlButtons = new sql_buttons_1.SqlButtons();
 	        this.serverProcess = new server_process_1.ServerProcess();
 	        this.userProcess = new user_process_1.UserProcess();
+	        this.listenerProcess = new listener_process_1.ListenerProcess();
 	        this.animation = new animation_1.Animation();
 	        this.oracleInstance = new oracle_instance_1.OracleInstance();
 	        this.oracleDatabase = new oracle_database_1.OracleDatabase();
 	    }
-	    Main.prototype.getSqlButton = function () {
+	    Main.prototype.getSqlButtons = function () {
 	        return this.sqlButtons;
 	    };
 	    Main.prototype.getUserProcess = function () {
@@ -76,6 +78,9 @@
 	    };
 	    Main.prototype.getServerProcess = function () {
 	        return this.serverProcess;
+	    };
+	    Main.prototype.getListenerProcess = function () {
+	        return this.listenerProcess;
 	    };
 	    Main.prototype.getSqlConsole = function () {
 	        return this.sqlConsole;
@@ -699,6 +704,18 @@
 	    SqlButtons.prototype.handleConnect = function () {
 	        new animation_connect_1.AnimationConnect().start();
 	    };
+	    /**
+	     * animateSendDataToListener
+	     * Metodo responsavel por animar o envio de dados ao listener
+	     * @param {delay} duracao da animacao
+	     * @returns uma promise retornada logo apos o tempo de animacao
+	     */
+	    SqlButtons.prototype.undisplayConnectDisplayCommandButtons = function () {
+	        return new Promise(function (resolve, reject) {
+	            $("#btnConnect").addClass("displayNone");
+	            $(".btnCommands").removeClass("displayNone");
+	        });
+	    };
 	    return SqlButtons;
 	}());
 	exports.SqlButtons = SqlButtons;
@@ -756,21 +773,30 @@
 	    function AnimationConnect() {
 	        _super.call(this);
 	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 10;
+	        this.animListenerProcessDelay = _super.prototype.getDelay.call(this) * 10;
 	    }
 	    /**
 	     * start
 	     * Inicio da animacao connect
 	     */
 	    AnimationConnect.prototype.start = function () {
-	        // setando estado de inicio da animacao
+	        var _this = this;
 	        var userProcess = Orasim.getUserProcess();
+	        var listenerProcess = Orasim.getListenerProcess();
+	        var sqlButtons = Orasim.getSqlButtons();
+	        // setando estado de inicio da animacao
 	        Orasim.getAnimation().setAnimating(true);
 	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
 	        // setando estado de termino da animacao        
 	        userProcess.animateSendDataToListener(this.animUserProcessDelay)
 	            .then(function (res) {
-	            return Orasim.getAnimation().setAnimating(false);
-	            // return this.animateSelect()
+	            return listenerProcess.animateSendDataToServer(_this.animListenerProcessDelay);
+	        })
+	            .then(function (res) {
+	            return listenerProcess.animateConnectToServer(_this.animUserProcessDelay);
+	        })
+	            .then(function (res) {
+	            return sqlButtons.undisplayConnectDisplayCommandButtons();
 	        })
 	            .then(function (res) {
 	            return Orasim.getAnimation().setAnimating(false);
@@ -790,7 +816,7 @@
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
-	 * @attribute {element} objeto html que referencia o elemento shared-pool
+	 * @attribute {element} objeto html que referencia o elemento server-process
 	 */
 	var ServerProcess = (function () {
 	    function ServerProcess() {
@@ -956,19 +982,17 @@
 	        });
 	    };
 	    /**
-	    * animateSendDataToListener
-	    * Metodo responsavel por animar o envio de dados ao listener
-	    * @param {delay} duracao da animacao
-	    * @returns uma promise retornada logo apos o tempo de animacao
-	    */
+	     * animateSendDataToListener
+	     * Metodo responsavel por animar o envio de dados ao listener
+	     * @param {delay} duracao da animacao
+	     * @returns uma promise retornada logo apos o tempo de animacao
+	     */
 	    UserProcess.prototype.animateSendDataToListener = function (delay) {
 	        return new Promise(function (resolve, reject) {
-	            $("#user-process").fadeTo(delay * 0.15, 0.1, function () {
-	                $("#user-process").fadeTo(delay * 0.15, 1, function () {
-	                    new arrow_1.Arrow(240, 80, 80, 0, delay * 0.40).moveToUpRight(function () {
-	                        $("#listener-process").fadeTo(delay * 0.15, 0.1, function () {
-	                            $("#listener-process").fadeTo(delay * 0.15, 1);
-	                        });
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Solicitando conexão com o <span style='font-weight: bold'>DB</span> através do <span style='font-weight: bold'>Listener</span>"));
+	            $("#user-process").fadeTo(delay * 0.25, 0.1, function () {
+	                $("#user-process").fadeTo(delay * 0.25, 1, function () {
+	                    new arrow_1.Arrow(355, 45, 20, 170, delay * 0.50).moveToUpRight(function () {
 	                    });
 	                });
 	            });
@@ -1371,7 +1395,82 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(19);
+	var sql_console_msg_info_1 = __webpack_require__(6);
+	var arrow_1 = __webpack_require__(17);
+	/**
+	 * ListenerProcess
+	 * Classe responsavel por modelar o objeto ListenerProcess da animacao
+	 * @attribute {element} objeto html que referencia o elemento listener-process
+	 */
+	var ListenerProcess = (function () {
+	    function ListenerProcess() {
+	        this.element = $("#listener-process")[0];
+	    }
+	    ListenerProcess.prototype.getElement = function () {
+	        return this.element;
+	    };
+	    /**
+	     * getElementOffset
+	     * Metodo responsavel por retornar posicao relativa do elemento ao documento
+	     * @returns coordenada jquery do elemento
+	     */
+	    ListenerProcess.prototype.getElementOffset = function () {
+	        return $(this.element).offset();
+	    };
+	    /**
+	     * animateSendDataToServer
+	     * Metodo responsavel por animar o envio de dados ao server process
+	     * @param {delay} duracao da animacao
+	     * @returns uma promise retornada logo apos o tempo de animacao
+	     */
+	    ListenerProcess.prototype.animateSendDataToServer = function (delay) {
+	        return new Promise(function (resolve, reject) {
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LN > Validando informações da conexão"));
+	            $("#listener-process").fadeTo(delay * 0.25, 0.1, function () {
+	                $("#listener-process").fadeTo(delay * 0.25, 1, function () {
+	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LN > Iniciando o <span style='font-weight: bold'>ServerProcess</span> dedicado"));
+	                    new arrow_1.Arrow(20, 190, 25, 210, delay * 0.50).moveToRightDown(function () {
+	                        $("#server-process").removeClass("displayNone");
+	                    });
+	                });
+	            });
+	            setTimeout(function () {
+	                resolve(0);
+	            }, delay);
+	        });
+	    };
+	    /**
+	     * animateConnectToServer
+	     * Metodo responsavel por animar a conexão com o server process
+	     * @param {delay} duracao da animacao
+	     * @returns uma promise retornada logo apos o tempo de animacao
+	     */
+	    ListenerProcess.prototype.animateConnectToServer = function (delay) {
+	        return new Promise(function (resolve, reject) {
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Conectando diretamente com o <span style='font-weight: bold'>ServerProcess</span>"));
+	            $("<div class='right-arrow end'>").css({
+	                "left": "95px",
+	                "top": "265px",
+	                "width": "40px"
+	            }).hide().appendTo("#animation-container").fadeTo(delay * 1, 1);
+	            setTimeout(function () {
+	                resolve(0);
+	            }, delay);
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Conexão estabelecida com o <span style='font-weight: bold'>Database</span>"));
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Aguardando solicitação..."));
+	        });
+	    };
+	    return ListenerProcess;
+	}());
+	exports.ListenerProcess = ListenerProcess;
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var data_files_1 = __webpack_require__(20);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -1385,11 +1484,11 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(20);
+	var block_1 = __webpack_require__(21);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -1420,7 +1519,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1455,12 +1554,12 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(22);
-	var pmon_1 = __webpack_require__(25);
+	var sga_1 = __webpack_require__(23);
+	var pmon_1 = __webpack_require__(26);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -1475,12 +1574,12 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(23);
-	var shared_pool_1 = __webpack_require__(24);
+	var db_buffer_cache_1 = __webpack_require__(24);
+	var shared_pool_1 = __webpack_require__(25);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -1498,11 +1597,11 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(20);
+	var block_1 = __webpack_require__(21);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -1512,7 +1611,7 @@
 	 */
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
-	        this.numBlocks = 30;
+	        this.numBlocks = 18;
 	        this.element = $('#db-buffer-cache')[0];
 	        this.blocks = new Array();
 	        this.initBlocks();
@@ -1577,7 +1676,7 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1660,7 +1759,7 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
