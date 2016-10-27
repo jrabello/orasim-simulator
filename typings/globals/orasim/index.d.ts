@@ -4,6 +4,10 @@ interface OrasimStatic {
 
     getServerProcess(): any 
 
+    getListenerProcess(): any
+
+    getSqlButtons(): any
+
     getSqlConsole(): any 
 
     getAnimation(): any 

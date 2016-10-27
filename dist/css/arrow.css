@@ -61,14 +61,14 @@ Estilo da cabeça das setas
 }
 
 .right-down-arrow.end:before {
-  left: 102%;
+  left: 105%;
   top: 100%;
   transform: rotate(45deg) translate(-100%, -15%);
 }
 
 .down-left-arrow.end:before {
   left: 0%;
-  top: 102%;
+  top: 105%;
   transform: rotate(-225deg) translate(-40%, 50%);
 }
 
@@ -80,13 +80,13 @@ Estilo da cabeça das setas
 
 .down-right-arrow.end:before {
   left: 100%;
-  top: 102%;
+  top: 105%;
   transform: rotate(-45deg) translate(-15%, -100%);
 }
 
 .right-up-arrow.end:before {
   top: 0%;
-  left:102%;
+  left:105%;
   transform: rotate(225deg) translate(50%, -40%);
 }
 

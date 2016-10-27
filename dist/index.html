@@ -16,12 +16,15 @@
 	<main>
 		<!--console-->
 		<div id="console-container">
-			<div id="btnConnect-div">
+			<div id="btn-div">
           		<a id="btnConnect" href="#">CONNECT</a>
+
+          		<a class="btnCommands displayNone" id="btnSelect" href="#">SELECT</a>
+				<a class="btnCommands displayNone" id="btnInsert" href="#">INSERT</a>
+				<a class="btnCommands displayNone" id="btnUpdate" href="#">UPDATE</a>
+				<a class="btnCommands displayNone" id="btnDelete" href="#">DELETE</a>
        		</div>
-			<div id="btnSelect-div">
-          		<a id="btnSelect" href="#">SELECT</a>
-       		</div>
+
 			<div id="console" class="console-view" disabled="disabled">
 				<ul id="console-msg-list-container">
 				</ul>
@@ -48,11 +51,11 @@
 
 			<div id="client-server-line"></div>
 
-			<div class="grey-bg oval process" id="server-process">
+			<div class="grey-bg oval process displayNone" id="server-process">
 				Server Process
 			</div>
 
-			<div class="black-bg" id="pga">PGA</div>
+			<div class="black-bg displayNone" id="pga">PGA</div>
 
 			<div class="black-bg" id="oracle-instance">
 				<p class="content-title-instance">Oracle Instance</p>

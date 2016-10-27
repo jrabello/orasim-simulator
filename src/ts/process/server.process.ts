@@ -6,7 +6,7 @@ import { UserProcess } from './user.process'
 /**
  * ServerProcess
  * Classe responsavel por modelar o objeto ServerProcess da animacao
- * @attribute {element} objeto html que referencia o elemento shared-pool  
+ * @attribute {element} objeto html que referencia o elemento server-process  
  */
 export class ServerProcess{
     private element: HTMLElement;

@@ -1149,6 +1149,9 @@ interface JQueryStatic {
      * @param keepScripts A Boolean indicating whether to include scripts passed in the HTML string
      */
     parseHTML(data: string, context?: Document, keepScripts?: boolean): any[];
+
+    repeat(): any
+    qtip(obj: Object): any
 }
 
 /**
@@ -3212,8 +3215,8 @@ interface JQuery {
      * @param callback The new function to add to the queue, with a function to call that will dequeue the next item.
      */
     queue(queueName: string, callback: Function): JQuery;
-    
-    repeat(): any
+
+	repeat(): any
     qtip(obj: Object): any
 }
 declare module "jquery" {
