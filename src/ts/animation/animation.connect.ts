@@ -34,5 +34,4 @@ export class AnimationConnect extends Animation{
             return Orasim.getAnimation().setAnimating(false)            
         })
     }
-
 }
