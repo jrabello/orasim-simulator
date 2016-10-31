@@ -1,4 +1,4 @@
-import { Block } from '../block'
+import { Block } from '../utils/block'
 
 /**
  * DbBufferCache
@@ -13,7 +13,7 @@ export class DbBufferCache {
     private blocks: Block[]
 
     constructor() {
-        this.numBlocks = 30
+        this.numBlocks = 18
         this.element = $('#db-buffer-cache')[0]
         this.blocks = new Array<Block>()
         this.initBlocks()

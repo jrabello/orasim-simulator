@@ -1150,9 +1150,8 @@ interface JQueryStatic {
      */
     parseHTML(data: string, context?: Document, keepScripts?: boolean): any[];
 
-    queue(queueName: string, callback: Function): JQuery;
-
     repeat(): any
+    qtip(obj: Object): any
 }
 
 /**
@@ -3217,7 +3216,8 @@ interface JQuery {
      */
     queue(queueName: string, callback: Function): JQuery;
 
-    repeat(): any
+	repeat(): any
+    qtip(obj: Object): any
 }
 declare module "jquery" {
     export = $;

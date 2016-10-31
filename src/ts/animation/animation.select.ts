@@ -51,11 +51,12 @@ export class AnimationSelect extends Animation{
         
         // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
         // setando estado de termino da animacao        
-        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay)
-        .then((res) => {                        
+        userProcess.animateSendDataToServerProcess(this.animUserProcessDelay, "<span style='font-weight: bold'>SELECT</span>")
+        .then((result: number) => {     
+                               
             return this.animateSelect()
         })
-        .then((res) => {            
+        .then((result: number) => {            
             return Orasim.getAnimation().setAnimating(false)            
         })
     }
@@ -66,7 +67,7 @@ export class AnimationSelect extends Animation{
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
     private animateSelect(): Promise<number> {
-        return new Promise<number>((resolve, reject) => {            
+        return new Promise<number>((resolve: Function, reject: Function) => {            
                         
             let animationTime = 0
 
@@ -98,9 +99,10 @@ export class AnimationSelect extends Animation{
             let userProcess: UserProcess = Orasim.getUserProcess()
 
             // hash nao encontrado
-            sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"))
-            sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess criando hash da user query"))
-
+            //sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"))
+            //sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess criando hash da user query"))
+            sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD</span> parse concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: "+sharedPool.getLastHash().getHexStrHash()))
+            
             // animacao adicionando hash na shared pool
             // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache            
             sharedPool.animateAddHash()               
@@ -114,7 +116,7 @@ export class AnimationSelect extends Animation{
             serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, this.animHashNotFoundDelay*0.25)            
             serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, this.animHashNotFoundDelay*0.25)
             serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, this.animHashNotFoundDelay*0.25)
-
+            
             //termino da animacao        
             setTimeout(() => {
                 //removendo block do DOM                     
