@@ -47,12 +47,12 @@
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
 	var sql_buttons_1 = __webpack_require__(10);
-	var server_process_1 = __webpack_require__(13);
-	var user_process_1 = __webpack_require__(16);
-	var listener_process_1 = __webpack_require__(18);
+	var server_process_1 = __webpack_require__(14);
+	var user_process_1 = __webpack_require__(17);
+	var listener_process_1 = __webpack_require__(19);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(19);
-	var oracle_instance_1 = __webpack_require__(22);
+	var oracle_database_1 = __webpack_require__(20);
+	var oracle_instance_1 = __webpack_require__(23);
 	/**
 	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
@@ -443,7 +443,7 @@
 	            // hash nao encontrado
 	            //sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess nao encontrou o hash na SharedPool"))
 	            //sqlConsole.addMsg(new SqlConsoleMsgInfo("ServerProcess criando hash da user query"))
-	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD</span> parse concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + sharedPool.getLastHash().getHexStrHash()));
+	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD</span> parse concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + sharedPool.getLastHash().getHashStr()));
 	            // animacao adicionando hash na shared pool
 	            // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache            
 	            sharedPool.animateAddHash();
@@ -571,18 +571,21 @@
 	    __extends(Crc32, _super);
 	    function Crc32(data) {
 	        _super.call(this);
-	        this.buildCrc(data);
-	    }
-	    /**
-	     * buildCrc
-	     * Metodo responsavel por construir o hash crc32
-	     *
-	     * @param  {data}     dados que serão utilizados pra gerar o hash
-	     */
-	    Crc32.prototype.buildCrc = function (data) {
 	        var uintCrc = (new Uint32Array([this.crc32Str(data)]))[0];
 	        _super.prototype.setHash.call(this, uintCrc);
-	    };
+	        _super.prototype.setHashStr.call(this, uintCrc.toString(16));
+	        //let sqlid: SqlId = new SqlId()
+	    }
+	    // /**
+	    //  * buildCrc
+	    //  * Metodo responsavel por construir o hash crc32 
+	    //  *   
+	    //  * @param  {data}     dados que serão utilizados pra gerar o hash
+	    //  */
+	    // buildCrc(data: string): void{
+	    //     let uintCrc = (new Uint32Array([this.crc32Str(data)]))[0]
+	    //     super.setHash(uintCrc)
+	    // }
 	    /**
 	     * Utf8Encode
 	     * Metodo utilizado pelo crc32Str para codificar a string em UTF8
@@ -654,9 +657,15 @@
 	     * getHexStrHash
 	     * @returns retorna representacao em hexadecimal do hash
 	     */
-	    Hash.prototype.getHexStrHash = function () {
-	        return this.hash.toString(16);
+	    Hash.prototype.getHashStr = function () {
+	        return this.hashStr;
 	    };
+	    Hash.prototype.setHashStr = function (hash) {
+	        this.hashStr = hash;
+	    };
+	    // getHashStr(): string{
+	    //     return this.hashStr
+	    // }
 	    Hash.prototype.setHash = function (hash) {
 	        this.hash = hash;
 	    };
@@ -674,7 +683,7 @@
 
 	"use strict";
 	var sql_button_select_1 = __webpack_require__(11);
-	var animation_connect_1 = __webpack_require__(12);
+	var animation_connect_1 = __webpack_require__(13);
 	var SqlButtons = (function () {
 	    function SqlButtons() {
 	        var _this = this;
@@ -711,7 +720,7 @@
 
 	"use strict";
 	var animation_select_1 = __webpack_require__(5);
-	var crc32_1 = __webpack_require__(8);
+	var sql_id_1 = __webpack_require__(12);
 	var SqlButtonSelect = (function () {
 	    function SqlButtonSelect() {
 	        var _this = this;
@@ -724,7 +733,8 @@
 	        //gerando o mesmo hash(crc do 'select') para todos os clicks
 	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	        var query = 'select';
-	        var hash = new crc32_1.Crc32(query);
+	        //let hash: Hash = new Crc32(query)
+	        var hash = new sql_id_1.SqlId(query);
 	        var isHashFound = sharedPool.findHash(hash);
 	        // caso o hash nao seja encontrado, adicione na shared-pool 
 	        if (!isHashFound)
@@ -738,6 +748,297 @@
 
 /***/ },
 /* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var hash_1 = __webpack_require__(9);
+	var crc32_1 = __webpack_require__(8);
+	var SqlId = (function (_super) {
+	    __extends(SqlId, _super);
+	    function SqlId(data) {
+	        _super.call(this);
+	        var sqlId = this.genSqlId(data);
+	        _super.prototype.setHashStr.call(this, sqlId);
+	        _super.prototype.setHash.call(this, new crc32_1.Crc32(sqlId).getHash());
+	    }
+	    /**
+	     * genSqlId
+	     * Metodo responsavel por gerar o sqlId
+	     * @param {data} dados a serem hasheados
+	     * @returns sqlId
+	     */
+	    SqlId.prototype.genSqlId = function (data) {
+	        var sqlid = '';
+	        //this.md5("select")
+	        var alphabet = '0123456789abcdfghjkmnpqrstuvwxyz';
+	        var h = this.md5(data);
+	        var d1 = parseInt(h.slice(0, 8), 16);
+	        var d2 = parseInt(h.slice(8, 16), 16);
+	        var msb = parseInt(h.slice(16, 24), 16);
+	        var lsb = parseInt(h.slice(24, 32), 16);
+	        var sqln = msb * Math.pow(2, 32) + lsb;
+	        var stop = (Math.log(sqln) / Math.exp(1)) / (Math.log(32) / Math.exp(1)) + 1;
+	        for (var i = 0; i < Math.round(stop); i++) {
+	            var index = this.modulo(Math.round(sqln / Math.pow(32, i)) + "", 32);
+	            sqlid += alphabet[index];
+	        }
+	        return sqlid;
+	    };
+	    SqlId.prototype.modulo = function (aNumStr, aDiv) {
+	        var tmp = 0;
+	        var i, r;
+	        for (i = 0; i < aNumStr.length; i++) {
+	            tmp += aNumStr.charAt(i);
+	            r = tmp % aDiv;
+	            tmp = r.toString(10);
+	        }
+	        return tmp / 1;
+	    };
+	    //     stmt_2_sqlid(stmt: string): string {
+	    //         //
+	    //         h = hashlib.md5(stmt + '\x00').digest()
+	    // stmt = 'insert'
+	    // h = hashlib.md5(stmt+ '\x00').digest()
+	    // (d1, d2, msb, lsb) = struct.unpack('IIII', h)
+	    // sqln = msb * (2 ** 32) + lsb
+	    // stop = math.log(sqln, math.e) / math.log(32, math.e) + 1
+	    // sqlid = ''
+	    // alphabet = '0123456789abcdfghjkmnpqrstuvwxyz'
+	    // for i in range(0, int(round(stop))):
+	    //     sqlid = alphabet[(sqln / (32 ** i)) % 32] + sqlid
+	    //         return sqlid
+	    //     }
+	    /*
+	    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+	    * to work around bugs in some JS interpreters.
+	    */
+	    SqlId.prototype.safeAdd = function (x, y) {
+	        var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+	        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+	        return (msw << 16) | (lsw & 0xFFFF);
+	    };
+	    /*
+	    * Bitwise rotate a 32-bit number to the left.
+	    */
+	    SqlId.prototype.bitRotateLeft = function (num, cnt) {
+	        return (num << cnt) | (num >>> (32 - cnt));
+	    };
+	    /*
+	    * These functions implement the four basic operations the algorithm uses.
+	    */
+	    SqlId.prototype.md5cmn = function (q, a, b, x, s, t) {
+	        return this.safeAdd(this.bitRotateLeft(this.safeAdd(this.safeAdd(a, q), this.safeAdd(x, t)), s), b);
+	    };
+	    SqlId.prototype.md5ff = function (a, b, c, d, x, s, t) {
+	        return this.md5cmn((b & c) | ((~b) & d), a, b, x, s, t);
+	    };
+	    SqlId.prototype.md5gg = function (a, b, c, d, x, s, t) {
+	        return this.md5cmn((b & d) | (c & (~d)), a, b, x, s, t);
+	    };
+	    SqlId.prototype.md5hh = function (a, b, c, d, x, s, t) {
+	        return this.md5cmn(b ^ c ^ d, a, b, x, s, t);
+	    };
+	    SqlId.prototype.md5ii = function (a, b, c, d, x, s, t) {
+	        return this.md5cmn(c ^ (b | (~d)), a, b, x, s, t);
+	    };
+	    /*
+	    * Calculate the MD5 of an array of little-endian words, and a bit length.
+	    */
+	    SqlId.prototype.binlMD5 = function (x, len) {
+	        /* append padding */
+	        x[len >> 5] |= 0x80 << (len % 32);
+	        x[(((len + 64) >>> 9) << 4) + 14] = len;
+	        var i;
+	        var olda;
+	        var oldb;
+	        var oldc;
+	        var oldd;
+	        var a = 1732584193;
+	        var b = -271733879;
+	        var c = -1732584194;
+	        var d = 271733878;
+	        for (i = 0; i < x.length; i += 16) {
+	            olda = a;
+	            oldb = b;
+	            oldc = c;
+	            oldd = d;
+	            a = this.md5ff(a, b, c, d, x[i], 7, -680876936);
+	            d = this.md5ff(d, a, b, c, x[i + 1], 12, -389564586);
+	            c = this.md5ff(c, d, a, b, x[i + 2], 17, 606105819);
+	            b = this.md5ff(b, c, d, a, x[i + 3], 22, -1044525330);
+	            a = this.md5ff(a, b, c, d, x[i + 4], 7, -176418897);
+	            d = this.md5ff(d, a, b, c, x[i + 5], 12, 1200080426);
+	            c = this.md5ff(c, d, a, b, x[i + 6], 17, -1473231341);
+	            b = this.md5ff(b, c, d, a, x[i + 7], 22, -45705983);
+	            a = this.md5ff(a, b, c, d, x[i + 8], 7, 1770035416);
+	            d = this.md5ff(d, a, b, c, x[i + 9], 12, -1958414417);
+	            c = this.md5ff(c, d, a, b, x[i + 10], 17, -42063);
+	            b = this.md5ff(b, c, d, a, x[i + 11], 22, -1990404162);
+	            a = this.md5ff(a, b, c, d, x[i + 12], 7, 1804603682);
+	            d = this.md5ff(d, a, b, c, x[i + 13], 12, -40341101);
+	            c = this.md5ff(c, d, a, b, x[i + 14], 17, -1502002290);
+	            b = this.md5ff(b, c, d, a, x[i + 15], 22, 1236535329);
+	            a = this.md5gg(a, b, c, d, x[i + 1], 5, -165796510);
+	            d = this.md5gg(d, a, b, c, x[i + 6], 9, -1069501632);
+	            c = this.md5gg(c, d, a, b, x[i + 11], 14, 643717713);
+	            b = this.md5gg(b, c, d, a, x[i], 20, -373897302);
+	            a = this.md5gg(a, b, c, d, x[i + 5], 5, -701558691);
+	            d = this.md5gg(d, a, b, c, x[i + 10], 9, 38016083);
+	            c = this.md5gg(c, d, a, b, x[i + 15], 14, -660478335);
+	            b = this.md5gg(b, c, d, a, x[i + 4], 20, -405537848);
+	            a = this.md5gg(a, b, c, d, x[i + 9], 5, 568446438);
+	            d = this.md5gg(d, a, b, c, x[i + 14], 9, -1019803690);
+	            c = this.md5gg(c, d, a, b, x[i + 3], 14, -187363961);
+	            b = this.md5gg(b, c, d, a, x[i + 8], 20, 1163531501);
+	            a = this.md5gg(a, b, c, d, x[i + 13], 5, -1444681467);
+	            d = this.md5gg(d, a, b, c, x[i + 2], 9, -51403784);
+	            c = this.md5gg(c, d, a, b, x[i + 7], 14, 1735328473);
+	            b = this.md5gg(b, c, d, a, x[i + 12], 20, -1926607734);
+	            a = this.md5hh(a, b, c, d, x[i + 5], 4, -378558);
+	            d = this.md5hh(d, a, b, c, x[i + 8], 11, -2022574463);
+	            c = this.md5hh(c, d, a, b, x[i + 11], 16, 1839030562);
+	            b = this.md5hh(b, c, d, a, x[i + 14], 23, -35309556);
+	            a = this.md5hh(a, b, c, d, x[i + 1], 4, -1530992060);
+	            d = this.md5hh(d, a, b, c, x[i + 4], 11, 1272893353);
+	            c = this.md5hh(c, d, a, b, x[i + 7], 16, -155497632);
+	            b = this.md5hh(b, c, d, a, x[i + 10], 23, -1094730640);
+	            a = this.md5hh(a, b, c, d, x[i + 13], 4, 681279174);
+	            d = this.md5hh(d, a, b, c, x[i], 11, -358537222);
+	            c = this.md5hh(c, d, a, b, x[i + 3], 16, -722521979);
+	            b = this.md5hh(b, c, d, a, x[i + 6], 23, 76029189);
+	            a = this.md5hh(a, b, c, d, x[i + 9], 4, -640364487);
+	            d = this.md5hh(d, a, b, c, x[i + 12], 11, -421815835);
+	            c = this.md5hh(c, d, a, b, x[i + 15], 16, 530742520);
+	            b = this.md5hh(b, c, d, a, x[i + 2], 23, -995338651);
+	            a = this.md5ii(a, b, c, d, x[i], 6, -198630844);
+	            d = this.md5ii(d, a, b, c, x[i + 7], 10, 1126891415);
+	            c = this.md5ii(c, d, a, b, x[i + 14], 15, -1416354905);
+	            b = this.md5ii(b, c, d, a, x[i + 5], 21, -57434055);
+	            a = this.md5ii(a, b, c, d, x[i + 12], 6, 1700485571);
+	            d = this.md5ii(d, a, b, c, x[i + 3], 10, -1894986606);
+	            c = this.md5ii(c, d, a, b, x[i + 10], 15, -1051523);
+	            b = this.md5ii(b, c, d, a, x[i + 1], 21, -2054922799);
+	            a = this.md5ii(a, b, c, d, x[i + 8], 6, 1873313359);
+	            d = this.md5ii(d, a, b, c, x[i + 15], 10, -30611744);
+	            c = this.md5ii(c, d, a, b, x[i + 6], 15, -1560198380);
+	            b = this.md5ii(b, c, d, a, x[i + 13], 21, 1309151649);
+	            a = this.md5ii(a, b, c, d, x[i + 4], 6, -145523070);
+	            d = this.md5ii(d, a, b, c, x[i + 11], 10, -1120210379);
+	            c = this.md5ii(c, d, a, b, x[i + 2], 15, 718787259);
+	            b = this.md5ii(b, c, d, a, x[i + 9], 21, -343485551);
+	            a = this.safeAdd(a, olda);
+	            b = this.safeAdd(b, oldb);
+	            c = this.safeAdd(c, oldc);
+	            d = this.safeAdd(d, oldd);
+	        }
+	        return [a, b, c, d];
+	    };
+	    /*
+	    * Convert an array of little-endian words to a string
+	    */
+	    SqlId.prototype.binl2rstr = function (input) {
+	        var i;
+	        var output = '';
+	        var length32 = input.length * 32;
+	        for (i = 0; i < length32; i += 8) {
+	            output += String.fromCharCode((input[i >> 5] >>> (i % 32)) & 0xFF);
+	        }
+	        return output;
+	    };
+	    /*
+	    * Convert a raw string to an array of little-endian words
+	    * Characters >255 have their high-byte silently ignored.
+	    */
+	    SqlId.prototype.rstr2binl = function (input) {
+	        var i;
+	        var output = [];
+	        output[(input.length >> 2) - 1] = undefined;
+	        for (i = 0; i < output.length; i += 1) {
+	            output[i] = 0;
+	        }
+	        var length8 = input.length * 8;
+	        for (i = 0; i < length8; i += 8) {
+	            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (i % 32);
+	        }
+	        return output;
+	    };
+	    /*
+	    * Calculate the MD5 of a raw string
+	    */
+	    SqlId.prototype.rstrMD5 = function (s) {
+	        return this.binl2rstr(this.binlMD5(this.rstr2binl(s), s.length * 8));
+	    };
+	    /*
+	    * Calculate the HMAC-MD5, of a key and some data (raw strings)
+	    */
+	    SqlId.prototype.rstrHMACMD5 = function (key, data) {
+	        var i;
+	        var bkey = this.rstr2binl(key);
+	        var ipad = [];
+	        var opad = [];
+	        var hash;
+	        ipad[15] = opad[15] = undefined;
+	        if (bkey.length > 16) {
+	            bkey = this.binlMD5(bkey, key.length * 8);
+	        }
+	        for (i = 0; i < 16; i += 1) {
+	            ipad[i] = bkey[i] ^ 0x36363636;
+	            opad[i] = bkey[i] ^ 0x5C5C5C5C;
+	        }
+	        hash = this.binlMD5(ipad.concat(this.rstr2binl(data)), 512 + data.length * 8);
+	        return this.binl2rstr(this.binlMD5(opad.concat(hash), 512 + 128));
+	    };
+	    /*
+	    * Convert a raw string to a hex string
+	    */
+	    SqlId.prototype.rstr2hex = function (input) {
+	        var hexTab = '0123456789abcdef';
+	        var output = '';
+	        var x;
+	        var i;
+	        for (i = 0; i < input.length; i += 1) {
+	            x = input.charCodeAt(i);
+	            output += hexTab.charAt((x >>> 4) & 0x0F) +
+	                hexTab.charAt(x & 0x0F);
+	        }
+	        return output;
+	    };
+	    /*
+	    * Encode a string as utf-8
+	    */
+	    SqlId.prototype.str2rstrUTF8 = function (input) {
+	        return decodeURI(encodeURIComponent(input));
+	    };
+	    /*
+	    * Take string arguments and return either raw or hex encoded strings
+	    */
+	    SqlId.prototype.rawMD5 = function (s) {
+	        return this.rstrMD5(this.str2rstrUTF8(s));
+	    };
+	    SqlId.prototype.hexMD5 = function (s) {
+	        return this.rstr2hex(this.rawMD5(s));
+	    };
+	    SqlId.prototype.rawHMACMD5 = function (k, d) {
+	        return this.rstrHMACMD5(this.str2rstrUTF8(k), this.str2rstrUTF8(d));
+	    };
+	    SqlId.prototype.hexHMACMD5 = function (k, d) {
+	        return this.rstr2hex(this.rawHMACMD5(k, d));
+	    };
+	    SqlId.prototype.md5 = function (str) {
+	        return this.hexMD5(str);
+	    };
+	    return SqlId;
+	}(hash_1.Hash));
+	exports.SqlId = SqlId;
+
+
+/***/ },
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -792,13 +1093,13 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var sql_console_msg_info_1 = __webpack_require__(6);
-	var pga_1 = __webpack_require__(15);
+	var pga_1 = __webpack_require__(16);
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
@@ -924,7 +1225,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -962,11 +1263,11 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var Pga = (function () {
 	    function Pga() {
 	        // criando tooltip para a PGA
@@ -978,12 +1279,12 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
-	var arrow_1 = __webpack_require__(17);
+	var tooltip_1 = __webpack_require__(15);
+	var arrow_1 = __webpack_require__(18);
 	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
 	 * UserProcess
@@ -1050,7 +1351,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1400,13 +1701,13 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var sql_console_msg_info_1 = __webpack_require__(6);
-	var arrow_1 = __webpack_require__(17);
+	var arrow_1 = __webpack_require__(18);
 	/**
 	 * ListenerProcess
 	 * Classe responsavel por modelar o objeto ListenerProcess da animacao
@@ -1479,11 +1780,11 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(20);
+	var data_files_1 = __webpack_require__(21);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -1497,11 +1798,11 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_block_1 = __webpack_require__(21);
+	var data_block_1 = __webpack_require__(22);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -1532,7 +1833,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1567,17 +1868,17 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(23);
-	var pmon_1 = __webpack_require__(27);
-	var smon_1 = __webpack_require__(28);
-	var dbwr_1 = __webpack_require__(29);
-	var ckpt_1 = __webpack_require__(30);
-	var lgwr_1 = __webpack_require__(31);
-	var arcn_1 = __webpack_require__(32);
+	var sga_1 = __webpack_require__(24);
+	var pmon_1 = __webpack_require__(28);
+	var smon_1 = __webpack_require__(29);
+	var dbwr_1 = __webpack_require__(30);
+	var ckpt_1 = __webpack_require__(31);
+	var lgwr_1 = __webpack_require__(32);
+	var arcn_1 = __webpack_require__(33);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -1597,13 +1898,13 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(24);
-	var shared_pool_1 = __webpack_require__(25);
-	var redo_log_buffer_1 = __webpack_require__(26);
+	var db_buffer_cache_1 = __webpack_require__(25);
+	var shared_pool_1 = __webpack_require__(26);
+	var redo_log_buffer_1 = __webpack_require__(27);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -1641,12 +1942,12 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
-	var data_block_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(15);
+	var data_block_1 = __webpack_require__(22);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -1723,11 +2024,11 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	/**
 	 * SharedPool
 	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
@@ -1749,7 +2050,7 @@
 	     */
 	    SharedPool.prototype.animateAddHash = function () {
 	        //neste caso estamos apenas dando append, nao existe animacao ainda
-	        $("#hash-ul-container").append($(this.hashElement).append(this.hashCollection.slice(-1)[0].getHexStrHash())[0].outerHTML);
+	        $("#hash-ul-container").append($(this.hashElement).append(this.hashCollection.slice(-1)[0].getHashStr())[0].outerHTML);
 	    };
 	    /**
 	     * addHash
@@ -1809,11 +2110,11 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	/**
 	 * Redo Log Buffer
 	 * Classe responsavel por modelar o objeto RedoLogBuffer do oracle instance
@@ -1831,11 +2132,11 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
@@ -1848,11 +2149,11 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var Smon = (function () {
 	    function Smon() {
 	        this.element = $('#smon')[0];
@@ -1865,11 +2166,11 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var Dbwr = (function () {
 	    function Dbwr() {
 	        this.element = $('#dbwr')[0];
@@ -1882,11 +2183,11 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var Ckpt = (function () {
 	    function Ckpt() {
 	        this.element = $('#ckpt')[0];
@@ -1899,11 +2200,11 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var Lgwr = (function () {
 	    function Lgwr() {
 	        this.element = $('#lgwr')[0];
@@ -1916,11 +2217,11 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(14);
+	var tooltip_1 = __webpack_require__(15);
 	var Arcn = (function () {
 	    function Arcn() {
 	        this.element = $('#arcn')[0];

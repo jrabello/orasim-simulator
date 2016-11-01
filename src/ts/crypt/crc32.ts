@@ -1,4 +1,5 @@
 import { Hash } from './hash'
+import { SqlId } from './sql.id'
 
 /**
  * Crc32
@@ -7,20 +8,23 @@ import { Hash } from './hash'
 export class Crc32 extends Hash {
 
     constructor(data: string) {
-        super()
-        this.buildCrc(data)
-    }
-
-    /**
-     * buildCrc
-     * Metodo responsavel por construir o hash crc32 
-     *   
-     * @param  {data}     dados que serão utilizados pra gerar o hash
-     */
-    buildCrc(data: string): void{
+         super()
         let uintCrc = (new Uint32Array([this.crc32Str(data)]))[0]
         super.setHash(uintCrc)
+        super.setHashStr(uintCrc.toString(16))
+        //let sqlid: SqlId = new SqlId()
     }
+
+    // /**
+    //  * buildCrc
+    //  * Metodo responsavel por construir o hash crc32 
+    //  *   
+    //  * @param  {data}     dados que serão utilizados pra gerar o hash
+    //  */
+    // buildCrc(data: string): void{
+    //     let uintCrc = (new Uint32Array([this.crc32Str(data)]))[0]
+    //     super.setHash(uintCrc)
+    // }
 
     /**
      * Utf8Encode
