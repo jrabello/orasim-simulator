@@ -46,9 +46,9 @@
 
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
-	var sql_buttons_1 = __webpack_require__(11);
-	var server_process_1 = __webpack_require__(14);
-	var user_process_1 = __webpack_require__(15);
+	var sql_buttons_1 = __webpack_require__(10);
+	var server_process_1 = __webpack_require__(13);
+	var user_process_1 = __webpack_require__(16);
 	var listener_process_1 = __webpack_require__(18);
 	var animation_1 = __webpack_require__(4);
 	var oracle_database_1 = __webpack_require__(19);
@@ -107,7 +107,7 @@
 
 	"use strict";
 	var sql_parser_1 = __webpack_require__(2);
-	var sql_console_msg_error_1 = __webpack_require__(10);
+	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
 	 * SqlConsole
 	 * Classe responsavel por modelar o console que o usuário usa para interagir com a aplicação
@@ -116,34 +116,44 @@
 	var SqlConsole = (function () {
 	    function SqlConsole() {
 	        this.sqlParser = new sql_parser_1.SqlParser();
+	        this.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("<br> <span style='font-weight: bold'>&nbsp&nbsp* * * * * * * * * *&nbsp&nbsp&nbsp[&nbsp  Welcome to the ORASIM  &nbsp]&nbsp&nbsp&nbsp&nbsp* * * * * * * * * * </span><br><br>"));
 	    }
 	    /**
 	     *  handleKeyPress
 	     *  Metodo responsável por receber qualquer tecla pressionada no input do console
 	     *  @param   event   evento passado pelo browser de tecla pressionada
 	     */
-	    SqlConsole.prototype.handleKeyPress = function (event) {
+	    /*
+	     * Método não está mais sendo utilizado. Verificar remoção.
+	     *
+	     *
+	    handleKeyPress(event: KeyboardEvent): void {
+
 	        // verificando se tecla enter foi pressionada
 	        if (event.keyCode === 13) {
-	            // verificando se existe alguma animacao em andamento 
-	            if (Orasim.getAnimation().isAnimating()) {
-	                this.addMsg(new sql_console_msg_error_1.SqlConsoleMsgError('Animação em andamento!'));
-	                return;
+
+	            // verificando se existe alguma animacao em andamento
+	            if(Orasim.getAnimation().isAnimating()){
+	                this.addMsg(new SqlConsoleMsgError('Animação em andamento!'))
+	                return
 	            }
+	            
 	            // pegando valor digitado no input do console
 	            // fazendo parsing da query
-	            var userSqlCmd = $("#console-input").val();
-	            var animation = this.sqlParser.parse(userSqlCmd);
+	            let userSqlCmd = $("#console-input").val()
+	            let animation: Animation = this.sqlParser.parse(userSqlCmd)
+
 	            // caso a query seja parseada com sucesso execute a animacao especifica
 	            // caso contrario imprima uma mensagem de erro no console
 	            if (this.sqlParser.parsedSuccess())
-	                animation.start();
+	                animation.start()
 	            else
-	                this.addMsg(new sql_console_msg_error_1.SqlConsoleMsgError('Query Inválida!'));
+	                this.addMsg(new SqlConsoleMsgError('Query Inválida!'))
+
 	            // limpando input do console
-	            $("#console-input").val('');
+	            $("#console-input").val('')
 	        }
-	    };
+	    }*/
 	    /**
 	     *  addMsg
 	     *  Responsável por adicionar mensagens no console
@@ -663,34 +673,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var sql_console_message_1 = __webpack_require__(7);
-	/**
-	 * SqlConsoleMsgError
-	 * Classe responsavel por especializar mensagens de erro
-	 * do console da aplicacao
-	 */
-	var SqlConsoleMsgError = (function (_super) {
-	    __extends(SqlConsoleMsgError, _super);
-	    function SqlConsoleMsgError(msg) {
-	        _super.call(this, 'error', msg);
-	    }
-	    return SqlConsoleMsgError;
-	}(sql_console_message_1.SqlConsoleMessage));
-	exports.SqlConsoleMsgError = SqlConsoleMsgError;
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var sql_button_select_1 = __webpack_require__(12);
-	var animation_connect_1 = __webpack_require__(13);
+	var sql_button_select_1 = __webpack_require__(11);
+	var animation_connect_1 = __webpack_require__(12);
 	var SqlButtons = (function () {
 	    function SqlButtons() {
 	        var _this = this;
@@ -722,7 +706,7 @@
 
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -753,7 +737,7 @@
 
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -808,11 +792,13 @@
 
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var tooltip_1 = __webpack_require__(14);
 	var sql_console_msg_info_1 = __webpack_require__(6);
+	var pga_1 = __webpack_require__(15);
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
@@ -820,7 +806,10 @@
 	 */
 	var ServerProcess = (function () {
 	    function ServerProcess() {
+	        this.pga = new pga_1.Pga();
 	        this.element = $("#server-process")[0];
+	        // criando tooltip para o ServerProcess
+	        var tooltip = new tooltip_1.Tooltip("#server-process", "Server Process", "\n        <p align=\"justify\">\n\n        Oracle Database cria o Server Process para lidar com as solicita\u00E7\u00F5es dos User Process conectados \u00E0 inst\u00E2ncia. \n        O User Process sempre se comunica com um banco de dados atrav\u00E9s de um Server Process separado.\n        <br><br>\n        Os Server Process criados pela solicia\u00E7\u00E3o de uma aplica\u00E7\u00E3o de banco de dados pode executar uma ou mais das seguintes tarefas:\n        \n        <br><br>\n        - Analisar e executar instru\u00E7\u00F5es SQL emitidas atrav\u00E9s da aplica\u00E7\u00E3o, incluindo a cria\u00E7\u00E3o e execu\u00E7\u00E3o do plano de consulta.\n        \n        <br><br>\n        - Executa c\u00F3digo PL/SQL.\n        \n        <br><br>\n        - Realizar a leitura dos blocos de dados que est\u00E3o armazenados nos datafiles e carregar no Db Buffer Cache \n        (O processo background DBWn \u00E9 o respons\u00E1vel por gravar os blocos modificados de volta para o disco)\n        \n        <br><br>\n        - Retorna os resultados solicitados de uma forma que a aplica\u00E7\u00E3o pode processar as informa\u00E7\u00F5es.\n        \n        <span style='font-weight: bold'>\n        </span>\n         ");
 	    }
 	    ServerProcess.prototype.getElement = function () {
 	        return this.element;
@@ -845,7 +834,7 @@
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))   
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DbBufferCache</span>"));
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"));
 	            //$('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
 	            //$(blockHtml).repeat().fadeTo(delay/2, 1).fadeTo(delay/2, 1).until(1)
 	        }, function () { });
@@ -886,7 +875,7 @@
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'))
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>"));
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"));
 	        }, function () { });
 	        return blockHtml;
 	    };
@@ -902,7 +891,7 @@
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>"));
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"));
 	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
 	        }, function () { });
 	    };
@@ -935,11 +924,65 @@
 
 
 /***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Tooltip = (function () {
+	    /**
+	     * constructor
+	     * Metodo responsavel por incluir a tooltip nos elementos
+	     * @param {idElement} id seletor do elemento html que recebera a tooltip
+	     * @param {title} titulo da janela
+	     * @param {text} texto dentro da janela
+	     */
+	    function Tooltip(idElement, title, text) {
+	        // criando tooltip para elemento
+	        $(idElement).qtip({
+	            suppress: false,
+	            content: {
+	                title: {
+	                    text: title,
+	                    button: true
+	                },
+	                text: text + '<br><br>'
+	            },
+	            show: { event: 'click' },
+	            style: { classes: 'qtip-light' },
+	            hide: { event: 'click' },
+	            position: {
+	                target: 'mouse',
+	                adjust: { mouse: false }
+	            }
+	        });
+	    }
+	    return Tooltip;
+	}());
+	exports.Tooltip = Tooltip;
+
+
+/***/ },
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(14);
+	var Pga = (function () {
+	    function Pga() {
+	        // criando tooltip para a PGA
+	        var tooltip = new tooltip_1.Tooltip("#pga", "Program Global Area (PGA)", "\n        <p align=\"justify\">\n\n        A PGA \u00E9 uma regi\u00E3o de mem\u00F3ria que cont\u00E9m os dados e informa\u00E7\u00F5es de controle para um Server Process.\n        <br><br>\n        \u00C9 uma \u00E1rea de  mem\u00F3ria n\u00E3o compartilhada criada pelo Oracle quando um Server Process \u00E9 iniciado.\n        <br><br>\n        O acesso a PGA \u00E9 exclusivo para do seu Server Process. Para cada Server Process existe uma PGA.\n\n         ");
+	    }
+	    return Pga;
+	}());
+	exports.Pga = Pga;
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(14);
 	var arrow_1 = __webpack_require__(17);
 	var sql_console_msg_info_1 = __webpack_require__(6);
 	/**
@@ -950,8 +993,8 @@
 	var UserProcess = (function () {
 	    function UserProcess() {
 	        this.element = $("#user-process")[0];
-	        // criando tooltip para user-process
-	        new tooltip_1.Tooltip("#user-process", "User Process", "Eu sou o user-process!");
+	        // criando tooltip para o UserProcess
+	        var tooltip = new tooltip_1.Tooltip("#user-process", "User Process", "\n        <p align=\"justify\">\n\n        Quando um usu\u00E1rio executa uma aplica\u00E7\u00E3o, como por exemplo o SQL*Plus, o sistema operacional cria um processo cliente (User Process) para executar a aplica\u00E7\u00E3o do usu\u00E1rio.\n        <br><br>\n        <span style='font-weight: bold'>\n        User Process e Server Process\n        </span>\n        <br><br>\n        Os User Process diferem em aspectos importantes dos Server Process que interagem diretamente com a inst\u00E2ncia.\n        <br><br>\n        Os Server Process trabalham para o User Process realizando leitura e escrita na SGA, ao passo que o User Process n\u00E3o pode fazer isso.\n        <br><br>\n        Um User Process pode ser executado em um host diferente do host em que o banco est\u00E1, enquanto que o Server Process n\u00E3o pode.\n        ");
 	    }
 	    UserProcess.prototype.getElement = function () {
 	        return this.element;
@@ -1004,40 +1047,6 @@
 	    return UserProcess;
 	}());
 	exports.UserProcess = UserProcess;
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var Tooltip = (function () {
-	    /**
-	     * constructor
-	     * Metodo responsavel por incluir a tooltip nos elementos
-	     * @param {idElement} id seletor do elemento html que recebera a tooltip
-	     * @param {title} titulo da janela
-	     * @param {text} texto dentro da janela
-	     */
-	    function Tooltip(idElement, title, text) {
-	        // criando tooltip para elemento
-	        $(idElement).qtip({
-	            suppress: false,
-	            content: {
-	                title: {
-	                    text: title,
-	                    button: true
-	                },
-	                text: text
-	            },
-	            show: { event: 'click' },
-	            style: { classes: 'qtip-light' },
-	            hide: { event: 'click' }
-	        });
-	    }
-	    return Tooltip;
-	}());
-	exports.Tooltip = Tooltip;
 
 
 /***/ },
@@ -1395,6 +1404,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var tooltip_1 = __webpack_require__(14);
 	var sql_console_msg_info_1 = __webpack_require__(6);
 	var arrow_1 = __webpack_require__(17);
 	/**
@@ -1405,6 +1415,8 @@
 	var ListenerProcess = (function () {
 	    function ListenerProcess() {
 	        this.element = $("#listener-process")[0];
+	        // criando tooltip para o Listener
+	        var tooltip = new tooltip_1.Tooltip("#listener-process", "Listener", "\n        <p align=\"justify\">\n\n        Os passos b\u00E1sicos pelo qual um processo cliente (UserProcess) estabelece uma conex\u00E3o atrav\u00E9s com um Listener s\u00E3o:\n        <br><br>\n        1. Um processo cliente ou outro banco de dados solicita uma conex\u00E3o.\n        <br><br>\n        2. O Listener seleciona um \"service handler\" (manipulador de servi\u00E7o) adequado para atender \u00E0 solicita\u00E7\u00E3o do client e encaminha a solicita\u00E7\u00E3o para o manipulador.\n        <br><br>    \n        3. O processo cliente conecta-se diretamente no \"service handler\" (manipulador de servi\u00E7o). O Listener n\u00E3o est\u00E1 envolvida na comunica\u00E7\u00E3o.\n        \n        <span style='font-weight: bold'>\n        </span>\n         ");
 	    }
 	    ListenerProcess.prototype.getElement = function () {
 	        return this.element;
@@ -1431,6 +1443,7 @@
 	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LN > Iniciando o <span style='font-weight: bold'>ServerProcess</span> dedicado"));
 	                    new arrow_1.Arrow(20, 190, 25, 210, delay * 0.50).moveToRightDown(function () {
 	                        $("#server-process").removeClass("displayNone");
+	                        $("#pga").removeClass("displayNone");
 	                    });
 	                });
 	            });
@@ -1488,7 +1501,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(21);
+	var data_block_1 = __webpack_require__(21);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -1506,7 +1519,7 @@
 	     * @returns retorna objeto html(Block) para ser animado
 	     */
 	    DataFiles.prototype.getNewBlockHtml = function () {
-	        var newBlock = new block_1.Block();
+	        var newBlock = new data_block_1.DataBlock();
 	        //criando block dentro do data-files        
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.element).offset());
@@ -1525,13 +1538,13 @@
 	"use strict";
 	/**
 	 * Block
-	 * Classe Responsavel modelar um bloco
+	 * Classe Responsavel modelar um bloco (data block)
 	 * @attribute {size} define o tamanho de um bloco
 	 * @attribute {element} objeto html que referencia o elemento user-process
 	 * @attribute {isUsed} flag que determina se o bloco esta em uso
 	 */
-	var Block = (function () {
-	    function Block() {
+	var DataBlock = (function () {
+	    function DataBlock() {
 	        this.element = $("<div class=\"cache-box\"></div>")[0];
 	        this.size = 4096;
 	        this.isUsed = false;
@@ -1541,16 +1554,16 @@
 	     * Metodo responsavel pela animacao de marcar o bloco como usado no db-buffer-cache
 	     * @param {flag} setando isUsed como usada ou livre
 	     */
-	    Block.prototype.setUsed = function (flag) {
+	    DataBlock.prototype.setUsed = function (flag) {
 	        this.isUsed = flag;
 	        $(this.element).css("background-color", "#f00");
 	    };
-	    Block.prototype.getElement = function () {
+	    DataBlock.prototype.getElement = function () {
 	        return this.element;
 	    };
-	    return Block;
+	    return DataBlock;
 	}());
-	exports.Block = Block;
+	exports.DataBlock = DataBlock;
 
 
 /***/ },
@@ -1559,11 +1572,21 @@
 
 	"use strict";
 	var sga_1 = __webpack_require__(23);
-	var pmon_1 = __webpack_require__(26);
+	var pmon_1 = __webpack_require__(27);
+	var smon_1 = __webpack_require__(28);
+	var dbwr_1 = __webpack_require__(29);
+	var ckpt_1 = __webpack_require__(30);
+	var lgwr_1 = __webpack_require__(31);
+	var arcn_1 = __webpack_require__(32);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
 	        this.pmon = new pmon_1.Pmon();
+	        this.smon = new smon_1.Smon();
+	        this.dbwr = new dbwr_1.Dbwr();
+	        this.ckpt = new ckpt_1.Ckpt();
+	        this.lgwr = new lgwr_1.Lgwr();
+	        this.arcn = new arcn_1.Arcn();
 	    }
 	    OracleInstance.prototype.getSga = function () {
 	        return this.sga;
@@ -1580,16 +1603,37 @@
 	"use strict";
 	var db_buffer_cache_1 = __webpack_require__(24);
 	var shared_pool_1 = __webpack_require__(25);
+	var redo_log_buffer_1 = __webpack_require__(26);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
 	        this.sharedPool = new shared_pool_1.SharedPool();
+	        this.redoLogBuffer = new redo_log_buffer_1.RedoLogBuffer();
+	        /*
+	         * Arrumar sobreposição do click da SGA e seus componentes.
+	         *
+	         *
+	                // criando tooltip para a SGA
+	                let tooltip = new Tooltip("#sga", "System Global Area (SGA)",
+	                `
+	                <p align="justify">
+	        
+	                A SGA é um grupo de estruturas de memória compartilhada, que contêm dados e informações de controle para uma única instância do banco de dados Oracle.
+	                <br>
+	                A SGA é compartilhada por todos os User Process e Background Process.
+	        
+	                 `
+	                )
+	        */
 	    }
 	    Sga.prototype.getSharedPool = function () {
 	        return this.sharedPool;
 	    };
 	    Sga.prototype.getDbBufferCache = function () {
 	        return this.dbBufferCache;
+	    };
+	    Sga.prototype.getRedoLogBuffer = function () {
+	        return this.redoLogBuffer;
 	    };
 	    return Sga;
 	}());
@@ -1601,7 +1645,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var block_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(14);
+	var data_block_1 = __webpack_require__(21);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -1615,6 +1660,8 @@
 	        this.element = $('#db-buffer-cache')[0];
 	        this.blocks = new Array();
 	        this.initBlocks();
+	        // criando tooltip para o DbBufferCache
+	        var tooltip = new tooltip_1.Tooltip("#db-buffer-cache", "DB Buffer Cache", "\n        <p align=\"justify\">\n        O DB Buffer Cache ou apenas Buffer Cache, \u00E9 a \u00E1rea de mem\u00F3ria que armazena as c\u00F3pias dos blocos de dados lidos a partir dos datafiles. \n        <br><br>\n        Um buffer \u00E9 um endere\u00E7o de mem\u00F3ria principal em que o gerenciador de buffer armazena temporariamente um bloco de dados usado no momento ou recentemente. \n        <br><br>\n        Todos os usu\u00E1rios conectados simultaneamente na inst\u00E2ncia do banco de dados compartilham os acessos ao Buffer Cache.\n        <br><br><br>\n        \n        O Oracle usa o buffer cache para atingir os seguintes objectivos:\n        <br><br>\n        <span style='font-weight: bold'>\n        # Otimiza\u00E7\u00E3o do I/O f\u00EDsico \n        </span><br><br>\n        \n        O banco de dados atualiza os blocos de dados no cache e armazena os metadados refer\u00EAnte a essas mudan\u00E7as no Redo Log Buffer.\n        Depois de um COMMIT, o Oracle grava os redo buffers no disco, mas n\u00E3o escreve imediatamente os blocos de dados no disco. \n        Quem faz essa escrita \u00E9 o Database Writer (DBWn) com algumas condi\u00E7\u00F5es.\n \n        <br><br>\n        <span style='font-weight: bold'>\n        # Manter blocos frequentemente acessados no buffer cache e escrever blocos pouco acessados no disco.\n        </span><br><br>\n\n        <span style='font-weight: bold'>\n        # Estados do buffer\n        </span><br><br>\n\n        O Oracle usa algoritmos internos para gerenciar buffers no cache. \n        Um buffer pode estar qualquer um dos seguintes estados que se excluem mutuamente:\n        <br><br>\n        \n        - Unused (N\u00E3o usado)\n        <br>\n        O buffer est\u00E1 dispon\u00EDvel para uso, porque ele nunca foi usado ou est\u00E1 atualmente sem uso. \n        <br>\n        Este tipo de buffer \u00E9 o mais f\u00E1cil para o banco de dados para usar.\n        <br><br>\n        \n        - Clean (Limpo)\n        <br>\n        Este buffer foi utilizado anteriormente e agora cont\u00E9m uma vers\u00E3o de leitura consistente de um bloco a partir de um ponto no tempo. \n        O bloco cont\u00E9m dados, mas est\u00E1 \"limpo\" e n\u00E3o precisa de checkpoint, ou seja, ser gravado em disco pelo Database Writer. \n        O Oracle pode selecionar este bloco e reutiliz\u00E1-lo.\n        <br><br>\n        \n        - Dirty (Sujo)\n        <br>\n        O buffer cont\u00EAm dados modificados que ainda n\u00E3o foram gravadas no disco. \n        O Oracle precisa fazer o checkpoint do bloco antes de reutiliz\u00E1-lo.\n         ");
 	    }
 	    /**
 	     * initBlocks
@@ -1622,7 +1669,7 @@
 	     */
 	    DbBufferCache.prototype.initBlocks = function () {
 	        for (var i = 0; i < this.numBlocks; i++) {
-	            var block = new block_1.Block();
+	            var block = new data_block_1.DataBlock();
 	            this.blocks.push(block);
 	            $('#db-buffer-cache-container').append(block.getElement());
 	        }
@@ -1641,7 +1688,7 @@
 	     * @returns retorna objeto html(Block) para ser animado
 	     */
 	    DbBufferCache.prototype.getNewBlockHtml = function () {
-	        var newBlock = new block_1.Block();
+	        var newBlock = new data_block_1.DataBlock();
 	        //adicionando elemento no DOM dinamicamente        
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.element).offset());
@@ -1656,7 +1703,7 @@
 	     * @returns retorna objeto html(Block) para ser animado
 	     */
 	    DbBufferCache.prototype.getNewBlockHtmlAt = function (memLocation) {
-	        var newBlock = new block_1.Block();
+	        var newBlock = new data_block_1.DataBlock();
 	        //adicionando elemento no DOM dinamicamente        
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset());
@@ -1677,9 +1724,10 @@
 
 /***/ },
 /* 25 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var tooltip_1 = __webpack_require__(14);
 	/**
 	 * SharedPool
 	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
@@ -1692,6 +1740,8 @@
 	        this.hashCollection = [];
 	        this.element = $("#shared-pool")[0];
 	        this.hashElement = $("<li class=\"sql-hash\"></li>")[0];
+	        // criando tooltip para o SharedPool
+	        var tooltip = new tooltip_1.Tooltip("#shared-pool", "Shared Pool", "\n        <p align=\"justify\">\n        Shared Pool xxxx\n\n        xxxxxxxxxxxxxxxxxxxxxxx\n        xxxxxxxxxxxxxxxxxxxxxxxx\n        xxxxxxxxxxxxxxxxxxxxxxx\n        ");
 	    }
 	    /**
 	     * animateAddHash
@@ -1763,16 +1813,123 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(14);
+	/**
+	 * Redo Log Buffer
+	 * Classe responsavel por modelar o objeto RedoLogBuffer do oracle instance
+	 * @attribute
+	 * @attribute
+	 */
+	var RedoLogBuffer = (function () {
+	    function RedoLogBuffer() {
+	        // criando tooltip para o RedoLogBuffer
+	        var tooltip = new tooltip_1.Tooltip("#redo-log-buffer", "Redo Log Buffer", "\n        <p align=\"justify\">\n\n        O Redo Log Buffer \u00E9 um buffer circular da SGA que cont\u00E9m informa\u00E7\u00F5es sobre as altera\u00E7\u00F5es feitas no banco de dados.\n        <br><br>\n        As informa\u00E7\u00F5es de Redo cont\u00EAm dados necess\u00E1rias para reconstruir ou refazer, as altera\u00E7\u00F5es feitas no banco de dados, como: INSERT, UPDATE, DELETE, CREATE, ALTER ou DROP.\n        Estas informa\u00E7\u00F5es s\u00E3o usadas para recupera\u00E7\u00E3o do banco de dados, se necess\u00E1rio.\n        <br><br>\n        As entradas de redo ocupam espa\u00E7o cont\u00EDnuo, sequencial no buffer. O processo background <span style='font-weight: bold'>Log Writer (LGWR)</span> grava as informa\u00E7\u00F5es do Redo Log Buffer para o Redo Log File em disco.\n         ");
+	    }
+	    return RedoLogBuffer;
+	}());
+	exports.RedoLogBuffer = RedoLogBuffer;
+
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(14);
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
 	        //tooltip do pmon
-	        new tooltip_1.Tooltip("#pmon", "Process Monitor", "Olá, eu sou o pmon!");
+	        new tooltip_1.Tooltip("#pmon", "Process Monitor (PMON)", "Olá, eu sou o PMON!");
 	    }
 	    return Pmon;
 	}());
 	exports.Pmon = Pmon;
+
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(14);
+	var Smon = (function () {
+	    function Smon() {
+	        this.element = $('#smon')[0];
+	        //tooltip do pmon
+	        new tooltip_1.Tooltip("#smon", "System Monitor (SMON)", "Olá, eu sou o SMON!");
+	    }
+	    return Smon;
+	}());
+	exports.Smon = Smon;
+
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(14);
+	var Dbwr = (function () {
+	    function Dbwr() {
+	        this.element = $('#dbwr')[0];
+	        //tooltip do pmon
+	        new tooltip_1.Tooltip("#dbwr", "Database Writer (DBWn)", "Olá, eu sou o DBWn!");
+	    }
+	    return Dbwr;
+	}());
+	exports.Dbwr = Dbwr;
+
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(14);
+	var Ckpt = (function () {
+	    function Ckpt() {
+	        this.element = $('#ckpt')[0];
+	        //tooltip do pmon
+	        new tooltip_1.Tooltip("#ckpt", "Checkpoint Process (CKPT)", "Olá, eu sou o CKPT!");
+	    }
+	    return Ckpt;
+	}());
+	exports.Ckpt = Ckpt;
+
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(14);
+	var Lgwr = (function () {
+	    function Lgwr() {
+	        this.element = $('#lgwr')[0];
+	        //tooltip do pmon
+	        new tooltip_1.Tooltip("#lgwr", "Log Writer (LGWR)", "Olá, eu sou o LGWR!");
+	    }
+	    return Lgwr;
+	}());
+	exports.Lgwr = Lgwr;
+
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(14);
+	var Arcn = (function () {
+	    function Arcn() {
+	        this.element = $('#arcn')[0];
+	        //tooltip do pmon
+	        new tooltip_1.Tooltip("#arcn", "Archive log (ARCn)", "Olá, eu sou o LGWR!");
+	    }
+	    return Arcn;
+	}());
+	exports.Arcn = Arcn;
 
 
 /***/ }

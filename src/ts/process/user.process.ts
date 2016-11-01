@@ -12,8 +12,25 @@ export class UserProcess {
 
     constructor() {
         this.element = $("#user-process")[0]
-            // criando tooltip para user-process
-        new Tooltip("#user-process", "User Process", "Eu sou o user-process!")
+        
+        // criando tooltip para o UserProcess
+        let tooltip = new Tooltip("#user-process", "User Process", 
+        `
+        <p align="justify">
+
+        Quando um usuário executa uma aplicação, como por exemplo o SQL*Plus, o sistema operacional cria um processo cliente (User Process) para executar a aplicação do usuário.
+        <br><br>
+        <span style='font-weight: bold'>
+        User Process e Server Process
+        </span>
+        <br><br>
+        Os User Process diferem em aspectos importantes dos Server Process que interagem diretamente com a instância.
+        <br><br>
+        Os Server Process trabalham para o User Process realizando leitura e escrita na SGA, ao passo que o User Process não pode fazer isso.
+        <br><br>
+        Um User Process pode ser executado em um host diferente do host em que o banco está, enquanto que o Server Process não pode.
+        `
+        )
     }
 
     getElement() {

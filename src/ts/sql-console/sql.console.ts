@@ -14,6 +14,7 @@ export class SqlConsole {
 
     constructor() {
         this.sqlParser = new SqlParser()
+        this.addMsg(new SqlConsoleMsgInfo("<br> <span style='font-weight: bold'>&nbsp&nbsp* * * * * * * * * *&nbsp&nbsp&nbsp[&nbsp  Welcome to the ORASIM  &nbsp]&nbsp&nbsp&nbsp&nbsp* * * * * * * * * * </span><br><br>"))
     }
 
     /**
@@ -21,6 +22,12 @@ export class SqlConsole {
      *  Metodo responsável por receber qualquer tecla pressionada no input do console 
      *  @param   event   evento passado pelo browser de tecla pressionada 
      */
+    
+
+    /*
+     * Método não está mais sendo utilizado. Verificar remoção.
+     * 
+     * 
     handleKeyPress(event: KeyboardEvent): void {
 
         // verificando se tecla enter foi pressionada
@@ -47,7 +54,9 @@ export class SqlConsole {
             // limpando input do console
             $("#console-input").val('')
         }
-    }
+    }*/
+
+
 
     /**
      *  addMsg
