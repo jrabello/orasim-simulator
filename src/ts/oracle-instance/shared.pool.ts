@@ -1,3 +1,4 @@
+import { Tooltip } from '../utils/tooltip'
 import { Hash } from '../crypt/hash'
 
 /**
@@ -16,6 +17,18 @@ export class SharedPool {
         this.hashCollection = []
         this.element = $(`#shared-pool`)[0]
         this.hashElement = $(`<li class="sql-hash"></li>`)[0]        
+
+        // criando tooltip para o SharedPool
+        let tooltip = new Tooltip("#shared-pool", "Shared Pool", 
+        `
+        <p align="justify">
+        Shared Pool xxxx
+
+        xxxxxxxxxxxxxxxxxxxxxxx
+        xxxxxxxxxxxxxxxxxxxxxxxx
+        xxxxxxxxxxxxxxxxxxxxxxx
+        `
+         )
     }
 
     /**

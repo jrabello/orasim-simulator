@@ -1,4 +1,4 @@
-import { Block } from '../utils/block'
+import { DataBlock } from '../utils/data.block'
 
 /**
  * DataFiles
@@ -7,11 +7,11 @@ import { Block } from '../utils/block'
  * @attribute {element} objeto html que referencia o elemento data-files 
  */
 export class DataFiles{
-    private blocks: Block[]
+    private blocks: DataBlock[]
     private element: HTMLElement
 
     constructor(){    
-        this.blocks = new Array<Block>()
+        this.blocks = new Array<DataBlock>()
         this.element = $("#data-files")[0]    
     }
     
@@ -21,7 +21,7 @@ export class DataFiles{
      * @returns retorna objeto html(Block) para ser animado  
      */
     getNewBlockHtml(): HTMLElement{
-        let newBlock = new Block()  
+        let newBlock = new DataBlock()  
         
         //criando block dentro do data-files        
         $(this.element).prepend(newBlock.getElement())

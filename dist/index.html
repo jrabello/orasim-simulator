@@ -37,7 +37,7 @@
 				<img src="img/user.png" alt="Usuário">
 			</div>
 
-			<div class="grey-bg oval process" id="user-process">
+			<div class="grey-bg oval process cursorHand" id="user-process">
 				User Process
 			</div>
 
@@ -45,24 +45,23 @@
 				<img src="img/orelha.png" alt="orelha">
 			</div>
 
-			<div class="grey-bg oval process" id="listener-process">
+			<div class="grey-bg oval process cursorHand" id="listener-process">
 				Listener
 			</div>
 
 			<div id="client-server-line"></div>
 
-			<div class="grey-bg oval process displayNone" id="server-process">
+			<div class="grey-bg oval process displayNone cursorHand" id="server-process">
 				Server Process
 			</div>
 
-			<div class="black-bg displayNone" id="pga">PGA</div>
+			<div class="black-bg displayNone cursorHand" id="pga">PGA</div>
 
 			<div class="black-bg" id="oracle-instance">
-				<p class="content-title-instance">Oracle Instance</p>
+				<p class="content-title-instance cursorHand">Oracle Instance</p>
 
 				<div class="yellow-bg" id="sga">
-					<p class="content-title-sga">SGA</p>
-
+					<p class="content-title-sga cursorHand">SGA</p>
 					<ul class="inline-block-container">
 
 						<!--<div class="green-bg" id="shared-pool">
@@ -71,13 +70,13 @@
               </div>-->
 
 						<li id="shared-pool" class="green-bg">
-							<p class="content-title-sga-blocks">Shared Pool</p>
+							<p class="content-title-sga-blocks cursorHand">Shared Pool</p>
 							<ul id="hash-ul-container">
 							</ul>
 						</li>
 
 						<li id="db-buffer-cache" class="green-bg" >
-							<p class="content-title-sga-blocks">DB Buffer Cache</p>
+							<p class="content-title-sga-blocks cursorHand">DB Buffer Cache</p>
 
 							<div id="db-buffer-cache-container">
 								
@@ -85,7 +84,7 @@
 						</li>
 
 						<li id="redo-log-buffer" class="green-bg" >
-							<p class="content-title-sga-blocks">Redo Log Buffer</p>
+							<p class="content-title-sga-blocks cursorHand">Redo Log Buffer</p>
 
 							<div id="cache-container">
 								<div class="buffer-box"></div>
@@ -102,12 +101,12 @@
 				</div>
 
 				<div class="inline-block-container process-instance">
-					<div id="pmon" class="blue-bg oval">PMON</div>
-					<div class="blue-bg oval">SMON</div>
-					<div class="blue-bg oval">DBWR</div>
-					<div class="blue-bg oval">CKPT</div>
-					<div class="blue-bg oval">LGWR</div>
-					<div class="blue-bg oval">ARCn</div>
+					<div id="pmon" class="blue-bg oval cursorHand">PMON</div>
+					<div id="smon" class="blue-bg oval cursorHand">SMON</div>
+					<div id="dbwr" class="blue-bg oval cursorHand">DBWn</div>
+					<div id="ckpt" class="blue-bg oval cursorHand">CKPT</div>
+					<div id="lgwr" class="blue-bg oval cursorHand">LGWR</div>
+					<div id="arcn" class="blue-bg oval cursorHand">ARCn</div>
 				</div>
 
 			</div>
@@ -130,7 +129,7 @@
 							<div class="control-files-bar"></div>
 							<div class="control-files-bar"></div>
 						</div>
-						<p class="bd-description">data files</p>
+						<p class="bd-description cursorHand">data files</p>
 					</div>
 
 					<div id="control-files">
@@ -141,7 +140,7 @@
 						<div class="bd" id="control-file-2">
 							controlfile2.ctl
 						</div>
-						<p class="bd-description">control files</p>
+						<p class="bd-description cursorHand">control files</p>
 					</div>
 
 					<div class="bd-container inline-block-container" id="redo-log-files">
@@ -156,14 +155,14 @@
 							<div class="log" id="log1-a">LOG1_B</div>
 							<div class="log" id="log1-b">LOG2_B</div>
 						</div>
-						<p class="bd-description">redo log files</p>
+						<p class="bd-description cursorHand">redo log files</p>
 					</div>
 
 				</div>
 
 				<div class="red-dashed-border-grey-bg" id="oracle-log-container">
 					<div class="bd" id="archived-log-files">
-						<p class="bd-description">archived log files</p>
+						<p class="bd-description cursorHand">archived log files</p>
 
 						<div class="archives">
 							<div class="archive" id="arc01">arc01</div>
@@ -176,7 +175,7 @@
 					</div>
 				</div>
 
-				<div class="dark-grey-bg bottom-left-radius" id="parameter-file">parameter-file</div>
+				<div class="dark-grey-bg bottom-left-radius cursorHand" id="parameter-file">parameter-file</div>
 
 				<p class="content-title" id="oracle-database-title">Oracle Database</p>
 			</div>

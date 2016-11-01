@@ -1,3 +1,4 @@
+# Agora Vai!!!
 # sgbd-emulator
 Oracle SGBD Emulator
 
@@ -9,7 +10,6 @@ https://code.visualstudio.com/
 
 npm:
 https://nodejs.org/en/download/
-
 
 
 1 - Digite "npm install" para que o npm faça download de todas as dependencias do projeto, que estão definidas no package.json
