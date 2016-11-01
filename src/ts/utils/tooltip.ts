@@ -16,11 +16,16 @@ export class Tooltip{
                             text: title,
                             button: true                            
                         },
-                        text: text
+                        text: text+'<br><br>'
                     },
             show: { event: 'click' },
-            style: { classes: 'qtip-light' },
-            hide:{ event: 'click' }
+            style: { classes: 'qtip-light'},
+            hide:{ event: 'click' },
+            position: {
+                  target: 'mouse',
+                  adjust: { mouse: false }
+            }
+            //position: { at: 'top left'}
         })
     }
 }

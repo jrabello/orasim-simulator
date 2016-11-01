@@ -1,7 +1,9 @@
+import { Tooltip } from '../utils/tooltip'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 import { DataFiles } from '../oracle-database/data.files'
 import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
 import { UserProcess } from './user.process'
+import { Pga } from './pga'
 
 /**
  * ServerProcess
@@ -9,10 +11,41 @@ import { UserProcess } from './user.process'
  * @attribute {element} objeto html que referencia o elemento server-process  
  */
 export class ServerProcess{
-    private element: HTMLElement;
+    private element: HTMLElement
+    private pga: Pga
     
     constructor(){
+        this.pga = new Pga()
+
         this.element = $("#server-process")[0]
+        
+        // criando tooltip para o ServerProcess
+        let tooltip = new Tooltip("#server-process", "Server Process", 
+        `
+        <p align="justify">
+
+        Oracle Database cria o Server Process para lidar com as solicitações dos User Process conectados à instância. 
+        O User Process sempre se comunica com um banco de dados através de um Server Process separado.
+        <br><br>
+        Os Server Process criados pela soliciação de uma aplicação de banco de dados pode executar uma ou mais das seguintes tarefas:
+        
+        <br><br>
+        - Analisar e executar instruções SQL emitidas através da aplicação, incluindo a criação e execução do plano de consulta.
+        
+        <br><br>
+        - Executa código PL/SQL.
+        
+        <br><br>
+        - Realizar a leitura dos blocos de dados que estão armazenados nos datafiles e carregar no Db Buffer Cache 
+        (O processo background DBWn é o responsável por gravar os blocos modificados de volta para o disco)
+        
+        <br><br>
+        - Retorna os resultados solicitados de uma forma que a aplicação pode processar as informações.
+        
+        <span style='font-weight: bold'>
+        </span>
+         `
+        )
     }
     
     getElement(){
@@ -40,7 +73,7 @@ export class ServerProcess{
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
             //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))   
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DbBufferCache</span>"))                         
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"))                         
             //$('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
             //$(blockHtml).repeat().fadeTo(delay/2, 1).fadeTo(delay/2, 1).until(1)
         }, () =>{})
@@ -84,7 +117,7 @@ export class ServerProcess{
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
             //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'))
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>")) 
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>")) 
         }, () =>{})
         return blockHtml
     }
@@ -101,7 +134,7 @@ export class ServerProcess{
         Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
             $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DbBufferCache</span>"))
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"))
             //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
         }, () => {})
     }
