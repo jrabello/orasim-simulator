@@ -5,6 +5,7 @@
  */
 export class Hash implements IHashable{
     private hash : number
+    private hashStr : string
 
     constructor(){        
     }
@@ -13,9 +14,17 @@ export class Hash implements IHashable{
      * getHexStrHash
      * @returns retorna representacao em hexadecimal do hash
      */
-    getHexStrHash(): string{
-        return this.hash.toString(16)
+    getHashStr(): string{
+        return this.hashStr
     }
+
+    setHashStr(hash: string){
+        this.hashStr = hash
+    }
+
+    // getHashStr(): string{
+    //     return this.hashStr
+    // }
 
     setHash(hash: number){
         this.hash = hash

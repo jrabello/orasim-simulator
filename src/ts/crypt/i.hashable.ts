@@ -4,5 +4,5 @@
  */
 interface IHashable{
     getHash(): number,
-    getHexStrHash(): string
+    getHashStr(): string
 }

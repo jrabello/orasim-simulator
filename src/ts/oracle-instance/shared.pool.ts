@@ -38,7 +38,7 @@ export class SharedPool {
     animateAddHash(): void{        
         //neste caso estamos apenas dando append, nao existe animacao ainda
         $("#hash-ul-container").append(
-            $(this.hashElement).append(this.hashCollection.slice(-1)[0].getHexStrHash())[0].outerHTML)
+            $(this.hashElement).append(this.hashCollection.slice(-1)[0].getHashStr())[0].outerHTML)
     }
 
     /**

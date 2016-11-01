@@ -8,8 +8,8 @@ export class SqlButtons {
         //adicionando connect event handler        
         $("#btnConnect").on('click', () => {
                 this.handleConnect()
-            })
-            //criando instancia de button select
+        })
+        //criando instancia de button select
         this.sqlButtonSelect = new SqlButtonSelect()
     }
 
