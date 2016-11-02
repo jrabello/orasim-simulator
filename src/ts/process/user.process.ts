@@ -38,6 +38,26 @@ export class UserProcess {
     }
 
     /**
+     * createUserProcess
+     * Metodo responsavel por animar a criacao do user process     
+     * @param {delay} duracao da animacao
+     * @returns uma promise retornada logo apos o tempo de animacao
+     */
+    createUserProcess(delay: number): Promise < number > {
+        return new Promise < number > ((resolve, reject) => {
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Criando <span style="font-weight: bold">UserProcess</span>'))
+            $("#user").fadeTo(delay * 0.4, 0.1, () => {
+                $("#user").fadeTo(delay * 0.4, 1, () => {
+                    $("#user-process").removeClass("displayNone")
+                })
+            })
+            setTimeout(() => {
+                resolve(0)
+            }, delay)
+        })
+    }
+
+    /**
      * animateSendDataToServerProcess
      * Metodo responsavel por animar o envio de dados ao server-process     
      * @param {delay} duracao da animacao
@@ -46,14 +66,11 @@ export class UserProcess {
      */
     animateSendDataToServerProcess(delay: number, nameComando: string): Promise < number > {
         return new Promise < number > ((resolve, reject) => {
-            $("#user-process").fadeTo(delay * 0.15, 0.1, () => { //user process iniciando a piscar              
-                $("#user-process").fadeTo(delay * 0.15, 1, () => { //user process parando de piscar
-                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Enviando comando ' + nameComando + ' para <span style="font-weight: bold">ServerProcess</span>'))
-                    new Arrow(240, 80, 80, 80, delay * 0.40).moveToRight(() => { //desenhando arrow
-                        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse e criando plano de execução da query'))
-                        $("#server-process").fadeTo(delay * 0.15, 0.1, () => {
-                            $("#server-process").fadeTo(delay * 0.15, 1)
-                        })
+            $("#user-process").fadeTo(delay * 0.25, 0.1, () => {              
+                $("#user-process").fadeTo(delay * 0.25, 1, () => {
+                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Enviando comando ' + nameComando + ' para o <span style="font-weight: bold">ServerProcess</span>'))
+                    $("#connection-arrow").fadeTo(delay * 0.25, 0.1, () => {
+                        $("#connection-arrow").fadeTo(delay * 0.25, 1)
                     })
                 })
             })

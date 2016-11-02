@@ -44,16 +44,19 @@ export class AnimationSelect extends Animation{
      * start
      * Inicio da animacao do select
      */
-    start(): void{        
+    start(): void{
         // setando estado de inicio da animacao
         let userProcess: UserProcess = Orasim.getUserProcess()
+        let serverProcess: ServerProcess = Orasim.getServerProcess()
         Orasim.getAnimation().setAnimating(true)
         
         // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
         // setando estado de termino da animacao        
         userProcess.animateSendDataToServerProcess(this.animUserProcessDelay, "<span style='font-weight: bold'>SELECT</span>")
-        .then((result: number) => {     
-                               
+        .then((result: number) => {
+            return serverProcess.doParse()
+        })
+        .then((result: number) => {
             return this.animateSelect()
         })
         .then((result: number) => {            
@@ -66,21 +69,22 @@ export class AnimationSelect extends Animation{
      * Verificando se o hash na shared pool existe, selecionando animacao especifica
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
-    private animateSelect(): Promise<number> {
-        return new Promise<number>((resolve: Function, reject: Function) => {            
-                        
+    private animateSelect(): Promise < number > {
+        return new Promise < number > ((resolve: Function, reject: Function) => {
             let animationTime = 0
 
-            // rodar animacao especifica se o hash foi encontrado na shared-pool ou não             
+            // rodar animacao especifica se o hash foi encontrado na shared-pool ou não
             if (this.isHashFound) {
                 this.animateHashFound()
                 animationTime = this.animHashFoundDelay
             } else {
                 this.animateHashNotFound()
-                animationTime =  this.animHashNotFoundDelay
+                animationTime = this.animHashNotFoundDelay
             }
 
-            setTimeout(() => { resolve(0) }, animationTime);
+            setTimeout(() => {
+                resolve(0)
+            }, animationTime);
         })
     }
 

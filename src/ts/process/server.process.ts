@@ -62,6 +62,18 @@ export class ServerProcess{
     }
 
     /**
+     * doParse
+     * Metodo responsavel pela animacao do SOFT PARSE e do HARD PARSE     
+     * @returns uma promise retornada logo apos o tempo de animacao
+     */
+    doParse(): Promise < number > {
+        return new Promise < number > ((resolve, reject) => {
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
+            $("#server-process").addClass("time-clock")
+        })
+    }
+
+    /**
      * animateGetBlockFromDataFiles
      * Metodo responsavel por animar os blocks que o server-process pega do data-files
      * @param {dataFiles} objeto html que representa o DataFiles
