@@ -3,6 +3,9 @@ import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 import { DataFiles } from '../oracle-database/data.files'
 import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
 import { UserProcess } from './user.process'
+import { SharedPool } from '../oracle-instance/shared.pool'
+import { DataBlock } from '../utils/data.block'
+import { SqlConsole } from '../sql-console/sql.console'
 import { Pga } from './pga'
 
 /**
@@ -59,18 +62,6 @@ export class ServerProcess{
      */
     getElementOffset(): JQueryCoordinates{        
         return $(this.element).offset()
-    }
-
-    /**
-     * doParse
-     * Metodo responsavel pela animacao do SOFT PARSE e do HARD PARSE     
-     * @returns uma promise retornada logo apos o tempo de animacao
-     */
-    doParse(): Promise < number > {
-        return new Promise < number > ((resolve, reject) => {
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
-            $("#server-process").addClass("time-clock")
-        })
     }
 
     /**
@@ -174,5 +165,95 @@ export class ServerProcess{
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Aguardando nova solicitação...'))
             
         })
+    }
+
+    /**
+     * animateByHash
+     * Metodo responsavel pela animacao do SOFT PARSE e do HARD PARSE
+     * Verificando se o hash na shared pool existe, selecionando animacao especifica
+     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+     */
+    animateByHash(isHashFound: boolean, delay: number): Promise < number > {
+        return new Promise < number > ((resolve: Function, reject: Function) => {
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
+            $("#server-process").addClass("time-clock")
+
+            // rodar animacao especifica se o hash foi encontrado na shared-pool ou não
+            if (isHashFound) {
+                this.animateHashFound(delay)
+            } else {
+                this.animateHashNotFound(delay)
+            }
+
+            setTimeout(() => {
+                resolve(0)
+            }, delay);
+        })
+    }
+
+    /**
+     * animateHashNotFound
+     * Animacao de hash not found
+     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+     */
+    private animateHashNotFound(delay: number) {
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let dataFiles: DataFiles = Orasim.getOracleDatabase().getDataFiles()
+        let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+        let sqlConsole: SqlConsole = Orasim.getSqlConsole()
+        let serverProcess: ServerProcess = Orasim.getServerProcess()
+        let userProcess: UserProcess = Orasim.getUserProcess()
+        let blockHtml: HTMLElement
+
+        sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > Comando SQL não foi encontrado na <span style='font-weight: bold'>SharedPool</span>"))
+        setTimeout(() => {
+            sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > Criando o plano de execução da query..."))
+            setTimeout(() => {
+                sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD Parse</span> concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + sharedPool.getLastHash().getHashStr()))
+                $("#server-process").removeClass("time-clock")
+
+                sharedPool.animateAddHash() // animacao adicionando hash na shared pool
+                let memLocation = sharedPool.getLastMemoryLocation() // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
+                blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, delay * 0.15) // animacao requisitando dados do dataFiles
+                serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, delay * 0.15) // animacao gravando dados no dbBufferCache
+                serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, delay * 0.15) // animacao pegando dados do dbBufferCache
+                serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, delay * 0.15) // animacao enviando dados para userProcess
+            }, delay * 0.20)
+        }, delay * 0.20)
+
+        //termino da animacao        
+        setTimeout(() => {
+            $(blockHtml).remove() //removendo block do DOM
+        }, delay)
+    }
+
+    /**
+     * animateHashFound
+     * Animacao de hash found
+     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
+     */
+    private animateHashFound(delay: number) {
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let dataFiles: DataFiles = Orasim.getOracleDatabase().getDataFiles()
+        let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+        let sqlConsole: SqlConsole = Orasim.getSqlConsole()
+        let serverProcess: ServerProcess = Orasim.getServerProcess()
+        let userProcess: UserProcess = Orasim.getUserProcess()
+
+        // pegando localizacao do bloco 
+        let memLocation = sharedPool.getLastMemoryLocation()
+
+         $("#server-process").removeClass("time-clock")
+
+        // animacao pegando dados do dbBufferCache
+        // animacao enviando dados para userProcess
+        let blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocation, delay * 0.15)
+        serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, delay * 0.15)
+
+        //termino da animacao
+        setTimeout(() => {
+            //removendo block do DOM
+            blockHtml.remove()
+        }, delay * 0.3);
     }
 } 

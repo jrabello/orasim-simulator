@@ -14,8 +14,8 @@ export class AnimationConnect extends Animation{
 
     constructor(){
         super()
-        this.animUserProcessDelay = super.getDelay() * 5
-        this.animListenerProcessDelay = super.getDelay() * 5
+        this.animUserProcessDelay = super.getDelay() * 3
+        this.animListenerProcessDelay = super.getDelay() * 3
     }
 
     /**

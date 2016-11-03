@@ -26,6 +26,7 @@ export class SqlButtons {
         return new Promise < number > ((resolve, reject) => {
             $("#btnConnect").addClass("displayNone")
             $(".btnCommands").removeClass("displayNone")
+            resolve(0)
         })
     }
 
