@@ -18,15 +18,15 @@ export class SqlButtons {
     }
 
     /**
-     * animateSendDataToListener
-     * Metodo responsavel por animar o envio de dados ao listener     
-     * @param {delay} duracao da animacao
+     * undisplayConnectDisplayCommandButtons
+     * Metodo responsavel por trocar botao de connect pelos botoes de commandos no banco     
      * @returns uma promise retornada logo apos o tempo de animacao
      */
     undisplayConnectDisplayCommandButtons(): Promise < number > {
         return new Promise < number > ((resolve, reject) => {
             $("#btnConnect").addClass("displayNone")
             $(".btnCommands").removeClass("displayNone")
+            resolve(0)
         })
     }
 

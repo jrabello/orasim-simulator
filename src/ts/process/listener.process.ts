@@ -1,5 +1,6 @@
 import { Tooltip } from '../utils/tooltip'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
+import { SqlConsoleMsgWarning } from '../sql-console/sql.console.msg.warning'
 import { Arrow } from '../animation/arrow'
 
 /**
@@ -79,18 +80,17 @@ export class ListenerProcess {
         return new Promise < number > ((resolve, reject) => {
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Conectando diretamente com o <span style='font-weight: bold'>ServerProcess</span>"))
 
-            $("<div class='right-arrow end'>").css({
+            $("<div id='connection-arrow' class='right-arrow end'>").css({
                 "left": "95px",
                 "top": "265px",
                 "width": "40px"
-            }).hide().appendTo("#animation-container").fadeTo(delay * 1, 1)
+            }).hide().appendTo("#animation-container").fadeTo(delay, 1)
 
             setTimeout(() => {
+                Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Conexão estabelecida com o <span style='font-weight: bold'>Database</span>"))
+                Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
                 resolve(0)
-            }, delay)
-
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Conexão estabelecida com o <span style='font-weight: bold'>Database</span>"))
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Aguardando solicitação..."))
+            }, delay * 0.8)
         })
     }
 

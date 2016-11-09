@@ -14,8 +14,8 @@ export class AnimationConnect extends Animation{
 
     constructor(){
         super()
-        this.animUserProcessDelay = super.getDelay() * 10
-        this.animListenerProcessDelay = super.getDelay() * 10
+        this.animUserProcessDelay = super.getDelay() * 3
+        this.animListenerProcessDelay = super.getDelay() * 3
     }
 
     /**
@@ -31,8 +31,11 @@ export class AnimationConnect extends Animation{
         Orasim.getAnimation().setAnimating(true)
         
         // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
-        // setando estado de termino da animacao        
-        userProcess.animateSendDataToListener(this.animUserProcessDelay)
+        // setando estado de termino da animacao
+        userProcess.createUserProcess(this.animListenerProcessDelay)        
+        .then((res) => {
+            return userProcess.animateSendDataToListener(this.animUserProcessDelay) 
+        })
         .then((res) => {
             return listenerProcess.animateSendDataToServer(this.animListenerProcessDelay)
         })
