@@ -10,13 +10,13 @@ import { Hash } from '../crypt/hash'
  */
 export class SharedPool {    
     private hashCollection: Hash[]    
-    private hashElement: HTMLElement
+    //private hashElement: HTMLElement
     private element: HTMLElement
 
     constructor() {        
         this.hashCollection = []
         this.element = $(`#shared-pool`)[0]
-        this.hashElement = $(`<li class="sql-hash"></li>`)[0]        
+        //this.hashElement = $(`<li class="sql-hash"></li>`)[0]        
 
         // criando tooltip para o SharedPool
         let tooltip = new Tooltip("#shared-pool", "Shared Pool", 
@@ -36,9 +36,21 @@ export class SharedPool {
      * Metodo responsavel por animar a inserção hash no hashContainer, dentro da shared-pool  
      */
     animateAddHash(): void{        
-        //neste caso estamos apenas dando append, nao existe animacao ainda
-        $("#hash-ul-container").append(
-            $(this.hashElement).append(this.hashCollection.slice(-1)[0].getHashStr())[0].outerHTML)
+        //neste caso estamos apenas dando append na DOM tree, nao existe animacao ainda
+        let lastAddedHash: Hash = this.hashCollection.slice(-1)[0]
+        let hashElement = $(`<li class="sql-hash"></li>`)[0]
+        let idHashHtmlElement = lastAddedHash.getHash().toString(16)
+
+        //adicionando elemento na DOM tree
+        //adicionando id no elemento
+        //adicionando cor no elemento
+        //adicionando representacao em string do hash
+        $("#hash-ul-container").append(hashElement)
+        $(hashElement).attr('id', idHashHtmlElement)
+        lastAddedHash.setColor('#' + idHashHtmlElement)
+        $('#'+idHashHtmlElement).css('color', lastAddedHash.getColor())
+        $('#'+idHashHtmlElement).append(lastAddedHash.getHashStr())
+        //$(hashElement).append(lastAddedHash.getHashStr())[0].outerHTML)                
     }
 
     /**

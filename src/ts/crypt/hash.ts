@@ -6,8 +6,21 @@
 export class Hash implements IHashable{
     private hash : number
     private hashStr : string
+    private color: string
 
-    constructor(){        
+    constructor(){       
+        this.color = "#ffffff" 
+    }
+
+    /**
+     * getColor
+     * @returns retorna cor do hash
+     */
+    getColor(): string{
+        return this.color
+    }
+    setColor(color: string){
+        this.color = color
     }
 
     /**

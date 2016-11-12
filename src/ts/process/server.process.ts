@@ -6,7 +6,9 @@ import { UserProcess } from './user.process'
 import { SharedPool } from '../oracle-instance/shared.pool'
 import { DataBlock } from '../utils/data.block'
 import { SqlConsole } from '../sql-console/sql.console'
+import { Hash } from '../crypt/hash'
 import { Pga } from './pga'
+
 
 /**
  * ServerProcess
@@ -71,9 +73,9 @@ export class ServerProcess{
      * @param {delay} tempo de animacao
      * @returns retorna o novo bloco criado(htmlElement) dentro do datafiles  
      */
-    animateGetBlockFromDataFiles(dataFiles: DataFiles, delay: number): HTMLElement{        
-        let blockHtml = dataFiles.getNewBlockHtml()
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
+    animateGetBlockFromDataFiles(dataFiles: DataFiles, hash: Hash, delay: number): HTMLElement{        
+        let blockHtml = dataFiles.getNewBlockHtmlWithColor(hash.getColor())
+        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
             //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))   
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"))                         
@@ -92,7 +94,7 @@ export class ServerProcess{
      * @param {memLocation} local de memoria de destino(onde o bloco sera salvo)
      * @param {delay} tempo de animacao 
      */
-    animateStoreBlockInDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, memLocation: number, delay: number): void{        
+    animateStoreBlockInDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, hash: Hash, memLocation: number, delay: number): void{        
         Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocation].getElement(), delay, delay/6, () =>{
             // no inicio da animacao piscar server-process e db-buffer-cache 
             $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
@@ -100,7 +102,7 @@ export class ServerProcess{
             //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
         }, () => { 
             // depois da animacao completa marcando o bloco como utilizado            
-            dbBufferCache.setMemoryLocationUsed(memLocation)            
+            dbBufferCache.setMemoryLocationUsed(memLocation, hash.getColor())            
         })
     }
 
@@ -213,9 +215,10 @@ export class ServerProcess{
                 $("#server-process").removeClass("time-clock")
 
                 sharedPool.animateAddHash() // animacao adicionando hash na shared pool
+                let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado
                 let memLocation = sharedPool.getLastMemoryLocation() // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
-                blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, delay * 0.15) // animacao requisitando dados do dataFiles
-                serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, delay * 0.15) // animacao gravando dados no dbBufferCache
+                blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, lastAddedHash ,delay * 0.15) // animacao requisitando dados do dataFiles
+                serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache,lastAddedHash, memLocation, delay * 0.15) // animacao gravando dados no dbBufferCache
                 serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, delay * 0.15) // animacao pegando dados do dbBufferCache
                 serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, delay * 0.15) // animacao enviando dados para userProcess
             }, delay * 0.20)
@@ -241,9 +244,10 @@ export class ServerProcess{
         let userProcess: UserProcess = Orasim.getUserProcess()
 
         // pegando localizacao do bloco 
+        // pegando ultimo hash adicionado         
+        let lastAddedHash = sharedPool.getLastHash()
         let memLocation = sharedPool.getLastMemoryLocation()
-
-         $("#server-process").removeClass("time-clock")
+        $("#server-process").removeClass("time-clock")
 
         // animacao pegando dados do dbBufferCache
         // animacao enviando dados para userProcess

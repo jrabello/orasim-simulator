@@ -1,33 +1,19 @@
 import { SqlButtonSelect } from './sql.button.select'
+import { SqlButtonConnect } from './sql.button.connect'
 import { AnimationConnect } from '../animation/animation.connect'
 
 export class SqlButtons {
     private sqlButtonSelect: SqlButtonSelect
+    private sqlButtonConnect: SqlButtonConnect 
 
-    constructor() {
-        //adicionando connect event handler        
-        $("#btnConnect").on('click', () => {
-                this.handleConnect()
-        })
+    constructor() {        
         //criando instancia de button select
+        //criando instancia de button connect
         this.sqlButtonSelect = new SqlButtonSelect()
+        this.sqlButtonConnect = new SqlButtonConnect()
     }
 
-    handleConnect(): void {
-        new AnimationConnect().start()
+    getButtonConnect(): SqlButtonConnect{
+        return this.sqlButtonConnect
     }
-
-    /**
-     * undisplayConnectDisplayCommandButtons
-     * Metodo responsavel por trocar botao de connect pelos botoes de commandos no banco     
-     * @returns uma promise retornada logo apos o tempo de animacao
-     */
-    undisplayConnectDisplayCommandButtons(): Promise < number > {
-        return new Promise < number > ((resolve, reject) => {
-            $("#btnConnect").addClass("displayNone")
-            $(".btnCommands").removeClass("displayNone")
-            resolve(0)
-        })
-    }
-
 }

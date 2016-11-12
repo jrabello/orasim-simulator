@@ -47,12 +47,12 @@
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
 	var sql_buttons_1 = __webpack_require__(10);
-	var server_process_1 = __webpack_require__(14);
-	var user_process_1 = __webpack_require__(17);
-	var listener_process_1 = __webpack_require__(19);
+	var server_process_1 = __webpack_require__(15);
+	var user_process_1 = __webpack_require__(18);
+	var listener_process_1 = __webpack_require__(20);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(21);
-	var oracle_instance_1 = __webpack_require__(24);
+	var oracle_database_1 = __webpack_require__(22);
+	var oracle_instance_1 = __webpack_require__(25);
 	/**
 	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
@@ -293,7 +293,7 @@
 	 */
 	var Animation = (function () {
 	    function Animation() {
-	        this.delay = 1000;
+	        this.delay = 100;
 	        this.animating = false;
 	    }
 	    /**
@@ -509,7 +509,18 @@
 	 */
 	var Hash = (function () {
 	    function Hash() {
+	        this.color = "#ffffff";
 	    }
+	    /**
+	     * getColor
+	     * @returns retorna cor do hash
+	     */
+	    Hash.prototype.getColor = function () {
+	        return this.color;
+	    };
+	    Hash.prototype.setColor = function (color) {
+	        this.color = color;
+	    };
 	    /**
 	     * getHexStrHash
 	     * @returns retorna representacao em hexadecimal do hash
@@ -595,31 +606,16 @@
 
 	"use strict";
 	var sql_button_select_1 = __webpack_require__(11);
-	var animation_connect_1 = __webpack_require__(13);
+	var sql_button_connect_1 = __webpack_require__(13);
 	var SqlButtons = (function () {
 	    function SqlButtons() {
-	        var _this = this;
-	        //adicionando connect event handler        
-	        $("#btnConnect").on('click', function () {
-	            _this.handleConnect();
-	        });
 	        //criando instancia de button select
+	        //criando instancia de button connect
 	        this.sqlButtonSelect = new sql_button_select_1.SqlButtonSelect();
+	        this.sqlButtonConnect = new sql_button_connect_1.SqlButtonConnect();
 	    }
-	    SqlButtons.prototype.handleConnect = function () {
-	        new animation_connect_1.AnimationConnect().start();
-	    };
-	    /**
-	     * undisplayConnectDisplayCommandButtons
-	     * Metodo responsavel por trocar botao de connect pelos botoes de commandos no banco
-	     * @returns uma promise retornada logo apos o tempo de animacao
-	     */
-	    SqlButtons.prototype.undisplayConnectDisplayCommandButtons = function () {
-	        return new Promise(function (resolve, reject) {
-	            $("#btnConnect").addClass("displayNone");
-	            $(".btnCommands").removeClass("displayNone");
-	            resolve(0);
-	        });
+	    SqlButtons.prototype.getButtonConnect = function () {
+	        return this.sqlButtonConnect;
 	    };
 	    return SqlButtons;
 	}());
@@ -642,6 +638,9 @@
 	        });
 	    }
 	    SqlButtonSelect.prototype.handleSelect = function () {
+	        //se animacao em andamento retorne
+	        if (Orasim.getAnimation().isAnimating())
+	            return;
 	        //gerando o mesmo hash(crc do 'select') para todos os clicks
 	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	        var query = 'select';
@@ -954,6 +953,43 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var animation_connect_1 = __webpack_require__(14);
+	var SqlButtonConnect = (function () {
+	    function SqlButtonConnect() {
+	        var _this = this;
+	        //adicionando connect event handler        
+	        $("#btnConnect").on('click', function () {
+	            _this.handleConnect();
+	        });
+	    }
+	    SqlButtonConnect.prototype.handleConnect = function () {
+	        //se animacao em andamento retorne
+	        if (Orasim.getAnimation().isAnimating())
+	            return;
+	        new animation_connect_1.AnimationConnect().start();
+	    };
+	    /**
+	     * undisplayConnectDisplayCommandButtons
+	     * Metodo responsavel por trocar botao de connect pelos botoes de commandos no banco
+	     * @returns uma promise retornada logo apos o tempo de animacao
+	     */
+	    SqlButtonConnect.prototype.undisplayConnectDisplayCommandButtons = function () {
+	        return new Promise(function (resolve, reject) {
+	            $("#btnConnect").addClass("displayNone");
+	            $(".btnCommands").removeClass("displayNone");
+	            resolve(0);
+	        });
+	    };
+	    return SqlButtonConnect;
+	}());
+	exports.SqlButtonConnect = SqlButtonConnect;
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -980,6 +1016,7 @@
 	        var _this = this;
 	        var userProcess = Orasim.getUserProcess();
 	        var listenerProcess = Orasim.getListenerProcess();
+	        //let sqlButtons: SqlButtons = Orasim.getSqlButtons()
 	        var sqlButtons = Orasim.getSqlButtons();
 	        // setando estado de inicio da animacao
 	        Orasim.getAnimation().setAnimating(true);
@@ -996,7 +1033,7 @@
 	            return listenerProcess.animateConnectToServer(_this.animUserProcessDelay);
 	        })
 	            .then(function (res) {
-	            return sqlButtons.undisplayConnectDisplayCommandButtons();
+	            return sqlButtons.getButtonConnect().undisplayConnectDisplayCommandButtons();
 	        })
 	            .then(function (res) {
 	            return Orasim.getAnimation().setAnimating(false);
@@ -1008,13 +1045,13 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var sql_console_msg_info_1 = __webpack_require__(8);
-	var pga_1 = __webpack_require__(16);
+	var pga_1 = __webpack_require__(17);
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
@@ -1045,8 +1082,8 @@
 	     * @param {delay} tempo de animacao
 	     * @returns retorna o novo bloco criado(htmlElement) dentro do datafiles
 	     */
-	    ServerProcess.prototype.animateGetBlockFromDataFiles = function (dataFiles, delay) {
-	        var blockHtml = dataFiles.getNewBlockHtml();
+	    ServerProcess.prototype.animateGetBlockFromDataFiles = function (dataFiles, hash, delay) {
+	        var blockHtml = dataFiles.getNewBlockHtmlWithColor(hash.getColor());
 	        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))   
@@ -1064,7 +1101,7 @@
 	     * @param {memLocation} local de memoria de destino(onde o bloco sera salvo)
 	     * @param {delay} tempo de animacao
 	     */
-	    ServerProcess.prototype.animateStoreBlockInDbBufferCache = function (blockHtml, dbBufferCache, memLocation, delay) {
+	    ServerProcess.prototype.animateStoreBlockInDbBufferCache = function (blockHtml, dbBufferCache, hash, memLocation, delay) {
 	        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocation].getElement(), delay, delay / 6, function () {
 	            // no inicio da animacao piscar server-process e db-buffer-cache 
 	            $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -1072,7 +1109,7 @@
 	            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
 	        }, function () {
 	            // depois da animacao completa marcando o bloco como utilizado            
-	            dbBufferCache.setMemoryLocationUsed(memLocation);
+	            dbBufferCache.setMemoryLocationUsed(memLocation, hash.getColor());
 	        });
 	    };
 	    /**
@@ -1177,9 +1214,10 @@
 	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD Parse</span> concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + sharedPool.getLastHash().getHashStr()));
 	                $("#server-process").removeClass("time-clock");
 	                sharedPool.animateAddHash(); // animacao adicionando hash na shared pool
+	                var lastAddedHash = sharedPool.getLastHash(); // pegando ultimo hash adicionado
 	                var memLocation = sharedPool.getLastMemoryLocation(); // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
-	                blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, delay * 0.15); // animacao requisitando dados do dataFiles
-	                serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, memLocation, delay * 0.15); // animacao gravando dados no dbBufferCache
+	                blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, lastAddedHash, delay * 0.15); // animacao requisitando dados do dataFiles
+	                serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache, lastAddedHash, memLocation, delay * 0.15); // animacao gravando dados no dbBufferCache
 	                serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, delay * 0.15); // animacao pegando dados do dbBufferCache
 	                serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, delay * 0.15); // animacao enviando dados para userProcess
 	            }, delay * 0.20);
@@ -1202,6 +1240,8 @@
 	        var serverProcess = Orasim.getServerProcess();
 	        var userProcess = Orasim.getUserProcess();
 	        // pegando localizacao do bloco 
+	        // pegando ultimo hash adicionado         
+	        var lastAddedHash = sharedPool.getLastHash();
 	        var memLocation = sharedPool.getLastMemoryLocation();
 	        $("#server-process").removeClass("time-clock");
 	        // animacao pegando dados do dbBufferCache
@@ -1220,7 +1260,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1258,11 +1298,11 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var Pga = (function () {
 	    function Pga() {
 	        // criando tooltip para a PGA
@@ -1274,12 +1314,12 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
-	var arrow_1 = __webpack_require__(18);
+	var tooltip_1 = __webpack_require__(16);
+	var arrow_1 = __webpack_require__(19);
 	var sql_console_msg_info_1 = __webpack_require__(8);
 	/**
 	 * UserProcess
@@ -1362,7 +1402,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1712,14 +1752,14 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var sql_console_msg_info_1 = __webpack_require__(8);
-	var sql_console_msg_warning_1 = __webpack_require__(20);
-	var arrow_1 = __webpack_require__(18);
+	var sql_console_msg_warning_1 = __webpack_require__(21);
+	var arrow_1 = __webpack_require__(19);
 	/**
 	 * ListenerProcess
 	 * Classe responsavel por modelar o objeto ListenerProcess da animacao
@@ -1792,7 +1832,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1817,11 +1857,11 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(22);
+	var data_files_1 = __webpack_require__(23);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -1835,11 +1875,11 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_block_1 = __webpack_require__(23);
+	var data_block_1 = __webpack_require__(24);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -1851,17 +1891,25 @@
 	        this.blocks = new Array();
 	        this.element = $("#data-files")[0];
 	    }
+	    DataFiles.prototype.createNewBlock = function () {
+	        var newBlock = new data_block_1.DataBlock();
+	        //criando block dentro do data-files        
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.element).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        return newBlock;
+	    };
 	    /**
 	     * getNewBlockHtml
 	     * Metodo responsavel por retornar novo objeto html que sera utilizado para animacao
 	     * @returns retorna objeto html(Block) para ser animado
 	     */
 	    DataFiles.prototype.getNewBlockHtml = function () {
-	        var newBlock = new data_block_1.DataBlock();
-	        //criando block dentro do data-files        
-	        $(this.element).prepend(newBlock.getElement());
-	        $(newBlock.getElement()).offset($(this.element).offset());
-	        $(newBlock.getElement()).css("position", "absolute");
+	        return this.createNewBlock().getElement();
+	    };
+	    DataFiles.prototype.getNewBlockHtmlWithColor = function (color) {
+	        var newBlock = this.createNewBlock();
+	        newBlock.setColor(color);
 	        return newBlock.getElement();
 	    };
 	    return DataFiles;
@@ -1870,7 +1918,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1886,15 +1934,29 @@
 	        this.element = $("<div class=\"cache-box\"></div>")[0];
 	        this.size = 4096;
 	        this.isUsed = false;
+	        this.color = "#ffffff";
 	    }
 	    /**
 	     * setUsed
 	     * Metodo responsavel pela animacao de marcar o bloco como usado no db-buffer-cache
 	     * @param {flag} setando isUsed como usada ou livre
 	     */
-	    DataBlock.prototype.setUsed = function (flag) {
+	    DataBlock.prototype.setUsed = function (flag, color) {
 	        this.isUsed = flag;
-	        $(this.element).css("background-color", "#f00");
+	        //$(this.element).css("background-color","#f00")
+	        this.setColor(color);
+	    };
+	    /**
+	     * setColor
+	     * Metodo responsavel ppor setar cor do block
+	     * @param {color} cor no seguinte formato #ffffff
+	     */
+	    DataBlock.prototype.setColor = function (color) {
+	        this.color = color;
+	        $(this.element).css("background-color", this.color);
+	    };
+	    DataBlock.prototype.getColor = function () {
+	        return this.color;
 	    };
 	    DataBlock.prototype.getElement = function () {
 	        return this.element;
@@ -1905,17 +1967,17 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(25);
-	var pmon_1 = __webpack_require__(29);
-	var smon_1 = __webpack_require__(30);
-	var dbwr_1 = __webpack_require__(31);
-	var ckpt_1 = __webpack_require__(32);
-	var lgwr_1 = __webpack_require__(33);
-	var arcn_1 = __webpack_require__(34);
+	var sga_1 = __webpack_require__(26);
+	var pmon_1 = __webpack_require__(30);
+	var smon_1 = __webpack_require__(31);
+	var dbwr_1 = __webpack_require__(32);
+	var ckpt_1 = __webpack_require__(33);
+	var lgwr_1 = __webpack_require__(34);
+	var arcn_1 = __webpack_require__(35);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -1935,13 +1997,13 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(26);
-	var shared_pool_1 = __webpack_require__(27);
-	var redo_log_buffer_1 = __webpack_require__(28);
+	var db_buffer_cache_1 = __webpack_require__(27);
+	var shared_pool_1 = __webpack_require__(28);
+	var redo_log_buffer_1 = __webpack_require__(29);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -1979,12 +2041,12 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
-	var data_block_1 = __webpack_require__(23);
+	var tooltip_1 = __webpack_require__(16);
+	var data_block_1 = __webpack_require__(24);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -2017,8 +2079,8 @@
 	     * Metodo responsavel por marcar uma area de memoria como utilizada
 	     * @param {memLocation} numero de id da localizacao da memoria
 	     */
-	    DbBufferCache.prototype.setMemoryLocationUsed = function (memLocation) {
-	        this.blocks[memLocation].setUsed(true);
+	    DbBufferCache.prototype.setMemoryLocationUsed = function (memLocation, color) {
+	        this.blocks[memLocation].setUsed(true, color);
 	    };
 	    /**
 	     * getNewBlockHtml
@@ -2043,6 +2105,7 @@
 	    DbBufferCache.prototype.getNewBlockHtmlAt = function (memLocation) {
 	        var newBlock = new data_block_1.DataBlock();
 	        //adicionando elemento no DOM dinamicamente        
+	        newBlock.setColor(this.getBlocks()[memLocation].getColor());
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset());
 	        $(newBlock.getElement()).css("position", "absolute");
@@ -2061,11 +2124,11 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	/**
 	 * SharedPool
 	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
@@ -2077,7 +2140,7 @@
 	    function SharedPool() {
 	        this.hashCollection = [];
 	        this.element = $("#shared-pool")[0];
-	        this.hashElement = $("<li class=\"sql-hash\"></li>")[0];
+	        //this.hashElement = $(`<li class="sql-hash"></li>`)[0]        
 	        // criando tooltip para o SharedPool
 	        var tooltip = new tooltip_1.Tooltip("#shared-pool", "Shared Pool", "\n        <p align=\"justify\">\n        Shared Pool xxxx\n\n        xxxxxxxxxxxxxxxxxxxxxxx\n        xxxxxxxxxxxxxxxxxxxxxxxx\n        xxxxxxxxxxxxxxxxxxxxxxx\n        ");
 	    }
@@ -2086,8 +2149,20 @@
 	     * Metodo responsavel por animar a inserção hash no hashContainer, dentro da shared-pool
 	     */
 	    SharedPool.prototype.animateAddHash = function () {
-	        //neste caso estamos apenas dando append, nao existe animacao ainda
-	        $("#hash-ul-container").append($(this.hashElement).append(this.hashCollection.slice(-1)[0].getHashStr())[0].outerHTML);
+	        //neste caso estamos apenas dando append na DOM tree, nao existe animacao ainda
+	        var lastAddedHash = this.hashCollection.slice(-1)[0];
+	        var hashElement = $("<li class=\"sql-hash\"></li>")[0];
+	        var idHashHtmlElement = lastAddedHash.getHash().toString(16);
+	        //adicionando elemento na DOM tree
+	        //adicionando id no elemento
+	        //adicionando cor no elemento
+	        //adicionando representacao em string do hash
+	        $("#hash-ul-container").append(hashElement);
+	        $(hashElement).attr('id', idHashHtmlElement);
+	        lastAddedHash.setColor('#' + idHashHtmlElement);
+	        $('#' + idHashHtmlElement).css('color', lastAddedHash.getColor());
+	        $('#' + idHashHtmlElement).append(lastAddedHash.getHashStr());
+	        //$(hashElement).append(lastAddedHash.getHashStr())[0].outerHTML)                
 	    };
 	    /**
 	     * addHash
@@ -2147,11 +2222,11 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	/**
 	 * Redo Log Buffer
 	 * Classe responsavel por modelar o objeto RedoLogBuffer do oracle instance
@@ -2169,11 +2244,11 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
@@ -2186,11 +2261,11 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var Smon = (function () {
 	    function Smon() {
 	        this.element = $('#smon')[0];
@@ -2203,11 +2278,11 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var Dbwr = (function () {
 	    function Dbwr() {
 	        this.element = $('#dbwr')[0];
@@ -2220,11 +2295,11 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var Ckpt = (function () {
 	    function Ckpt() {
 	        this.element = $('#ckpt')[0];
@@ -2237,11 +2312,11 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var Lgwr = (function () {
 	    function Lgwr() {
 	        this.element = $('#lgwr')[0];
@@ -2254,11 +2329,11 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(15);
+	var tooltip_1 = __webpack_require__(16);
 	var Arcn = (function () {
 	    function Arcn() {
 	        this.element = $('#arcn')[0];

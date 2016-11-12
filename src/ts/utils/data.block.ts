@@ -9,25 +9,41 @@ export class DataBlock{
     private size: number    
     private element: HTMLElement
     private isUsed: boolean
+    private color: string
 
     constructor() {
         this.element = $(`<div class="cache-box"></div>`)[0]        
         this.size = 4096
         this.isUsed = false
+        this.color = "#ffffff"
     }
-
+    
     /**
      * setUsed
      * Metodo responsavel pela animacao de marcar o bloco como usado no db-buffer-cache
      * @param {flag} setando isUsed como usada ou livre
      */
-    setUsed(flag: boolean){
+    setUsed(flag: boolean, color: string){
         this.isUsed = flag
-        $(this.element).css("background-color","#f00")
+        //$(this.element).css("background-color","#f00")
+        this.setColor(color)
+    }
+
+    /**
+     * setColor
+     * Metodo responsavel ppor setar cor do block
+     * @param {color} cor no seguinte formato #ffffff
+     */
+    setColor(color: string){
+        this.color = color
+        $(this.element).css("background-color", this.color)
+    }
+
+    getColor(): string{
+        return this.color
     }
 
     getElement(): HTMLElement{
         return this.element
-    }
-    
+    }    
 }

@@ -13,7 +13,11 @@ export class SqlButtonSelect{
         })
     }
 
-    handleSelect(): void{                
+    handleSelect(): void{
+        //se animacao em andamento retorne
+        if(Orasim.getAnimation().isAnimating())
+            return
+                            
         //gerando o mesmo hash(crc do 'select') para todos os clicks
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let query = 'select'            

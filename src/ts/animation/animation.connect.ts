@@ -2,6 +2,7 @@ import { Animation } from './animation'
 import { UserProcess } from '../process/user.process'
 import { ListenerProcess } from '../process/listener.process'
 import { SqlButtons } from '../sql-buttons/sql.buttons'
+import { SqlButtonConnect } from '../sql-buttons/sql.button.connect'
 
 /**
  * AnimationConnect
@@ -25,6 +26,7 @@ export class AnimationConnect extends Animation{
     start(): void{        
         let userProcess: UserProcess = Orasim.getUserProcess()
         let listenerProcess: ListenerProcess = Orasim.getListenerProcess()
+        //let sqlButtons: SqlButtons = Orasim.getSqlButtons()
         let sqlButtons: SqlButtons = Orasim.getSqlButtons()
 
         // setando estado de inicio da animacao
@@ -43,7 +45,7 @@ export class AnimationConnect extends Animation{
             return listenerProcess.animateConnectToServer(this.animUserProcessDelay)            
         })
         .then((res) => {            
-            return sqlButtons.undisplayConnectDisplayCommandButtons()            
+            return sqlButtons.getButtonConnect().undisplayConnectDisplayCommandButtons()            
         })
         .then((res) => {            
             return Orasim.getAnimation().setAnimating(false)            
