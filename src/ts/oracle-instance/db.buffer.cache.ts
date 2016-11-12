@@ -92,8 +92,8 @@ export class DbBufferCache {
      * Metodo responsavel por marcar uma area de memoria como utilizada
      * @param {memLocation} numero de id da localizacao da memoria
      */
-    setMemoryLocationUsed(memLocation: number){
-        this.blocks[memLocation].setUsed(true)
+    setMemoryLocationUsed(memLocation: number, color: string){
+        this.blocks[memLocation].setUsed(true, color)
     }
 
     /**
@@ -123,9 +123,11 @@ export class DbBufferCache {
         let newBlock = new DataBlock()
         
         //adicionando elemento no DOM dinamicamente        
-        $(this.element).prepend(newBlock.getElement())
-        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset())
+        newBlock.setColor(this.getBlocks()[memLocation].getColor())
+        $(this.element).prepend(newBlock.getElement())        
+        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset())        
         $(newBlock.getElement()).css("position", "absolute")
+        
         //$(newBlock.getElement()).css("z-index", 100)
         
         return newBlock.getElement()
