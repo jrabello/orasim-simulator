@@ -293,7 +293,7 @@
 	 */
 	var Animation = (function () {
 	    function Animation() {
-	        this.delay = 100;
+	        this.delay = 1000;
 	        this.animating = false;
 	    }
 	    /**
@@ -428,11 +428,15 @@
 	    __extends(Crc32, _super);
 	    function Crc32(data) {
 	        _super.call(this);
-	        var uintCrc = (new Uint32Array([this.crc32Str(data)]))[0];
+	        var uintCrc = this.genCrc32(data);
 	        _super.prototype.setHash.call(this, uintCrc);
 	        _super.prototype.setHashStr.call(this, uintCrc.toString(16));
-	        //let sqlid: SqlId = new SqlId()
 	    }
+	    Crc32.prototype.genCrc32 = function (data) {
+	        return (new Uint32Array([this.crc32Str(data)]))[0];
+	        // super.setHash(uintCrc)
+	        // super.setHashStr(uintCrc.toString(16))
+	    };
 	    // /**
 	    //  * buildCrc
 	    //  * Metodo responsavel por construir o hash crc32 

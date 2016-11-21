@@ -23,7 +23,7 @@ export class DataBlock{
      * Metodo responsavel pela animacao de marcar o bloco como usado no db-buffer-cache
      * @param {flag} setando isUsed como usada ou livre
      */
-    setUsed(flag: boolean, color: string){
+    setUsed(flag: boolean, color: string): void{
         this.isUsed = flag
         //$(this.element).css("background-color","#f00")
         this.setColor(color)
@@ -34,7 +34,7 @@ export class DataBlock{
      * Metodo responsavel ppor setar cor do block
      * @param {color} cor no seguinte formato #ffffff
      */
-    setColor(color: string){
+    setColor(color: string): void{
         this.color = color
         $(this.element).css("background-color", this.color)
     }
