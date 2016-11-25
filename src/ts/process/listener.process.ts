@@ -33,7 +33,7 @@ export class ListenerProcess {
         )
     }
 
-    getElement() {
+    getElement(): HTMLElement {
         return this.element
     }
 

@@ -293,7 +293,7 @@
 	 */
 	var Animation = (function () {
 	    function Animation() {
-	        this.delay = 100;
+	        this.delay = 1000;
 	        this.animating = false;
 	    }
 	    /**
@@ -428,11 +428,15 @@
 	    __extends(Crc32, _super);
 	    function Crc32(data) {
 	        _super.call(this);
-	        var uintCrc = (new Uint32Array([this.crc32Str(data)]))[0];
+	        var uintCrc = this.genCrc32(data);
 	        _super.prototype.setHash.call(this, uintCrc);
 	        _super.prototype.setHashStr.call(this, uintCrc.toString(16));
-	        //let sqlid: SqlId = new SqlId()
 	    }
+	    Crc32.prototype.genCrc32 = function (data) {
+	        return (new Uint32Array([this.crc32Str(data)]))[0];
+	        // super.setHash(uintCrc)
+	        // super.setHashStr(uintCrc.toString(16))
+	    };
 	    // /**
 	    //  * buildCrc
 	    //  * Metodo responsavel por construir o hash crc32 
@@ -616,6 +620,9 @@
 	    }
 	    SqlButtons.prototype.getButtonConnect = function () {
 	        return this.sqlButtonConnect;
+	    };
+	    SqlButtons.prototype.getButtonSelect = function () {
+	        return this.sqlButtonSelect;
 	    };
 	    return SqlButtons;
 	}());
@@ -1273,6 +1280,9 @@
 	     * @param {text} texto dentro da janela
 	     */
 	    function Tooltip(idElement, title, text) {
+	        this.genToolTip(idElement, title, text);
+	    }
+	    Tooltip.prototype.genToolTip = function (idElement, title, text) {
 	        // criando tooltip para elemento
 	        $(idElement).qtip({
 	            suppress: false,
@@ -1291,7 +1301,7 @@
 	                adjust: { mouse: false }
 	            }
 	        });
-	    }
+	    };
 	    return Tooltip;
 	}());
 	exports.Tooltip = Tooltip;
@@ -1305,9 +1315,12 @@
 	var tooltip_1 = __webpack_require__(16);
 	var Pga = (function () {
 	    function Pga() {
+	        this.setToolTip();
+	    }
+	    Pga.prototype.setToolTip = function () {
 	        // criando tooltip para a PGA
 	        var tooltip = new tooltip_1.Tooltip("#pga", "Program Global Area (PGA)", "\n        <p align=\"justify\">\n\n        A PGA \u00E9 uma regi\u00E3o de mem\u00F3ria que cont\u00E9m os dados e informa\u00E7\u00F5es de controle para um Server Process.\n        <br><br>\n        \u00C9 uma \u00E1rea de  mem\u00F3ria n\u00E3o compartilhada criada pelo Oracle quando um Server Process \u00E9 iniciado.\n        <br><br>\n        O acesso a PGA \u00E9 exclusivo para do seu Server Process. Para cada Server Process existe uma PGA.\n\n         ");
-	    }
+	    };
 	    return Pga;
 	}());
 	exports.Pga = Pga;

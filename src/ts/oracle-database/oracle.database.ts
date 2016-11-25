@@ -7,7 +7,7 @@ export class OracleDatabase{
         this.dataFiles = new DataFiles()
     }
 
-    getDataFiles(){
+    getDataFiles(): DataFiles{
         return this.dataFiles
     }
 }

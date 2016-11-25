@@ -36,7 +36,7 @@ export class SqlId extends Hash {
         return sqlid
     }
 
-    modulo(aNumStr, aDiv) {
+    private modulo(aNumStr, aDiv) {
         let tmp = 0;
         let i, r;
         for (i = 0; i < aNumStr.length; i++) {
@@ -69,7 +69,7 @@ export class SqlId extends Hash {
     * Add integers, wrapping at 2^32. This uses 16-bit operations internally
     * to work around bugs in some JS interpreters.
     */
-    safeAdd(x, y) {
+    private safeAdd(x, y) {
         var lsw = (x & 0xFFFF) + (y & 0xFFFF)
         var msw = (x >> 16) + (y >> 16) + (lsw >> 16)
         return (msw << 16) | (lsw & 0xFFFF)
@@ -78,34 +78,34 @@ export class SqlId extends Hash {
     /*
     * Bitwise rotate a 32-bit number to the left.
     */
-    bitRotateLeft(num, cnt) {
+    private bitRotateLeft(num, cnt) {
         return (num << cnt) | (num >>> (32 - cnt))
     }
 
     /*
     * These functions implement the four basic operations the algorithm uses.
     */
-    md5cmn(q, a, b, x, s, t) {
+    private md5cmn(q, a, b, x, s, t) {
         return this.safeAdd(this.bitRotateLeft(this.safeAdd(this.safeAdd(a, q),
             this.safeAdd(x, t)), s), b)
     }
-    md5ff(a, b, c, d, x, s, t) {
+    private md5ff(a, b, c, d, x, s, t) {
         return this.md5cmn((b & c) | ((~b) & d), a, b, x, s, t)
     }
-    md5gg(a, b, c, d, x, s, t) {
+    private md5gg(a, b, c, d, x, s, t) {
         return this.md5cmn((b & d) | (c & (~d)), a, b, x, s, t)
     }
-    md5hh(a, b, c, d, x, s, t) {
+    private md5hh(a, b, c, d, x, s, t) {
         return this.md5cmn(b ^ c ^ d, a, b, x, s, t)
     }
-    md5ii(a, b, c, d, x, s, t) {
+    private md5ii(a, b, c, d, x, s, t) {
         return this.md5cmn(c ^ (b | (~d)), a, b, x, s, t)
     }
 
     /*
     * Calculate the MD5 of an array of little-endian words, and a bit length.
     */
-    binlMD5(x, len) {
+    private binlMD5(x, len) {
         /* append padding */
         x[len >> 5] |= 0x80 << (len % 32)
         x[(((len + 64) >>> 9) << 4) + 14] = len
@@ -205,7 +205,7 @@ export class SqlId extends Hash {
     /*
     * Convert an array of little-endian words to a string
     */
-    binl2rstr(input) {
+    private binl2rstr(input) {
         var i
         var output = ''
         var length32 = input.length * 32
@@ -219,7 +219,7 @@ export class SqlId extends Hash {
     * Convert a raw string to an array of little-endian words
     * Characters >255 have their high-byte silently ignored.
     */
-    rstr2binl(input) {
+    private rstr2binl(input) {
         var i
         var output = []
         output[(input.length >> 2) - 1] = undefined
@@ -236,14 +236,14 @@ export class SqlId extends Hash {
     /*
     * Calculate the MD5 of a raw string
     */
-    rstrMD5(s) {
+    private rstrMD5(s) {
         return this.binl2rstr(this.binlMD5(this.rstr2binl(s), s.length * 8))
     }
 
     /*
     * Calculate the HMAC-MD5, of a key and some data (raw strings)
     */
-    rstrHMACMD5(key, data) {
+    private rstrHMACMD5(key, data) {
         var i
         var bkey = this.rstr2binl(key)
         var ipad = []
@@ -264,7 +264,7 @@ export class SqlId extends Hash {
     /*
     * Convert a raw string to a hex string
     */
-    rstr2hex(input) {
+    private rstr2hex(input) {
         var hexTab = '0123456789abcdef'
         var output = ''
         var x
@@ -280,27 +280,27 @@ export class SqlId extends Hash {
     /*
     * Encode a string as utf-8
     */
-    str2rstrUTF8(input) {
+    private str2rstrUTF8(input) {
         return decodeURI(encodeURIComponent(input))
     }
 
     /*
     * Take string arguments and return either raw or hex encoded strings
     */
-    rawMD5(s) {
+    private rawMD5(s) {
         return this.rstrMD5(this.str2rstrUTF8(s))
     }
-    hexMD5(s) {
+    private hexMD5(s) {
         return this.rstr2hex(this.rawMD5(s))
     }
-    rawHMACMD5(k, d) {
+    private rawHMACMD5(k, d) {
         return this.rstrHMACMD5(this.str2rstrUTF8(k), this.str2rstrUTF8(d))
     }
-    hexHMACMD5(k, d) {
+    private hexHMACMD5(k, d) {
         return this.rstr2hex(this.rawHMACMD5(k, d))
     }
 
-    md5(str): string {
+    private md5(str): string {
         return this.hexMD5(str)
     }
 

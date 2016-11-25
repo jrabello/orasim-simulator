@@ -33,7 +33,7 @@ export class UserProcess {
         )
     }
 
-    getElement() {
+    getElement(): HTMLElement {
         return this.element
     }
 

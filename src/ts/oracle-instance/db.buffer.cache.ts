@@ -1,5 +1,5 @@
 import { Tooltip } from '../utils/tooltip'
-import { DataBlock } from '../utils/data.block'
+import { DataBlock } from '../oracle-database/data.block'
 
 /**
  * DbBufferCache
@@ -133,7 +133,7 @@ export class DbBufferCache {
         return newBlock.getElement()
     }
 
-    getElement() {
+    getElement(): HTMLElement{
         return this.element
     }
 

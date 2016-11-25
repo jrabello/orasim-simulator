@@ -8,11 +8,16 @@ import { SqlId } from './sql.id'
 export class Crc32 extends Hash {
 
     constructor(data: string) {
-        super()
-        let uintCrc = (new Uint32Array([this.crc32Str(data)]))[0]
+        super()        
+        let uintCrc: number = this.genCrc32(data);
         super.setHash(uintCrc)
         super.setHashStr(uintCrc.toString(16))
-        //let sqlid: SqlId = new SqlId()
+    }
+
+    genCrc32(data: string): number{
+        return  (new Uint32Array([this.crc32Str(data)]))[0]
+        // super.setHash(uintCrc)
+        // super.setHashStr(uintCrc.toString(16))
     }
 
     // /**
