@@ -3,8 +3,11 @@ import { Tooltip } from '../utils/tooltip'
 export class Pga{
 
     constructor(){
-        
-        // criando tooltip para a PGA
+       this.setToolTip()        
+    }
+
+    setToolTip(): void{
+         // criando tooltip para a PGA
         let tooltip = new Tooltip("#pga", "Program Global Area (PGA)", 
         `
         <p align="justify">

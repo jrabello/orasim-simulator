@@ -16,4 +16,8 @@ export class SqlButtons {
     getButtonConnect(): SqlButtonConnect{
         return this.sqlButtonConnect
     }
+
+    getButtonSelect(): SqlButtonSelect{
+        return this.sqlButtonSelect
+    }
 }

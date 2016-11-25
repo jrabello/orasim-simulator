@@ -133,7 +133,7 @@ export class DbBufferCache {
         return newBlock.getElement()
     }
 
-    getElement() {
+    getElement(): HTMLElement{
         return this.element
     }
 

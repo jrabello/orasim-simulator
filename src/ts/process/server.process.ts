@@ -4,7 +4,7 @@ import { DataFiles } from '../oracle-database/data.files'
 import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
 import { UserProcess } from './user.process'
 import { SharedPool } from '../oracle-instance/shared.pool'
-import { DataBlock } from '../utils/data.block'
+import { DataBlock } from '../oracle-database/data.block'
 import { SqlConsole } from '../sql-console/sql.console'
 import { Hash } from '../crypt/hash'
 import { Pga } from './pga'
@@ -53,7 +53,7 @@ export class ServerProcess{
         )
     }
     
-    getElement(){
+    getElement(): HTMLElement{
         return this.element
     }
 

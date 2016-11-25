@@ -8,6 +8,10 @@ export class Tooltip{
      * @param {text} texto dentro da janela
      */
     constructor(idElement: string, title: string, text: string){
+        this.genToolTip(idElement, title, text)
+    }
+
+    genToolTip(idElement: string, title: string, text: string): void{
         // criando tooltip para elemento
         $(idElement).qtip({
             suppress: false,
