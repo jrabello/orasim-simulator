@@ -93,7 +93,8 @@ export class DbBufferCache {
      * @param {memLocation} numero de id da localizacao da memoria
      */
     setMemoryLocationUsed(memLocation: number, color: string){
-        this.blocks[memLocation].setUsed(true, color)
+        this.blocks[memLocation].setUsed(true)
+        this.blocks[memLocation].setColor(color)
     }
 
     /**

@@ -434,7 +434,7 @@ h1 {
 
 .sql-hash {
  color: white;
-  position: absolute;
+  /*position: absolute;*/
   top: 1.9em;
   left: 0.5em;
   font-weight: bold;

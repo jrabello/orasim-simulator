@@ -47,12 +47,12 @@
 	"use strict";
 	var sql_console_1 = __webpack_require__(1);
 	var sql_buttons_1 = __webpack_require__(10);
-	var server_process_1 = __webpack_require__(15);
-	var user_process_1 = __webpack_require__(18);
-	var listener_process_1 = __webpack_require__(20);
+	var server_process_1 = __webpack_require__(19);
+	var user_process_1 = __webpack_require__(24);
+	var listener_process_1 = __webpack_require__(26);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(22);
-	var oracle_instance_1 = __webpack_require__(25);
+	var oracle_database_1 = __webpack_require__(28);
+	var oracle_instance_1 = __webpack_require__(30);
 	/**
 	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
@@ -611,13 +611,22 @@
 	"use strict";
 	var sql_button_select_1 = __webpack_require__(11);
 	var sql_button_connect_1 = __webpack_require__(13);
+	var sql_button_insert_1 = __webpack_require__(15);
+	var sql_button_commit_1 = __webpack_require__(17);
 	var SqlButtons = (function () {
 	    function SqlButtons() {
-	        //criando instancia de button select
-	        //criando instancia de button connect
+	        //criando instancia de button select, insert, connect        
 	        this.sqlButtonSelect = new sql_button_select_1.SqlButtonSelect();
 	        this.sqlButtonConnect = new sql_button_connect_1.SqlButtonConnect();
+	        this.sqlButtonInsert = new sql_button_insert_1.SqlButtonInsert();
+	        this.sqlButtonCommit = new sql_button_commit_1.SqlButtonCommit();
 	    }
+	    SqlButtons.prototype.getButtonCommit = function () {
+	        return this.sqlButtonCommit;
+	    };
+	    SqlButtons.prototype.getButtonInsert = function () {
+	        return this.sqlButtonInsert;
+	    };
 	    SqlButtons.prototype.getButtonConnect = function () {
 	        return this.sqlButtonConnect;
 	    };
@@ -1056,9 +1065,187 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var animation_insert_1 = __webpack_require__(16);
+	var sql_id_1 = __webpack_require__(12);
+	var SqlButtonInsert = (function () {
+	    function SqlButtonInsert() {
+	        var _this = this;
+	        //adicionando connect event handler        
+	        $("#btnInsert").on('click', function () {
+	            _this.handleInsert();
+	        });
+	    }
+	    SqlButtonInsert.prototype.handleInsert = function () {
+	        if (Orasim.getAnimation().isAnimating())
+	            return;
+	        //gerando o mesmo hash(crc do 'select') para todos os clicks
+	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	        var query = 'insert';
+	        query += Math.random().toString(36).substr(2, 5);
+	        //let hash: Hash = new Crc32(query)
+	        var hash = new sql_id_1.SqlId(query);
+	        var isHashFound = sharedPool.findHash(hash);
+	        // caso o hash nao seja encontrado, adicione na shared-pool 
+	        if (!isHashFound)
+	            sharedPool.addHash(hash);
+	        new animation_insert_1.AnimationInsert(isHashFound).start();
+	    };
+	    return SqlButtonInsert;
+	}());
+	exports.SqlButtonInsert = SqlButtonInsert;
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var animation_1 = __webpack_require__(4);
+	/**
+	 * AnimationInsert
+	 * Classe responsavel por implementar animações relacionadas ao insert
+	 */
+	var AnimationInsert = (function (_super) {
+	    __extends(AnimationInsert, _super);
+	    function AnimationInsert(isHashFound) {
+	        _super.call(this);
+	        this.animationTime = _super.prototype.getDelay.call(this) * 5;
+	    }
+	    /**
+	     * start
+	     * Inicio da animacao do insert
+	     */
+	    AnimationInsert.prototype.start = function () {
+	        var _this = this;
+	        // setando estado de inicio da animacao
+	        Orasim.getAnimation().setAnimating(true);
+	        var userProcess = Orasim.getUserProcess();
+	        var serverProcess = Orasim.getServerProcess();
+	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	        var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	        userProcess.animateSendDataToServerProcess(this.animationTime * 0.25, "INSERT")
+	            .then(function (result) {
+	            return new Promise(function (resolve, reject) {
+	                //pegando dados da shared pool
+	                var localAnimTime = _this.animationTime * 0.75;
+	                sharedPool.animateAddHash(); // animacao adicionando hash na shared pool
+	                var lastAddedHash = sharedPool.getLastHash(); // pegando ultimo hash adicionado                
+	                var memLocation = sharedPool.getLastMemoryLocation(); // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
+	                //ambos tem a mesma porcentagem de tempo para animar porque a animacao eh feita ao mesmo tempo
+	                serverProcess.animateSendBlockTo('#redo-log-buffer', lastAddedHash, localAnimTime);
+	                serverProcess.animateSendBlockTo('#db-buffer-cache', lastAddedHash, localAnimTime);
+	                setTimeout(function () { resolve(0); }, localAnimTime);
+	                //serverProcess.animateSendBlockTo()
+	            });
+	        })
+	            .then(function (result) {
+	            return Orasim.getAnimation().setAnimating(false);
+	        });
+	        // .then((result: number) => {
+	        // })
+	    };
+	    return AnimationInsert;
+	}(animation_1.Animation));
+	exports.AnimationInsert = AnimationInsert;
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var animation_commit_1 = __webpack_require__(18);
+	var SqlButtonCommit = (function () {
+	    function SqlButtonCommit() {
+	        var _this = this;
+	        //adicionando connect event handler        
+	        $("#btnCommit").on('click', function () {
+	            _this.handleCommit();
+	        });
+	    }
+	    SqlButtonCommit.prototype.handleCommit = function () {
+	        if (Orasim.getAnimation().isAnimating())
+	            return;
+	        new animation_commit_1.AnimationCommit().start();
+	    };
+	    return SqlButtonCommit;
+	}());
+	exports.SqlButtonCommit = SqlButtonCommit;
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var animation_1 = __webpack_require__(4);
+	var AnimationCommit = (function (_super) {
+	    __extends(AnimationCommit, _super);
+	    function AnimationCommit() {
+	        _super.call(this);
+	        this.animationTime = _super.prototype.getDelay.call(this) * 5;
+	    }
+	    AnimationCommit.prototype.start = function () {
+	        var _this = this;
+	        var redoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer();
+	        var lgwr = Orasim.getOracleInstance().getLgwr();
+	        var blocks = new Array();
+	        //counting number of blocks used
+	        //apagando status dos blocks do redo-log-buffer
+	        //criando numero de blocks do numRedoBlocksUsed dentro de redo-log-buffer
+	        for (var index in redoLogBuffer.getBlocks()) {
+	            var block = redoLogBuffer.getBlocks()[index];
+	            if (block.used()) {
+	                //criando novo bloco que sera usado na animacao de envio para o log writer         
+	                var newBlock = redoLogBuffer.createNewDataBlock();
+	                newBlock.setColor(block.getColor());
+	                blocks.push(newBlock);
+	                //resetando o estado dos blocos do redo log buffer
+	                block.setUsed(false);
+	                block.setColor("#ffffff");
+	            }
+	        }
+	        //implementando animacao
+	        var userProcess = Orasim.getUserProcess();
+	        userProcess.animateSendDataToServerProcess(this.animationTime * 0.25, "COMMIT")
+	            .then(function (result) {
+	            return new Promise(function (resolve, reject) {
+	                var localAnimTime = _this.animationTime * 0.75;
+	                //anima-los para log-writer
+	                lgwr.animGetBlocksFromRedoLogBuffer(blocks, localAnimTime * 0.50);
+	                //uma vez no log-writer precisamos envia-los ao redo-log-files
+	                lgwr.animSendBlocksToRedoLogFiles(blocks, localAnimTime * 0.50);
+	                setTimeout(function () { resolve(0); }, localAnimTime);
+	            });
+	        })
+	            .then(function (result) {
+	            return Orasim.getAnimation().setAnimating(false);
+	        });
+	    };
+	    return AnimationCommit;
+	}(animation_1.Animation));
+	exports.AnimationCommit = AnimationCommit;
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(20);
 	var sql_console_msg_info_1 = __webpack_require__(8);
-	var pga_1 = __webpack_require__(17);
+	var data_block_1 = __webpack_require__(21);
+	var pga_1 = __webpack_require__(23);
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
@@ -1081,6 +1268,40 @@
 	     */
 	    ServerProcess.prototype.getElementOffset = function () {
 	        return $(this.element).offset();
+	    };
+	    ServerProcess.prototype.createNewBlock = function () {
+	        var newBlock = new data_block_1.DataBlock();
+	        //criando block dentro do do elemento atual        
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.element).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        $(newBlock.getElement()).css("z-index", 100);
+	        return newBlock;
+	    };
+	    ServerProcess.prototype.animateSendBlockTo = function (elementId, hash, delay) {
+	        //criando novo block dentro do server process
+	        var block = this.createNewBlock();
+	        block.setColor(hash.getColor());
+	        //movendo block para elemento
+	        Orasim.getAnimation().moveTo(block.getElement(), $(elementId)[0], delay, 0, function () {
+	        }, function () {
+	            //remova no fim da animacao
+	            $(block.getElement()).remove();
+	            var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	            var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	            var redoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer();
+	            var memLocation = sharedPool.getMemoryLocation(hash);
+	            //verificando qual elemento foi passado como argumento
+	            //setando local de memoria como dirty buffer
+	            switch (elementId) {
+	                case '#redo-log-buffer':
+	                    redoLogBuffer.setMemoryLocationUsed(memLocation, hash.getColor());
+	                    break;
+	                case '#db-buffer-cache':
+	                    dbBufferCache.setMemoryLocationUsed(memLocation, hash.getColor());
+	                    break;
+	            }
+	        });
 	    };
 	    /**
 	     * animateGetBlockFromDataFiles
@@ -1267,7 +1488,7 @@
 
 
 /***/ },
-/* 16 */
+/* 20 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1308,11 +1529,85 @@
 
 
 /***/ },
-/* 17 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var block_1 = __webpack_require__(22);
+	/**
+	 * DataBlock
+	 * Classe Responsavel modelar um bloco (data block)
+	 */
+	var DataBlock = (function (_super) {
+	    __extends(DataBlock, _super);
+	    function DataBlock() {
+	        _super.call(this, $("<div class=\"cache-box\"></div>")[0], 4096, false, "#ffffff");
+	        // super.element =         
+	        // this.size = 4096
+	        // this.isUsed = false
+	        // this.color = "#ffffff"
+	    }
+	    return DataBlock;
+	}(block_1.Block));
+	exports.DataBlock = DataBlock;
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Block = (function () {
+	    function Block(element, size, isUsed, color) {
+	        this.element = element;
+	        this.size = size;
+	        this.isUsed = isUsed;
+	        this.color = color;
+	    }
+	    /**
+	     * setUsed
+	     * Metodo responsavel pela animacao de marcar o bloco como usado no db-buffer-cache
+	     * @param {flag} setando isUsed como usada ou livre
+	     */
+	    Block.prototype.setUsed = function (flag) {
+	        this.isUsed = flag;
+	        //$(this.element).css("background-color","#f00")
+	        //this.setColor(color)
+	    };
+	    Block.prototype.used = function () {
+	        return this.isUsed;
+	    };
+	    /**
+	     * setColor
+	     * Metodo responsavel ppor setar cor do block
+	     * @param {color} cor no seguinte formato #ffffff
+	     */
+	    Block.prototype.setColor = function (color) {
+	        this.color = color;
+	        $(this.element).css("background-color", this.color);
+	    };
+	    Block.prototype.getColor = function () {
+	        return this.color;
+	    };
+	    Block.prototype.getElement = function () {
+	        return this.element;
+	    };
+	    return Block;
+	}());
+	exports.Block = Block;
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(20);
 	var Pga = (function () {
 	    function Pga() {
 	        this.setToolTip();
@@ -1327,12 +1622,12 @@
 
 
 /***/ },
-/* 18 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
-	var arrow_1 = __webpack_require__(19);
+	var tooltip_1 = __webpack_require__(20);
+	var arrow_1 = __webpack_require__(25);
 	var sql_console_msg_info_1 = __webpack_require__(8);
 	/**
 	 * UserProcess
@@ -1415,7 +1710,7 @@
 
 
 /***/ },
-/* 19 */
+/* 25 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1765,14 +2060,14 @@
 
 
 /***/ },
-/* 20 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
 	var sql_console_msg_info_1 = __webpack_require__(8);
-	var sql_console_msg_warning_1 = __webpack_require__(21);
-	var arrow_1 = __webpack_require__(19);
+	var sql_console_msg_warning_1 = __webpack_require__(27);
+	var arrow_1 = __webpack_require__(25);
 	/**
 	 * ListenerProcess
 	 * Classe responsavel por modelar o objeto ListenerProcess da animacao
@@ -1845,7 +2140,7 @@
 
 
 /***/ },
-/* 21 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1870,11 +2165,11 @@
 
 
 /***/ },
-/* 22 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(23);
+	var data_files_1 = __webpack_require__(29);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -1888,11 +2183,11 @@
 
 
 /***/ },
-/* 23 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_block_1 = __webpack_require__(24);
+	var data_block_1 = __webpack_require__(21);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -1931,66 +2226,17 @@
 
 
 /***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-	"use strict";
-	/**
-	 * Block
-	 * Classe Responsavel modelar um bloco (data block)
-	 * @attribute {size} define o tamanho de um bloco
-	 * @attribute {element} objeto html que referencia o elemento user-process
-	 * @attribute {isUsed} flag que determina se o bloco esta em uso
-	 */
-	var DataBlock = (function () {
-	    function DataBlock() {
-	        this.element = $("<div class=\"cache-box\"></div>")[0];
-	        this.size = 4096;
-	        this.isUsed = false;
-	        this.color = "#ffffff";
-	    }
-	    /**
-	     * setUsed
-	     * Metodo responsavel pela animacao de marcar o bloco como usado no db-buffer-cache
-	     * @param {flag} setando isUsed como usada ou livre
-	     */
-	    DataBlock.prototype.setUsed = function (flag, color) {
-	        this.isUsed = flag;
-	        //$(this.element).css("background-color","#f00")
-	        this.setColor(color);
-	    };
-	    /**
-	     * setColor
-	     * Metodo responsavel ppor setar cor do block
-	     * @param {color} cor no seguinte formato #ffffff
-	     */
-	    DataBlock.prototype.setColor = function (color) {
-	        this.color = color;
-	        $(this.element).css("background-color", this.color);
-	    };
-	    DataBlock.prototype.getColor = function () {
-	        return this.color;
-	    };
-	    DataBlock.prototype.getElement = function () {
-	        return this.element;
-	    };
-	    return DataBlock;
-	}());
-	exports.DataBlock = DataBlock;
-
-
-/***/ },
-/* 25 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(26);
-	var pmon_1 = __webpack_require__(30);
-	var smon_1 = __webpack_require__(31);
-	var dbwr_1 = __webpack_require__(32);
-	var ckpt_1 = __webpack_require__(33);
-	var lgwr_1 = __webpack_require__(34);
-	var arcn_1 = __webpack_require__(35);
+	var sga_1 = __webpack_require__(31);
+	var pmon_1 = __webpack_require__(36);
+	var smon_1 = __webpack_require__(37);
+	var dbwr_1 = __webpack_require__(38);
+	var ckpt_1 = __webpack_require__(39);
+	var lgwr_1 = __webpack_require__(40);
+	var arcn_1 = __webpack_require__(41);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -2004,19 +2250,22 @@
 	    OracleInstance.prototype.getSga = function () {
 	        return this.sga;
 	    };
+	    OracleInstance.prototype.getLgwr = function () {
+	        return this.lgwr;
+	    };
 	    return OracleInstance;
 	}());
 	exports.OracleInstance = OracleInstance;
 
 
 /***/ },
-/* 26 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(27);
-	var shared_pool_1 = __webpack_require__(28);
-	var redo_log_buffer_1 = __webpack_require__(29);
+	var db_buffer_cache_1 = __webpack_require__(32);
+	var shared_pool_1 = __webpack_require__(33);
+	var redo_log_buffer_1 = __webpack_require__(34);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -2054,12 +2303,12 @@
 
 
 /***/ },
-/* 27 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
-	var data_block_1 = __webpack_require__(24);
+	var tooltip_1 = __webpack_require__(20);
+	var data_block_1 = __webpack_require__(21);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -2093,7 +2342,8 @@
 	     * @param {memLocation} numero de id da localizacao da memoria
 	     */
 	    DbBufferCache.prototype.setMemoryLocationUsed = function (memLocation, color) {
-	        this.blocks[memLocation].setUsed(true, color);
+	        this.blocks[memLocation].setUsed(true);
+	        this.blocks[memLocation].setColor(color);
 	    };
 	    /**
 	     * getNewBlockHtml
@@ -2137,11 +2387,11 @@
 
 
 /***/ },
-/* 28 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
 	/**
 	 * SharedPool
 	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
@@ -2166,6 +2416,9 @@
 	        var lastAddedHash = this.hashCollection.slice(-1)[0];
 	        var hashElement = $("<li class=\"sql-hash\"></li>")[0];
 	        var idHashHtmlElement = lastAddedHash.getHash().toString(16);
+	        //hash ja foi adicionado na shared pool
+	        if ($('#' + idHashHtmlElement).length)
+	            return;
 	        //adicionando elemento na DOM tree
 	        //adicionando id no elemento
 	        //adicionando cor no elemento
@@ -2235,11 +2488,13 @@
 
 
 /***/ },
-/* 29 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
+	var data_block_redo_1 = __webpack_require__(35);
+	var data_block_1 = __webpack_require__(21);
 	/**
 	 * Redo Log Buffer
 	 * Classe responsavel por modelar o objeto RedoLogBuffer do oracle instance
@@ -2248,20 +2503,82 @@
 	 */
 	var RedoLogBuffer = (function () {
 	    function RedoLogBuffer() {
+	        this.size = 8;
+	        this.dataBlockRedoList = new Array();
+	        this.element = $("#redo-log-buffer")[0];
+	        this.setToopTip();
+	        this.initBlocks();
+	    }
+	    RedoLogBuffer.prototype.initBlocks = function () {
+	        // let dataBlockRedoListInstance = this.dataBlockRedoList
+	        // let size = 
+	        for (var i = 0; i < this.size; i++) {
+	            this.dataBlockRedoList.push(new data_block_redo_1.DataBlockRedo());
+	            $("#redo-log-buffer").find('#cache-container').append(this.dataBlockRedoList[i].getElement());
+	        }
+	    };
+	    RedoLogBuffer.prototype.getBlocks = function () {
+	        return this.dataBlockRedoList;
+	    };
+	    RedoLogBuffer.prototype.createNewDataBlock = function () {
+	        var newBlock = new data_block_1.DataBlock();
+	        //criando block dentro do do elemento atual        
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.element).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        $(newBlock.getElement()).css("z-index", 100);
+	        return newBlock;
+	    };
+	    RedoLogBuffer.prototype.setMemoryLocationUsed = function (memLocation, color) {
+	        for (var _i = 0, _a = this.dataBlockRedoList; _i < _a.length; _i++) {
+	            var block = _a[_i];
+	            if (!block.used()) {
+	                block.setUsed(true);
+	                block.setColor(color);
+	                break;
+	            }
+	        }
+	    };
+	    RedoLogBuffer.prototype.setToopTip = function () {
 	        // criando tooltip para o RedoLogBuffer
 	        var tooltip = new tooltip_1.Tooltip("#redo-log-buffer", "Redo Log Buffer", "\n        <p align=\"justify\">\n\n        O Redo Log Buffer \u00E9 um buffer circular da SGA que cont\u00E9m informa\u00E7\u00F5es sobre as altera\u00E7\u00F5es feitas no banco de dados.\n        <br><br>\n        As informa\u00E7\u00F5es de Redo cont\u00EAm dados necess\u00E1rias para reconstruir ou refazer, as altera\u00E7\u00F5es feitas no banco de dados, como: INSERT, UPDATE, DELETE, CREATE, ALTER ou DROP.\n        Estas informa\u00E7\u00F5es s\u00E3o usadas para recupera\u00E7\u00E3o do banco de dados, se necess\u00E1rio.\n        <br><br>\n        As entradas de redo ocupam espa\u00E7o cont\u00EDnuo, sequencial no buffer. O processo background <span style='font-weight: bold'>Log Writer (LGWR)</span> grava as informa\u00E7\u00F5es do Redo Log Buffer para o Redo Log File em disco.\n         ");
-	    }
+	    };
 	    return RedoLogBuffer;
 	}());
 	exports.RedoLogBuffer = RedoLogBuffer;
 
 
 /***/ },
-/* 30 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var block_1 = __webpack_require__(22);
+	/**
+	 * DataBlockRedo
+	 * Classe Responsavel modelar um bloco (data block redo)
+	 */
+	var DataBlockRedo = (function (_super) {
+	    __extends(DataBlockRedo, _super);
+	    function DataBlockRedo() {
+	        _super.call(this, $("<div class=\"buffer-box\"></div>")[0], 4096, false, "#ffffff");
+	    }
+	    return DataBlockRedo;
+	}(block_1.Block));
+	exports.DataBlockRedo = DataBlockRedo;
+
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(20);
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
@@ -2274,11 +2591,11 @@
 
 
 /***/ },
-/* 31 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
 	var Smon = (function () {
 	    function Smon() {
 	        this.element = $('#smon')[0];
@@ -2291,11 +2608,11 @@
 
 
 /***/ },
-/* 32 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
 	var Dbwr = (function () {
 	    function Dbwr() {
 	        this.element = $('#dbwr')[0];
@@ -2308,11 +2625,11 @@
 
 
 /***/ },
-/* 33 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
 	var Ckpt = (function () {
 	    function Ckpt() {
 	        this.element = $('#ckpt')[0];
@@ -2325,28 +2642,54 @@
 
 
 /***/ },
-/* 34 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
 	var Lgwr = (function () {
 	    function Lgwr() {
 	        this.element = $('#lgwr')[0];
 	        //tooltip do pmon
 	        new tooltip_1.Tooltip("#lgwr", "Log Writer (LGWR)", "Olá, eu sou o LGWR!");
 	    }
+	    Lgwr.prototype.animSendBlocksToRedoLogFiles = function (blocks, delay) {
+	        var _loop_1 = function(block) {
+	            Orasim.getAnimation().moveTo(block.getElement(), $("#redo-log-file-1")[0], delay, 0, function () {
+	            }, function () {
+	                //remova no fim da animacao
+	                $(block.getElement()).remove();
+	            });
+	            delay = delay / 1.5;
+	        };
+	        for (var _i = 0, blocks_1 = blocks; _i < blocks_1.length; _i++) {
+	            var block = blocks_1[_i];
+	            _loop_1(block);
+	        }
+	    };
+	    Lgwr.prototype.animGetBlocksFromRedoLogBuffer = function (blocks, delay) {
+	        //movendo blocks para log writer
+	        for (var _i = 0, blocks_2 = blocks; _i < blocks_2.length; _i++) {
+	            var block = blocks_2[_i];
+	            Orasim.getAnimation().moveTo(block.getElement(), this.element, delay, 0, function () {
+	            }, function () {
+	                //remova no fim da animacao
+	                //$(block.getElement()).remove()            
+	            });
+	            delay = delay / 1.5;
+	        }
+	    };
 	    return Lgwr;
 	}());
 	exports.Lgwr = Lgwr;
 
 
 /***/ },
-/* 35 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(16);
+	var tooltip_1 = __webpack_require__(20);
 	var Arcn = (function () {
 	    function Arcn() {
 	        this.element = $('#arcn')[0];

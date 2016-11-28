@@ -2,12 +2,14 @@ import { Tooltip } from '../utils/tooltip'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 import { DataFiles } from '../oracle-database/data.files'
 import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
+import { RedoLogBuffer } from '../oracle-instance/redo.log.buffer'
 import { UserProcess } from './user.process'
 import { SharedPool } from '../oracle-instance/shared.pool'
 import { DataBlock } from '../oracle-database/data.block'
 import { SqlConsole } from '../sql-console/sql.console'
 import { Hash } from '../crypt/hash'
 import { Pga } from './pga'
+import { Block } from '../oracle-database/block'
 
 
 /**
@@ -64,6 +66,46 @@ export class ServerProcess{
      */
     getElementOffset(): JQueryCoordinates{        
         return $(this.element).offset()
+    }
+
+    createNewBlock(): DataBlock{
+        let newBlock = new DataBlock()
+        
+        //criando block dentro do do elemento atual        
+        $(this.element).prepend(newBlock.getElement())
+        $(newBlock.getElement()).offset($(this.element).offset())
+        $(newBlock.getElement()).css("position", "absolute")
+        $(newBlock.getElement()).css("z-index", 100)
+
+        return newBlock
+    }
+
+    animateSendBlockTo(elementId: string, hash: Hash, delay: number): void{
+        //criando novo block dentro do server process
+        let block = this.createNewBlock()
+        block.setColor(hash.getColor())
+
+        //movendo block para elemento
+        Orasim.getAnimation().moveTo( block.getElement(), $(elementId)[0], delay, 0, () => {
+            
+        }, () => {
+            //remova no fim da animacao
+            $(block.getElement()).remove()
+            let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+            let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+            let redoLogBuffer: RedoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer()
+            let memLocation = sharedPool.getMemoryLocation(hash)
+            //verificando qual elemento foi passado como argumento
+            //setando local de memoria como dirty buffer
+            switch (elementId) {
+                case '#redo-log-buffer':
+                    redoLogBuffer.setMemoryLocationUsed(memLocation, hash.getColor())
+                    break;
+                case '#db-buffer-cache':                    
+                    dbBufferCache.setMemoryLocationUsed(memLocation, hash.getColor())                    
+                    break;
+            }
+        })      
     }
 
     /**

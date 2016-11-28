@@ -40,6 +40,10 @@ export class SharedPool {
         let lastAddedHash: Hash = this.hashCollection.slice(-1)[0]
         let hashElement = $(`<li class="sql-hash"></li>`)[0]
         let idHashHtmlElement = lastAddedHash.getHash().toString(16)
+        
+        //hash ja foi adicionado na shared pool
+        if($('#'+idHashHtmlElement).length)
+            return
 
         //adicionando elemento na DOM tree
         //adicionando id no elemento
