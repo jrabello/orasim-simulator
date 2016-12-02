@@ -213,7 +213,9 @@ export class ServerProcess{
                     Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"))
                 }
                 //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
-            }, () => {})
+            }, () => {                
+                    blockHtml.remove() 
+            })
         }
     }
     /**
@@ -289,7 +291,11 @@ export class ServerProcess{
         setTimeout(() => {
             sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > Criando o plano de execução da query..."))
             setTimeout(() => {
-                sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD Parse</span> concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + hash.getHashStr()))
+                sqlConsole.addMsg(new SqlConsoleMsgInfo(
+                    `< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>
+                     concluído, gerado 
+                     <span style="font-weight: bold">SQL_ID</span>: 
+                     <span style="font-weight: bold; color: ${hash.getColor()}">${hash.getHashStr()}</span>`))
                 $("#server-process").removeClass("time-clock")
                 
                 //let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado
@@ -301,14 +307,14 @@ export class ServerProcess{
                 blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, delay * 0.15) // animacao requisitando dados do dataFiles
                 serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, delay * 0.15) // animacao gravando dados no dbBufferCache
                 serverProcess.animateGetBlockFromDbBufferCache(blockHtmlArr, dbBufferCache, delay * 0.15) // animacao pegando dados do dbBufferCache
-                serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15) // animacao enviando dados para userProcess
+                //serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15) // animacao enviando dados para userProcess
             }, delay * 0.20)
         }, delay * 0.20)
 
         //termino da animacao        
         setTimeout(() => {
-            for(let blockHtml of blockHtmlArr)
-                blockHtml.remove() //removendo block do DOM
+            // for(let blockHtml of blockHtmlArr)
+            //     blockHtml.remove() //removendo block do DOM
         }, delay)
     }
 
@@ -333,13 +339,13 @@ export class ServerProcess{
         // animacao enviando dados para userProcess
         let memLocationArr = sharedPool.getMemoryLocation(hash)
         blockHtmlArr = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocationArr, delay * 0.15)
-        serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15)
+        //serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15)
 
         //termino da animacao
         setTimeout(() => {
             //removendo block do DOM
-            for(let blockHtml of blockHtmlArr)
-                blockHtml.remove()
-        }, delay * 0.3);
+            // for(let blockHtml of blockHtmlArr)
+            //     blockHtml.remove()
+        }, delay)
     }
 } 

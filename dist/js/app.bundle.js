@@ -372,7 +372,7 @@
 	    __extends(AnimationSelect, _super);
 	    function AnimationSelect(hash, hashFound) {
 	        _super.call(this);
-	        this.animationTime = _super.prototype.getDelay.call(this) * 15;
+	        this.animationTime = _super.prototype.getDelay.call(this) * 25;
 	        this.hash = hash;
 	        this.hashFound = hashFound;
 	    }
@@ -1411,16 +1411,22 @@
 	     */
 	    ServerProcess.prototype.animateGetBlockFromDbBufferCache = function (blockHtmlArr, dbBufferCache, delay) {
 	        var animCounter = 0;
-	        for (var _i = 0, blockHtmlArr_2 = blockHtmlArr; _i < blockHtmlArr_2.length; _i++) {
-	            var blockHtml = blockHtmlArr_2[_i];
-	            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
+	        var _loop_1 = function(blockHtml) {
+	            Orasim.getAnimation().moveTo(blockHtml, this_1.getElement(), delay, 0, function () {
 	                if (animCounter++ == 0) {
 	                    $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	                    $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"));
 	                }
 	                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
-	            }, function () { });
+	            }, function () {
+	                blockHtml.remove();
+	            });
+	        };
+	        var this_1 = this;
+	        for (var _i = 0, blockHtmlArr_2 = blockHtmlArr; _i < blockHtmlArr_2.length; _i++) {
+	            var blockHtml = blockHtmlArr_2[_i];
+	            _loop_1(blockHtml);
 	        }
 	    };
 	    /**
@@ -1493,7 +1499,7 @@
 	        setTimeout(function () {
 	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Criando o plano de execução da query..."));
 	            setTimeout(function () {
-	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD Parse</span> concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + hash.getHashStr()));
+	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo, gerado \n                     <span style=\"font-weight: bold\">SQL_ID</span>: \n                     <span style=\"font-weight: bold; color: " + hash.getColor() + "\">" + hash.getHashStr() + "</span>"));
 	                $("#server-process").removeClass("time-clock");
 	                //let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado
 	                //let memLocation = sharedPool.getLastMemoryLocation() 
@@ -1504,15 +1510,13 @@
 	                blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, delay * 0.15); // animacao requisitando dados do dataFiles
 	                serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, delay * 0.15); // animacao gravando dados no dbBufferCache
 	                serverProcess.animateGetBlockFromDbBufferCache(blockHtmlArr, dbBufferCache, delay * 0.15); // animacao pegando dados do dbBufferCache
-	                serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15); // animacao enviando dados para userProcess
+	                //serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15) // animacao enviando dados para userProcess
 	            }, delay * 0.20);
 	        }, delay * 0.20);
 	        //termino da animacao        
 	        setTimeout(function () {
-	            for (var _i = 0, blockHtmlArr_4 = blockHtmlArr; _i < blockHtmlArr_4.length; _i++) {
-	                var blockHtml = blockHtmlArr_4[_i];
-	                blockHtml.remove();
-	            } //removendo block do DOM
+	            // for(let blockHtml of blockHtmlArr)
+	            //     blockHtml.remove() //removendo block do DOM
 	        }, delay);
 	    };
 	    /**
@@ -1534,15 +1538,13 @@
 	        // animacao enviando dados para userProcess
 	        var memLocationArr = sharedPool.getMemoryLocation(hash);
 	        blockHtmlArr = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocationArr, delay * 0.15);
-	        serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15);
+	        //serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15)
 	        //termino da animacao
 	        setTimeout(function () {
 	            //removendo block do DOM
-	            for (var _i = 0, blockHtmlArr_5 = blockHtmlArr; _i < blockHtmlArr_5.length; _i++) {
-	                var blockHtml = blockHtmlArr_5[_i];
-	                blockHtml.remove();
-	            }
-	        }, delay * 0.3);
+	            // for(let blockHtml of blockHtmlArr)
+	            //     blockHtml.remove()
+	        }, delay);
 	    };
 	    return ServerProcess;
 	}());
@@ -2380,7 +2382,7 @@
 	 */
 	var DbBufferCache = (function () {
 	    function DbBufferCache() {
-	        this.numBlocks = 30;
+	        this.numBlocks = 24;
 	        this.element = $('#db-buffer-cache')[0];
 	        this.blocks = new Array();
 	        this.initBlocks();

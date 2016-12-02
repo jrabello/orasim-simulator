@@ -15,7 +15,7 @@ export class DbBufferCache {
     private blocks: DataBlock[]
 
     constructor() {
-        this.numBlocks = 30
+        this.numBlocks = 24
         this.element = $('#db-buffer-cache')[0]
         this.blocks = new Array<DataBlock>()
         this.initBlocks()

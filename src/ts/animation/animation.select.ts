@@ -21,7 +21,7 @@ export class AnimationSelect extends Animation{
 
     constructor(hash: Hash, hashFound: boolean){
         super()
-        this.animationTime = super.getDelay() * 15
+        this.animationTime = super.getDelay() * 25
         this.hash = hash
         this.hashFound = hashFound
     }
