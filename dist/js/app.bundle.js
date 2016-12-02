@@ -293,7 +293,7 @@
 	 */
 	var Animation = (function () {
 	    function Animation() {
-	        this.delay = 100;
+	        this.delay = 1000;
 	        this.animating = false;
 	    }
 	    /**
