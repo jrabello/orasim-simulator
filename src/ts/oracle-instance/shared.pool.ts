@@ -1,5 +1,9 @@
+import std = require("typescript-stl");
+import { Random } from '../crypt/rand' 
 import { Tooltip } from '../utils/tooltip'
 import { Hash } from '../crypt/hash'
+import { DataBlock } from '../oracle-database/data.block'
+import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
 
 /**
  * SharedPool
@@ -9,13 +13,16 @@ import { Hash } from '../crypt/hash'
  * @attribute {element} objeto html que referencia o elemento shared-pool  
  */
 export class SharedPool {    
-    private hashCollection: Hash[]    
-    //private hashElement: HTMLElement
     private element: HTMLElement
+    private hashCollection: Hash[]
+    private sqlIdMap: std.HashMap<number, number[]> 
+    //private hashElement: HTMLElement
+    
 
     constructor() {        
         this.hashCollection = []
         this.element = $(`#shared-pool`)[0]
+        this.sqlIdMap = new std.HashMap<number, number[]>()
         //this.hashElement = $(`<li class="sql-hash"></li>`)[0]        
 
         // criando tooltip para o SharedPool
@@ -35,25 +42,26 @@ export class SharedPool {
      * animateAddHash
      * Metodo responsavel por animar a inserção hash no hashContainer, dentro da shared-pool  
      */
-    animateAddHash(): void{        
-        //neste caso estamos apenas dando append na DOM tree, nao existe animacao ainda
-        let lastAddedHash: Hash = this.hashCollection.slice(-1)[0]
+    animateAddHash(hash: Hash): void{        
+        //criando elemento dinamicamente
+        //let lastAddedHash: Hash = this.hashCollection.slice(-1)[0]
+        //this.sqlIdList.get(hash.getHash())
         let hashElement = $(`<li class="sql-hash"></li>`)[0]
-        let idHashHtmlElement = lastAddedHash.getHash().toString(16)
+        let idHashHtmlElement = hash.getHash().toString(16)
         
         //hash ja foi adicionado na shared pool
-        if($('#'+idHashHtmlElement).length)
+        if($('#'+idHashHtmlElement+'-sharedPool').length)
             return
 
         //adicionando elemento na DOM tree
         //adicionando id no elemento
-        //adicionando cor no elemento
+        //adicionando cor no elemento(usei bit clear trick pra impedir um branco :p)
         //adicionando representacao em string do hash
         $("#hash-ul-container").append(hashElement)
-        $(hashElement).attr('id', idHashHtmlElement)
-        lastAddedHash.setColor('#' + idHashHtmlElement)
-        $('#'+idHashHtmlElement).css('color', lastAddedHash.getColor())
-        $('#'+idHashHtmlElement).append(lastAddedHash.getHashStr())
+        $(hashElement).attr('id', idHashHtmlElement+'-sharedPool')        
+        //hash.setColor('#' + hash.getHash())
+        $('#'+idHashHtmlElement+'-sharedPool').css('color', hash.getColor())
+        $('#'+idHashHtmlElement+'-sharedPool').append(hash.getHashStr())
         //$(hashElement).append(lastAddedHash.getHashStr())[0].outerHTML)                
     }
 
@@ -62,42 +70,50 @@ export class SharedPool {
      * Adiciona hash na shared-pool
      * @param {hash} hash que sera adicionado na collection da shared-pool 
      */
-    addHash(hash: Hash): void {        
-        this.hashCollection.push(hash)    
-    }
-        
-    /**
-     * getLastHash
-     * Metodo responsavel por retornar ultimo hash inserido na shared pool 
-     */
-    getLastHash(): Hash{
-        return this.hashCollection[this.hashCollection.length-1]
-    }
+    addHash(hash: Hash): void {
 
+        //retornando se hash ja foi inserido
+        if(this.findHash(hash))
+            return
+        
+        let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+        let releasedBlocksIndexes: number[] = dbBufferCache.getReleasedBlocksMemLocation()
+        console.log('released blocks indexes:', releasedBlocksIndexes.length)
+
+        //retornando se nao existir mais blocks released
+        if(releasedBlocksIndexes.length < 2){
+            console.log('SharedPool::addHash no freedBlocksIndexes found!')
+            return
+        }
+
+        //selecionando numero randomico de blocos
+        let randomNumBlocks = new Random().getIntBetweenRange(2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
+
+        // construindo array com indexes preenchidos com blocos
+        let dirtyBLocks = []
+        for(let i = 0; i < randomNumBlocks; i++){
+            let randomIndex = new Random().getIntBetweenRange(0, releasedBlocksIndexes.length-1)
+            dirtyBLocks.push(releasedBlocksIndexes[randomIndex])
+            releasedBlocksIndexes.splice(randomIndex,1)
+        }
+
+        //linkando hash para array de blocks
+        this.sqlIdMap.insert(std.make_pair(hash.getHash(), dirtyBLocks))
+        dbBufferCache.setMemoryLocationUsed(dirtyBLocks)
+        console.log('dirtyBLocks: ', dirtyBLocks, 'length: ', dirtyBLocks.length)
+        //dbBufferCache.getBlocks()
+        //this.sqlIdList.insert_or_assign(hash.getHash(),)    
+    }
+    
     /**
      * getMemoryLocation
      * @param {hs} hash que sera usado para busca de local da memoria
      * @returns local de memoria onde os dados estao armazenados
      */
-    getMemoryLocation(hs: Hash): number {
-        let i = 0
-
-        for (let hash of this.hashCollection) {
-            if (hs.getHash() == hash.getHash())
-                return i
-            i++
-        }
-
-        return -1
-    }
-
-    /**
-     * getLastMemoryLocation
-     * Metodo responsavel por retornar local de memoria do ultimo hash inserido
-     * @returns local de memoria do ultimo hash inserido 
-     */
-    getLastMemoryLocation(): number{
-        return this.getMemoryLocation(this.hashCollection.slice(-1)[0])
+    getMemoryLocation(hs: Hash): number[] {
+        if(this.sqlIdMap.has(hs.getHash()))
+            return this.sqlIdMap.get(hs.getHash())
+        return []
     }
 
     /**
@@ -107,10 +123,6 @@ export class SharedPool {
      */
     findHash(hs: Hash): boolean {
         //searching for hash in collection
-        for (let hash of this.hashCollection)
-            if (hs.getHash() == hash.getHash())
-                return true
-
-        return false
+        return this.sqlIdMap.has(hs.getHash())        
     }
 }

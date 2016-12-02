@@ -41,6 +41,8 @@ export class Hash implements IHashable{
 
     setHash(hash: number){
         this.hash = hash
+        this.color = '#' + hash.toString(16).slice(2,8)
+        console.log(this.color)
     }
 
     getHash(): number{

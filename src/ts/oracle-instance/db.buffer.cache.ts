@@ -1,3 +1,4 @@
+import { Hash } from '../crypt/hash'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlock } from '../oracle-database/data.block'
 
@@ -14,7 +15,7 @@ export class DbBufferCache {
     private blocks: DataBlock[]
 
     constructor() {
-        this.numBlocks = 18
+        this.numBlocks = 30
         this.element = $('#db-buffer-cache')[0]
         this.blocks = new Array<DataBlock>()
         this.initBlocks()
@@ -92,9 +93,17 @@ export class DbBufferCache {
      * Metodo responsavel por marcar uma area de memoria como utilizada
      * @param {memLocation} numero de id da localizacao da memoria
      */
-    setMemoryLocationUsed(memLocation: number, color: string){
-        this.blocks[memLocation].setUsed(true)
-        this.blocks[memLocation].setColor(color)
+    setMemoryLocationUsed(memLocationArr: number[]){
+        for(let memLocation of memLocationArr){
+            this.blocks[memLocation].setUsed(true)            
+        }
+    }
+
+    setMemoryLocationUsedWithHash(memLocationArr: number[], hash: Hash){
+        this.setMemoryLocationUsed(memLocationArr)
+        for(let memLocation of memLocationArr){            
+            this.blocks[memLocation].setColor(hash.getColor())
+        }
     }
 
     /**
@@ -140,5 +149,18 @@ export class DbBufferCache {
 
     getBlocks(): DataBlock[]{
         return this.blocks
+    }
+
+    /**
+     * getFreeBlocksMemLocation
+     * gets location array of free blocks
+     */
+    getReleasedBlocksMemLocation(): number[]{
+        let blocks: number[] = new Array<number>()
+        for (let i = 0; i < this.numBlocks; i++) {            
+            if(!this.blocks[i].used())
+                blocks.push(i)
+        }
+        return blocks
     }
 }

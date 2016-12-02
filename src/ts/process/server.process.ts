@@ -80,6 +80,10 @@ export class ServerProcess{
         return newBlock
     }
 
+    /**
+     * animateSendBlockTo
+     * metodo um pouco mais generico que permite o envio dos dados para elementos usando id  
+     */
     animateSendBlockTo(elementId: string, hash: Hash, delay: number): void{
         //criando novo block dentro do server process
         let block = this.createNewBlock()
@@ -94,16 +98,16 @@ export class ServerProcess{
             let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
             let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
             let redoLogBuffer: RedoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer()
-            let memLocation = sharedPool.getMemoryLocation(hash)
+            let memLocationArr = sharedPool.getMemoryLocation(hash)
             //verificando qual elemento foi passado como argumento
             //setando local de memoria como dirty buffer
             switch (elementId) {
                 case '#redo-log-buffer':
-                    redoLogBuffer.setMemoryLocationUsed(memLocation, hash.getColor())
+                    redoLogBuffer.setMemoryLocationUsed(hash)
                     break;
                 case '#db-buffer-cache':                    
-                    dbBufferCache.setMemoryLocationUsed(memLocation, hash.getColor())                    
-                    break;
+                   dbBufferCache.setMemoryLocationUsedWithHash(memLocationArr, hash)                    
+                   break;
             }
         })      
     }
@@ -115,16 +119,20 @@ export class ServerProcess{
      * @param {delay} tempo de animacao
      * @returns retorna o novo bloco criado(htmlElement) dentro do datafiles  
      */
-    animateGetBlockFromDataFiles(dataFiles: DataFiles, hash: Hash, delay: number): HTMLElement{        
-        let blockHtml = dataFiles.getNewBlockHtmlWithColor(hash.getColor())
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
-            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DataFiles'))   
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"))                         
-            //$('#data-files').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            //$(blockHtml).repeat().fadeTo(delay/2, 1).fadeTo(delay/2, 1).until(1)
-        }, () =>{})
-        return blockHtml
+    animateGetBlockFromDataFiles(dataFiles: DataFiles, hash: Hash, memLocationArr: number[], delay: number): HTMLElement[]{
+        let blockHtmlArr: HTMLElement[] = []
+        let animCounter = 0
+        for(let memLocation of memLocationArr){
+            let blockHtml = dataFiles.getNewBlockHtmlWithColor(hash.getColor())  
+            blockHtmlArr.push(blockHtml)
+            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
+                if(animCounter++ == 0){
+                    $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"))
+                }
+            }, () =>{})
+        }
+        return blockHtmlArr
     }
 
     
@@ -136,16 +144,25 @@ export class ServerProcess{
      * @param {memLocation} local de memoria de destino(onde o bloco sera salvo)
      * @param {delay} tempo de animacao 
      */
-    animateStoreBlockInDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, hash: Hash, memLocation: number, delay: number): void{        
-        Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocation].getElement(), delay, delay/6, () =>{
-            // no inicio da animacao piscar server-process e db-buffer-cache 
-            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
-            $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
-        }, () => { 
-            // depois da animacao completa marcando o bloco como utilizado            
-            dbBufferCache.setMemoryLocationUsed(memLocation, hash.getColor())            
-        })
+    animateStoreBlockInDbBufferCache(blockHtmlArr: HTMLElement[], dbBufferCache: DbBufferCache, hash: Hash, memLocationArr: number[], delay: number): void{
+        let i = 0
+        let animCounterAftr = 0
+        let animCounterBef = 0
+        for(let blockHtml of blockHtmlArr){        
+            Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocationArr[i]].getElement(), delay, delay/6, () =>{
+                // no inicio da animacao piscar server-process e db-buffer-cache
+                if(animCounterBef++ == 0){ 
+                    $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
+                    $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+                }
+                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
+            }, () => { 
+                // depois da animacao completa marcando o bloco como utilizado
+                if(++animCounterAftr == blockHtmlArr.length)              
+                    dbBufferCache.setMemoryLocationUsedWithHash(memLocationArr, hash)                            
+            })
+            i++
+        }
     }
 
     /**
@@ -158,15 +175,24 @@ export class ServerProcess{
      * @param {delay} tempo de animacao
      * @returns retorna novo bloco na posicao de memoria passada como argumento
      */
-    animateGetNewBlockFromDbBufferCache(dbBufferCache: DbBufferCache, memLocation: number, delay: number): HTMLElement{
-        let blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation)        
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
-            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
-            $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'))
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>")) 
-        }, () =>{})
-        return blockHtml
+    animateGetNewBlockFromDbBufferCache(dbBufferCache: DbBufferCache, memLocationArr: number[], delay: number): HTMLElement[]{
+        let animCounter = 0
+        let blockHtmlArr: HTMLElement[] = []
+        //iterating memory locations        
+        for(let memLocation of memLocationArr){
+            let blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation)  
+            blockHtmlArr.push(blockHtml)  
+                
+            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () =>{
+                if(animCounter++ == 0){
+                    $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
+                    $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+                    //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'))
+                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"))
+                }             
+            }, () =>{})
+        }
+        return blockHtmlArr
     }
 
     /**
@@ -177,13 +203,18 @@ export class ServerProcess{
      * @param {memLocation} local de memoria de destino(onde o bloco sera salvo)
      * @param {delay} duracao de animacao     
      */
-    animateGetBlockFromDbBufferCache(blockHtml: HTMLElement, dbBufferCache: DbBufferCache, delay: number): void{        
-        Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
-            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
-            $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"))
-            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
-        }, () => {})
+    animateGetBlockFromDbBufferCache(blockHtmlArr: HTMLElement[], dbBufferCache: DbBufferCache, delay: number): void{
+        let animCounter = 0
+        for(let blockHtml of blockHtmlArr){        
+            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, () => {
+                if(animCounter++ == 0){            
+                    $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)            
+                    $('#db-buffer-cache').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"))
+                }
+                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess ')) 
+            }, () => {})
+        }
     }
     /**
      * animateSendBlockToUserProcess
@@ -192,23 +223,30 @@ export class ServerProcess{
      * @param {userProcess} objeto html que representa o user-process
      * @param {delay} duracao da animacao
      */    
-    animateSendBlockToUserProcess(blockHtml: HTMLElement, userProcess: UserProcess, delay: number){        
-        Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay, 0, () => {
-            //no inicio da animacao, piscar user-process e server-process     
-            $('.arrow.from-serverp-2-userp').show()      
-            $('.arrow.from-serverp-2-userp').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1).wait().hide()
-            $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Retornando resultado para <span style='font-weight: bold'>UserProcess</span>"))
-            //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess enviando dados para UserProcess'))
-        }, 
-        () => {
-            //no final da animacao
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Comando executado com sucesso'))
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Aguardando nova solicitação...'))
-            
-        })
+    animateSendBlockToUserProcess(blockHtmlArr: HTMLElement[], userProcess: UserProcess, delay: number){
+        let animCounterAftr = 0
+        let animCounterBfr = 0
+        for(let blockHtml of blockHtmlArr){        
+            Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay, 0, () => {
+                if(animCounterBfr++ == 0){
+                    //no inicio da animacao, piscar user-process e server-process     
+                    $('.arrow.from-serverp-2-userp').show()      
+                    $('.arrow.from-serverp-2-userp').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1).wait().hide()
+                    $('#server-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+                    $('#user-process').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+                    $('#user img').repeat().fadeTo(delay/2, 0.1).fadeTo(delay/2, 1).until(1)
+                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Retornando resultado para <span style='font-weight: bold'>UserProcess</span>"))
+                }
+                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess enviando dados para UserProcess'))
+            }, 
+            () => {
+                if(animCounterAftr++ == 0){
+                    //no final da animacao
+                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Comando executado com sucesso'))
+                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Aguardando nova solicitação...'))
+                }            
+            })            
+        }
     }
 
     /**
@@ -217,21 +255,19 @@ export class ServerProcess{
      * Verificando se o hash na shared pool existe, selecionando animacao especifica
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
-    animateByHash(isHashFound: boolean, delay: number): Promise < number > {
-        return new Promise < number > ((resolve: Function, reject: Function) => {
+    animateByHash(hash: Hash, hashFound: boolean, delay: number): Promise <number> {
+        return new Promise <number> ((resolve: Function, reject: Function) => {
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
             $("#server-process").addClass("time-clock")
 
             // rodar animacao especifica se o hash foi encontrado na shared-pool ou não
-            if (isHashFound) {
-                this.animateHashFound(delay)
+            if (hashFound) {
+                this.animateHashFound(hash, delay)
             } else {
-                this.animateHashNotFound(delay)
+                this.animateHashNotFound(hash, delay)
             }
 
-            setTimeout(() => {
-                resolve(0)
-            }, delay);
+            setTimeout(() => { resolve(0) }, delay);
         })
     }
 
@@ -240,35 +276,39 @@ export class ServerProcess{
      * Animacao de hash not found
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
-    private animateHashNotFound(delay: number) {
+    private animateHashNotFound(hash: Hash, delay: number) {
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let dataFiles: DataFiles = Orasim.getOracleDatabase().getDataFiles()
         let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
         let sqlConsole: SqlConsole = Orasim.getSqlConsole()
         let serverProcess: ServerProcess = Orasim.getServerProcess()
         let userProcess: UserProcess = Orasim.getUserProcess()
-        let blockHtml: HTMLElement
+        let blockHtmlArr: HTMLElement[]
 
         sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > Comando SQL não foi encontrado na <span style='font-weight: bold'>SharedPool</span>"))
         setTimeout(() => {
             sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > Criando o plano de execução da query..."))
             setTimeout(() => {
-                sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD Parse</span> concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + sharedPool.getLastHash().getHashStr()))
+                sqlConsole.addMsg(new SqlConsoleMsgInfo("< SP > <span style='font-weight: bold'>HARD Parse</span> concluído, gerado <span style='font-weight: bold'>SQL_ID</span>: " + hash.getHashStr()))
                 $("#server-process").removeClass("time-clock")
-
-                sharedPool.animateAddHash() // animacao adicionando hash na shared pool
-                let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado
-                let memLocation = sharedPool.getLastMemoryLocation() // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
-                blockHtml = serverProcess.animateGetBlockFromDataFiles(dataFiles, lastAddedHash ,delay * 0.15) // animacao requisitando dados do dataFiles
-                serverProcess.animateStoreBlockInDbBufferCache(blockHtml, dbBufferCache,lastAddedHash, memLocation, delay * 0.15) // animacao gravando dados no dbBufferCache
-                serverProcess.animateGetBlockFromDbBufferCache(blockHtml, dbBufferCache, delay * 0.15) // animacao pegando dados do dbBufferCache
-                serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, delay * 0.15) // animacao enviando dados para userProcess
+                
+                //let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado
+                //let memLocation = sharedPool.getLastMemoryLocation() 
+                // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
+                // animacao adicionando hash na shared pool
+                sharedPool.animateAddHash(hash) 
+                let memLocationArr = sharedPool.getMemoryLocation(hash)
+                blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, delay * 0.15) // animacao requisitando dados do dataFiles
+                serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, delay * 0.15) // animacao gravando dados no dbBufferCache
+                serverProcess.animateGetBlockFromDbBufferCache(blockHtmlArr, dbBufferCache, delay * 0.15) // animacao pegando dados do dbBufferCache
+                serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15) // animacao enviando dados para userProcess
             }, delay * 0.20)
         }, delay * 0.20)
 
         //termino da animacao        
         setTimeout(() => {
-            $(blockHtml).remove() //removendo block do DOM
+            for(let blockHtml of blockHtmlArr)
+                blockHtml.remove() //removendo block do DOM
         }, delay)
     }
 
@@ -277,29 +317,29 @@ export class ServerProcess{
      * Animacao de hash found
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
-    private animateHashFound(delay: number) {
+    private animateHashFound(hash: Hash, delay: number) {
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let dataFiles: DataFiles = Orasim.getOracleDatabase().getDataFiles()
         let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
         let sqlConsole: SqlConsole = Orasim.getSqlConsole()
         let serverProcess: ServerProcess = Orasim.getServerProcess()
         let userProcess: UserProcess = Orasim.getUserProcess()
-
-        // pegando localizacao do bloco 
-        // pegando ultimo hash adicionado         
-        let lastAddedHash = sharedPool.getLastHash()
-        let memLocation = sharedPool.getLastMemoryLocation()
+        let blockHtmlArr: HTMLElement[]
+               
         $("#server-process").removeClass("time-clock")
 
+        // pegando ultimo hash adicionado         
         // animacao pegando dados do dbBufferCache
         // animacao enviando dados para userProcess
-        let blockHtml = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocation, delay * 0.15)
-        serverProcess.animateSendBlockToUserProcess(blockHtml, userProcess, delay * 0.15)
+        let memLocationArr = sharedPool.getMemoryLocation(hash)
+        blockHtmlArr = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocationArr, delay * 0.15)
+        serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15)
 
         //termino da animacao
         setTimeout(() => {
             //removendo block do DOM
-            blockHtml.remove()
+            for(let blockHtml of blockHtmlArr)
+                blockHtml.remove()
         }, delay * 0.3);
     }
 } 

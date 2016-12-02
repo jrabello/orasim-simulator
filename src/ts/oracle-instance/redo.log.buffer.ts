@@ -1,3 +1,4 @@
+import { Hash } from '../crypt/hash'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlockRedo } from '../oracle-database/data.block.redo'
 import { DataBlock } from '../oracle-database/data.block'
@@ -46,11 +47,11 @@ export class RedoLogBuffer {
         return newBlock
     }
 
-    setMemoryLocationUsed(memLocation: number, color: string) {
+    setMemoryLocationUsed(hash: Hash) {
         for (let block of this.dataBlockRedoList) {
             if (!block.used()) {
                 block.setUsed(true)
-                block.setColor(color)
+                block.setColor(hash.getColor())
                 break
             }
         }

@@ -1,3 +1,4 @@
+import { Hash } from '../crypt/hash'
 import { Animation } from './animation'
 import { ServerProcess } from '../process/server.process'
 import { UserProcess } from '../process/user.process'
@@ -11,10 +12,12 @@ import { DataBlock } from '../oracle-database/data.block'
  */
 export class AnimationInsert extends Animation{    
     private animationTime: number
+    private hash: Hash
 
-    constructor(isHashFound: boolean){
+    constructor(hash: Hash){
         super()
         this.animationTime = super.getDelay() * 5
+        this.hash = hash
     }
 
     /**
@@ -29,19 +32,19 @@ export class AnimationInsert extends Animation{
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
       
-
         userProcess.animateSendDataToServerProcess(this.animationTime*0.25, "INSERT")
         .then((result: number) => { 
             return new Promise <number> ((resolve: Function, reject: Function) => {               
                 //pegando dados da shared pool
                 let localAnimTime = this.animationTime*0.75
-                sharedPool.animateAddHash() // animacao adicionando hash na shared pool
-                let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado                
-                let memLocation = sharedPool.getLastMemoryLocation() // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
+                // animacao adicionando hash na shared pool
+                sharedPool.animateAddHash(this.hash) 
+                //let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado                
+                let memLocationArr = sharedPool.getMemoryLocation(this.hash) // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
                 
                 //ambos tem a mesma porcentagem de tempo para animar porque a animacao eh feita ao mesmo tempo
-                serverProcess.animateSendBlockTo('#redo-log-buffer', lastAddedHash, localAnimTime);
-                serverProcess.animateSendBlockTo('#db-buffer-cache', lastAddedHash, localAnimTime);
+                serverProcess.animateSendBlockTo('#redo-log-buffer', this.hash, localAnimTime)
+                serverProcess.animateSendBlockTo('#db-buffer-cache', this.hash, localAnimTime)
                 setTimeout(() => {resolve(0)}, localAnimTime)
                 //serverProcess.animateSendBlockTo()
             })
