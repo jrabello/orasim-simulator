@@ -542,8 +542,15 @@
 	    // }
 	    Hash.prototype.setHash = function (hash) {
 	        this.hash = hash;
-	        var h = ("00000000" + hash.toString(16)).substr(-8);
-	        this.color = '#' + h;
+	        var formattedHash = hash;
+	        //cortando alguns niveis de verde com bit shifting :p
+	        formattedHash &= ~(0x01 << 15) >>> 0;
+	        formattedHash &= ~(0x01 << 14) >>> 0;
+	        formattedHash &= ~(0x01 << 13) >>> 0;
+	        formattedHash &= ~(0x01 << 12) >>> 0;
+	        var hashWithLessGreen = ("000000" + formattedHash.toString(16)).substr(-6);
+	        console.log('hashWithLessGreen', hashWithLessGreen);
+	        this.color = '#' + hashWithLessGreen;
 	        console.log(this.color);
 	    };
 	    Hash.prototype.getHash = function () {
