@@ -23,7 +23,7 @@ export class Animation {
     private animating: boolean
 
     constructor() {        
-        this.delay = 100
+        this.delay = 1000
         this.animating = false
     }
 
