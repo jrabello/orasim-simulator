@@ -293,7 +293,7 @@
 	 */
 	var Animation = (function () {
 	    function Animation() {
-	        this.delay = 1000;
+	        this.delay = 100;
 	        this.animating = false;
 	    }
 	    /**
@@ -542,7 +542,8 @@
 	    // }
 	    Hash.prototype.setHash = function (hash) {
 	        this.hash = hash;
-	        this.color = '#' + hash.toString(16).slice(2, 8);
+	        var h = ("00000000" + hash.toString(16)).substr(-8);
+	        this.color = '#' + h;
 	        console.log(this.color);
 	    };
 	    Hash.prototype.getHash = function () {
