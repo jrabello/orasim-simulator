@@ -228,6 +228,7 @@
 	     */
 	    SqlConsole.prototype.addMsg = function (msg) {
 	        $("#console-msg-list-container").append(msg.getMsg());
+	        $("#console").scrollTop(1000);
 	    };
 	    return SqlConsole;
 	}());
@@ -1488,14 +1489,17 @@
 	    ServerProcess.prototype.animateGetBlockFromDataFiles = function (dataFiles, hash, memLocationArr, delay) {
 	        var blockHtmlArr = [];
 	        var animCounter = 0;
+	        var delayIncrementer = 0;
+	        var currentDelay = delay;
 	        for (var _i = 0, memLocationArr_1 = memLocationArr; _i < memLocationArr_1.length; _i++) {
 	            var memLocation = memLocationArr_1[_i];
 	            var blockHtml = dataFiles.getNewBlockHtmlWithColor(hash.getColor());
 	            blockHtmlArr.push(blockHtml);
-	            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay / (animCounter + 1), 0, function () {
+	            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), currentDelay, 0, function () {
 	                if (animCounter++ == 0) {
 	                }
 	            }, function () { });
+	            currentDelay = currentDelay - (currentDelay * 0.1);
 	        }
 	        return blockHtmlArr;
 	    };
@@ -1775,8 +1779,8 @@
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 5:
 	                        _a.sent();
-	                        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 5000);
-	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
+	                        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 15000);
+	                        return [4 /*yield*/, new delay_1.Delay(15000).sleep()];
 	                    case 6:
 	                        _a.sent();
 	                        // animacao gravando dados no dbBufferCache

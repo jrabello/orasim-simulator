@@ -131,15 +131,17 @@ export class ServerProcess {
     animateGetBlockFromDataFiles(dataFiles: DataFiles, hash: Hash, memLocationArr: number[], delay: number): HTMLElement[] {
         let blockHtmlArr: HTMLElement[] = []
         let animCounter = 0
+        let delayIncrementer = 0
+        let currentDelay = delay
         for (let memLocation of memLocationArr) {
             let blockHtml = dataFiles.getNewBlockHtmlWithColor(hash.getColor())
-            blockHtmlArr.push(blockHtml)
-            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay / (animCounter + 1), 0, () => {
+            blockHtmlArr.push(blockHtml)            
+            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), currentDelay, 0, () => {
                 if (animCounter++ == 0) {
                     //$('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1)
-
                 }
             }, () => { })
+            currentDelay = currentDelay - (currentDelay*0.1)
         }
         return blockHtmlArr
     }
@@ -358,17 +360,15 @@ export class ServerProcess {
         // animacao requisitando dados do dataFiles
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"))
         await new Delay(3000).sleep()
-        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 5000)
-        await new Delay(5000).sleep()
+        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 15000)
+        await new Delay(15000).sleep()
         // animacao gravando dados no dbBufferCache
         serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, 5000)
         await new Delay(5000).sleep()
-        
-        
+                
         //serverProcess.animateGetBlockFromDbBufferCache(blockHtmlArr, dbBufferCache, delay * 0.20) // animacao pegando dados do dbBufferCache
         //termino da animacao
         //await new Delay().sleep()
-
         //serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15) // animacao enviando dados para userProcess                
         // setTimeout(() => {
         //     // for(let blockHtml of blockHtmlArr)
