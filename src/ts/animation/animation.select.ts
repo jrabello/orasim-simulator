@@ -1,3 +1,4 @@
+import { Delay } from '../time/delay'
 import { Hash } from '../crypt/hash'
 import { Animation } from './animation'
 import { ServerProcess } from '../process/server.process'
@@ -21,7 +22,7 @@ export class AnimationSelect extends Animation{
 
     constructor(hash: Hash, hashFound: boolean){
         super()
-        this.animationTime = super.getDelay() * 25
+        this.animationTime = super.getDelay() * 60
         this.hash = hash
         this.hashFound = hashFound
     }
@@ -41,7 +42,7 @@ export class AnimationSelect extends Animation{
      * start
      * Inicio da animacao do select
      */
-    start(): void{
+    async start(){
         // setando estado de inicio da animacao
         let userProcess: UserProcess = Orasim.getUserProcess()
         let serverProcess: ServerProcess = Orasim.getServerProcess()
@@ -49,12 +50,12 @@ export class AnimationSelect extends Animation{
         
         // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
         // setando estado de termino da animacao        
-        userProcess.animateSendDataToServerProcess(this.animationTime * 0.20, "SELECT")
-        .then((result: number) => {
-            return serverProcess.animateByHash(this.hash, this.hashFound, this.animationTime * 0.80)
-        })
+        userProcess.animateSendDataToServerProcess(this.animationTime * 0.10, "SELECT")
         .then((result: number) => {            
-            return Orasim.getAnimation().setAnimating(false)            
+            return serverProcess.animateByHash(this.hash, this.hashFound)             
+        })
+        .then((result: void) => {            
+            Orasim.getAnimation().setAnimating(false)
         })
     }
 }

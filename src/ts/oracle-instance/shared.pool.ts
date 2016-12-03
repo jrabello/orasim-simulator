@@ -81,13 +81,13 @@ export class SharedPool {
         console.log('released blocks indexes:', releasedBlocksIndexes.length)
 
         //retornando se nao existir mais blocks released
-        if(releasedBlocksIndexes.length < 2){
+        if(releasedBlocksIndexes.length < 3){
             console.log('SharedPool::addHash no freedBlocksIndexes found!')
             return
         }
 
-        //selecionando numero randomico de blocos
-        let randomNumBlocks = new Random().getIntBetweenRange(2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
+        //selecionando numero randomico de blocos 3 ou 6 blocks
+        let randomNumBlocks = new Random().getIntBetweenRange(0,1) == 0 ? 3 : 6 //2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
 
         // construindo array com indexes preenchidos com blocos
         let dirtyBLocks = []

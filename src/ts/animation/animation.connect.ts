@@ -3,6 +3,7 @@ import { UserProcess } from '../process/user.process'
 import { ListenerProcess } from '../process/listener.process'
 import { SqlButtons } from '../sql-buttons/sql.buttons'
 import { SqlButtonConnect } from '../sql-buttons/sql.button.connect'
+import {Delay} from '../time/delay'
 
 /**
  * AnimationConnect
@@ -15,15 +16,18 @@ export class AnimationConnect extends Animation{
 
     constructor(){
         super()
-        this.animUserProcessDelay = super.getDelay() * 3
-        this.animListenerProcessDelay = super.getDelay() * 3
+        this.animUserProcessDelay = super.getDelay() * 1
+        this.animListenerProcessDelay = super.getDelay() * 1
     }
+
+    
 
     /**
      * start
      * Inicio da animacao connect
      */
-    start(): void{        
+    start(): void{
+        //this.someDelay()        
         let userProcess: UserProcess = Orasim.getUserProcess()
         let listenerProcess: ListenerProcess = Orasim.getListenerProcess()
         //let sqlButtons: SqlButtons = Orasim.getSqlButtons()

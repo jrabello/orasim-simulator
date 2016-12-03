@@ -45,14 +45,50 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments)).next());
+	    });
+	};
+	var __generator = (this && this.__generator) || function (thisArg, body) {
+	    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+	    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+	    function verb(n) { return function (v) { return step([n, v]); }; }
+	    function step(op) {
+	        if (f) throw new TypeError("Generator is already executing.");
+	        while (_) try {
+	            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+	            if (y = 0, t) op = [0, t.value];
+	            switch (op[0]) {
+	                case 0: case 1: t = op; break;
+	                case 4: _.label++; return { value: op[1], done: false };
+	                case 5: _.label++; y = op[1]; op = [0]; continue;
+	                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+	                default:
+	                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+	                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+	                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+	                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+	                    if (t[2]) _.ops.pop();
+	                    _.trys.pop(); continue;
+	            }
+	            op = body.call(thisArg, _);
+	        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+	    }
+	};
 	var sql_console_1 = __webpack_require__(1);
 	var sql_buttons_1 = __webpack_require__(10);
 	var server_process_1 = __webpack_require__(19);
-	var user_process_1 = __webpack_require__(24);
-	var listener_process_1 = __webpack_require__(26);
+	var user_process_1 = __webpack_require__(26);
+	var listener_process_1 = __webpack_require__(28);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(28);
-	var oracle_instance_1 = __webpack_require__(30);
+	var oracle_database_1 = __webpack_require__(29);
+	var oracle_instance_1 = __webpack_require__(31);
+	var delay_1 = __webpack_require__(25);
 	/**
 	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
@@ -69,7 +105,38 @@
 	        this.animation = new animation_1.Animation();
 	        this.oracleInstance = new oracle_instance_1.OracleInstance();
 	        this.oracleDatabase = new oracle_database_1.OracleDatabase();
+	        //this.someDelay()    
 	    }
+	    Main.prototype.someDelay = function () {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var i;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        console.log('lol');
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        i = 0;
+	                        _a.label = 2;
+	                    case 2:
+	                        if (!(i < 3))
+	                            return [3 /*break*/, 5];
+	                        console.log(".");
+	                        return [4 /*yield*/, new delay_1.Delay(1000).sleep()];
+	                    case 3:
+	                        _a.sent();
+	                        _a.label = 4;
+	                    case 4:
+	                        i++;
+	                        return [3 /*break*/, 2];
+	                    case 5:
+	                        console.log('lal');
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
 	    Main.prototype.getSqlButtons = function () {
 	        return this.sqlButtons;
 	    };
@@ -272,7 +339,7 @@
 	var AnimationNull = (function (_super) {
 	    __extends(AnimationNull, _super);
 	    function AnimationNull() {
-	        _super.call(this);
+	        return _super.call(this) || this;
 	    }
 	    return AnimationNull;
 	}(animation_1.Animation));
@@ -359,6 +426,41 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments)).next());
+	    });
+	};
+	var __generator = (this && this.__generator) || function (thisArg, body) {
+	    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+	    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+	    function verb(n) { return function (v) { return step([n, v]); }; }
+	    function step(op) {
+	        if (f) throw new TypeError("Generator is already executing.");
+	        while (_) try {
+	            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+	            if (y = 0, t) op = [0, t.value];
+	            switch (op[0]) {
+	                case 0: case 1: t = op; break;
+	                case 4: _.label++; return { value: op[1], done: false };
+	                case 5: _.label++; y = op[1]; op = [0]; continue;
+	                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+	                default:
+	                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+	                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+	                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+	                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+	                    if (t[2]) _.ops.pop();
+	                    _.trys.pop(); continue;
+	            }
+	            op = body.call(thisArg, _);
+	        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+	    }
+	};
 	var animation_1 = __webpack_require__(4);
 	/**
 	 * AnimationSelect
@@ -371,10 +473,11 @@
 	var AnimationSelect = (function (_super) {
 	    __extends(AnimationSelect, _super);
 	    function AnimationSelect(hash, hashFound) {
-	        _super.call(this);
-	        this.animationTime = _super.prototype.getDelay.call(this) * 25;
-	        this.hash = hash;
-	        this.hashFound = hashFound;
+	        var _this = _super.call(this) || this;
+	        _this.animationTime = _super.prototype.getDelay.call(_this) * 60;
+	        _this.hash = hash;
+	        _this.hashFound = hashFound;
+	        return _this;
 	    }
 	    /**
 	     * buildAnimSelect
@@ -391,19 +494,24 @@
 	     * Inicio da animacao do select
 	     */
 	    AnimationSelect.prototype.start = function () {
-	        var _this = this;
-	        // setando estado de inicio da animacao
-	        var userProcess = Orasim.getUserProcess();
-	        var serverProcess = Orasim.getServerProcess();
-	        Orasim.getAnimation().setAnimating(true);
-	        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
-	        // setando estado de termino da animacao        
-	        userProcess.animateSendDataToServerProcess(this.animationTime * 0.20, "SELECT")
-	            .then(function (result) {
-	            return serverProcess.animateByHash(_this.hash, _this.hashFound, _this.animationTime * 0.80);
-	        })
-	            .then(function (result) {
-	            return Orasim.getAnimation().setAnimating(false);
+	        return __awaiter(this, void 0, void 0, function () {
+	            var _this = this;
+	            var userProcess, serverProcess;
+	            return __generator(this, function (_a) {
+	                userProcess = Orasim.getUserProcess();
+	                serverProcess = Orasim.getServerProcess();
+	                Orasim.getAnimation().setAnimating(true);
+	                // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
+	                // setando estado de termino da animacao        
+	                userProcess.animateSendDataToServerProcess(this.animationTime * 0.10, "SELECT")
+	                    .then(function (result) {
+	                    return serverProcess.animateByHash(_this.hash, _this.hashFound);
+	                })
+	                    .then(function (result) {
+	                    Orasim.getAnimation().setAnimating(false);
+	                });
+	                return [2 /*return*/];
+	            });
 	        });
 	    };
 	    return AnimationSelect;
@@ -429,10 +537,11 @@
 	var Crc32 = (function (_super) {
 	    __extends(Crc32, _super);
 	    function Crc32(data) {
-	        _super.call(this);
-	        var uintCrc = this.genCrc32(data);
-	        _super.prototype.setHash.call(this, uintCrc);
-	        _super.prototype.setHashStr.call(this, uintCrc.toString(16));
+	        var _this = _super.call(this) || this;
+	        var uintCrc = _this.genCrc32(data);
+	        _super.prototype.setHash.call(_this, uintCrc);
+	        _super.prototype.setHashStr.call(_this, uintCrc.toString(16));
+	        return _this;
 	    }
 	    Crc32.prototype.genCrc32 = function (data) {
 	        return (new Uint32Array([this.crc32Str(data)]))[0];
@@ -579,7 +688,7 @@
 	var SqlConsoleMsgInfo = (function (_super) {
 	    __extends(SqlConsoleMsgInfo, _super);
 	    function SqlConsoleMsgInfo(msg) {
-	        _super.call(this, 'info', msg);
+	        return _super.call(this, 'info', msg) || this;
 	    }
 	    return SqlConsoleMsgInfo;
 	}(sql_console_message_1.SqlConsoleMessage));
@@ -701,10 +810,11 @@
 	var SqlId = (function (_super) {
 	    __extends(SqlId, _super);
 	    function SqlId(data) {
-	        _super.call(this);
-	        var sqlId = this.genSqlId(data);
-	        _super.prototype.setHashStr.call(this, sqlId);
-	        _super.prototype.setHash.call(this, new crc32_1.Crc32(sqlId).getHash());
+	        var _this = _super.call(this) || this;
+	        var sqlId = _this.genSqlId(data);
+	        _super.prototype.setHashStr.call(_this, sqlId);
+	        _super.prototype.setHash.call(_this, new crc32_1.Crc32(sqlId).getHash());
+	        return _this;
 	    }
 	    /**
 	     * genSqlId
@@ -1033,9 +1143,10 @@
 	var AnimationConnect = (function (_super) {
 	    __extends(AnimationConnect, _super);
 	    function AnimationConnect() {
-	        _super.call(this);
-	        this.animUserProcessDelay = _super.prototype.getDelay.call(this) * 3;
-	        this.animListenerProcessDelay = _super.prototype.getDelay.call(this) * 3;
+	        var _this = _super.call(this) || this;
+	        _this.animUserProcessDelay = _super.prototype.getDelay.call(_this) * 1;
+	        _this.animListenerProcessDelay = _super.prototype.getDelay.call(_this) * 1;
+	        return _this;
 	    }
 	    /**
 	     * start
@@ -1043,6 +1154,7 @@
 	     */
 	    AnimationConnect.prototype.start = function () {
 	        var _this = this;
+	        //this.someDelay()        
 	        var userProcess = Orasim.getUserProcess();
 	        var listenerProcess = Orasim.getListenerProcess();
 	        //let sqlButtons: SqlButtons = Orasim.getSqlButtons()
@@ -1124,9 +1236,10 @@
 	var AnimationInsert = (function (_super) {
 	    __extends(AnimationInsert, _super);
 	    function AnimationInsert(hash) {
-	        _super.call(this);
-	        this.animationTime = _super.prototype.getDelay.call(this) * 5;
-	        this.hash = hash;
+	        var _this = _super.call(this) || this;
+	        _this.animationTime = _super.prototype.getDelay.call(_this) * 5;
+	        _this.hash = hash;
+	        return _this;
 	    }
 	    /**
 	     * start
@@ -1205,8 +1318,9 @@
 	var AnimationCommit = (function (_super) {
 	    __extends(AnimationCommit, _super);
 	    function AnimationCommit() {
-	        _super.call(this);
-	        this.animationTime = _super.prototype.getDelay.call(this) * 5;
+	        var _this = _super.call(this) || this;
+	        _this.animationTime = _super.prototype.getDelay.call(_this) * 5;
+	        return _this;
 	    }
 	    AnimationCommit.prototype.start = function () {
 	        var _this = this;
@@ -1255,10 +1369,47 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments)).next());
+	    });
+	};
+	var __generator = (this && this.__generator) || function (thisArg, body) {
+	    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+	    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+	    function verb(n) { return function (v) { return step([n, v]); }; }
+	    function step(op) {
+	        if (f) throw new TypeError("Generator is already executing.");
+	        while (_) try {
+	            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+	            if (y = 0, t) op = [0, t.value];
+	            switch (op[0]) {
+	                case 0: case 1: t = op; break;
+	                case 4: _.label++; return { value: op[1], done: false };
+	                case 5: _.label++; y = op[1]; op = [0]; continue;
+	                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+	                default:
+	                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+	                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+	                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+	                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+	                    if (t[2]) _.ops.pop();
+	                    _.trys.pop(); continue;
+	            }
+	            op = body.call(thisArg, _);
+	        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+	    }
+	};
 	var tooltip_1 = __webpack_require__(20);
 	var sql_console_msg_info_1 = __webpack_require__(8);
-	var data_block_1 = __webpack_require__(21);
-	var pga_1 = __webpack_require__(23);
+	var sql_console_msg_warning_1 = __webpack_require__(21);
+	var data_block_1 = __webpack_require__(22);
+	var pga_1 = __webpack_require__(24);
+	var delay_1 = __webpack_require__(25);
 	/**
 	 * ServerProcess
 	 * Classe responsavel por modelar o objeto ServerProcess da animacao
@@ -1268,6 +1419,13 @@
 	    function ServerProcess() {
 	        this.pga = new pga_1.Pga();
 	        this.element = $("#server-process")[0];
+	        //criando arrow que representa envio de dados de server process para user process
+	        $("<div id='arrow-2-server-process' class='left-arrow end'>").css({
+	            "left": "95px",
+	            "top": "275px",
+	            "width": "40px",
+	            "color": "green"
+	        }).hide().appendTo("#animation-container");
 	        // criando tooltip para o ServerProcess
 	        var tooltip = new tooltip_1.Tooltip("#server-process", "Server Process", "\n        <p align=\"justify\">\n\n        Oracle Database cria o Server Process para lidar com as solicita\u00E7\u00F5es dos User Process conectados \u00E0 inst\u00E2ncia. \n        O User Process sempre se comunica com um banco de dados atrav\u00E9s de um Server Process separado.\n        <br><br>\n        Os Server Process criados pela solicia\u00E7\u00E3o de uma aplica\u00E7\u00E3o de banco de dados pode executar uma ou mais das seguintes tarefas:\n        \n        <br><br>\n        - Analisar e executar instru\u00E7\u00F5es SQL emitidas atrav\u00E9s da aplica\u00E7\u00E3o, incluindo a cria\u00E7\u00E3o e execu\u00E7\u00E3o do plano de consulta.\n        \n        <br><br>\n        - Executa c\u00F3digo PL/SQL.\n        \n        <br><br>\n        - Realizar a leitura dos blocos de dados que est\u00E3o armazenados nos datafiles e carregar no Db Buffer Cache \n        (O processo background DBWn \u00E9 o respons\u00E1vel por gravar os blocos modificados de volta para o disco)\n        \n        <br><br>\n        - Retorna os resultados solicitados de uma forma que a aplica\u00E7\u00E3o pode processar as informa\u00E7\u00F5es.\n        \n        <span style='font-weight: bold'>\n        </span>\n         ");
 	    }
@@ -1334,10 +1492,8 @@
 	            var memLocation = memLocationArr_1[_i];
 	            var blockHtml = dataFiles.getNewBlockHtmlWithColor(hash.getColor());
 	            blockHtmlArr.push(blockHtml);
-	            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
+	            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay / (animCounter + 1), 0, function () {
 	                if (animCounter++ == 0) {
-	                    $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
-	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"));
 	                }
 	            }, function () { });
 	        }
@@ -1385,19 +1541,25 @@
 	    ServerProcess.prototype.animateGetNewBlockFromDbBufferCache = function (dbBufferCache, memLocationArr, delay) {
 	        var animCounter = 0;
 	        var blockHtmlArr = [];
-	        //iterating memory locations        
-	        for (var _i = 0, memLocationArr_2 = memLocationArr; _i < memLocationArr_2.length; _i++) {
-	            var memLocation = memLocationArr_2[_i];
+	        var _loop_1 = function (memLocation) {
 	            var blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation);
 	            blockHtmlArr.push(blockHtml);
-	            Orasim.getAnimation().moveTo(blockHtml, this.getElement(), delay, 0, function () {
+	            Orasim.getAnimation().moveTo(blockHtml, this_1.getElement(), delay, 0, function () {
 	                if (animCounter++ == 0) {
 	                    $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	                    $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	                    //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess requisitando dados do DbBufferCache'))
 	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"));
 	                }
-	            }, function () { });
+	            }, function () {
+	                blockHtml.remove();
+	            });
+	        };
+	        var this_1 = this;
+	        //iterating memory locations        
+	        for (var _i = 0, memLocationArr_2 = memLocationArr; _i < memLocationArr_2.length; _i++) {
+	            var memLocation = memLocationArr_2[_i];
+	            _loop_1(memLocation);
 	        }
 	        return blockHtmlArr;
 	    };
@@ -1411,8 +1573,8 @@
 	     */
 	    ServerProcess.prototype.animateGetBlockFromDbBufferCache = function (blockHtmlArr, dbBufferCache, delay) {
 	        var animCounter = 0;
-	        var _loop_1 = function(blockHtml) {
-	            Orasim.getAnimation().moveTo(blockHtml, this_1.getElement(), delay, 0, function () {
+	        var _loop_2 = function (blockHtml) {
+	            Orasim.getAnimation().moveTo(blockHtml, this_2.getElement(), delay, 0, function () {
 	                if (animCounter++ == 0) {
 	                    $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
 	                    $('#db-buffer-cache').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -1423,10 +1585,10 @@
 	                blockHtml.remove();
 	            });
 	        };
-	        var this_1 = this;
+	        var this_2 = this;
 	        for (var _i = 0, blockHtmlArr_2 = blockHtmlArr; _i < blockHtmlArr_2.length; _i++) {
 	            var blockHtml = blockHtmlArr_2[_i];
-	            _loop_1(blockHtml);
+	            _loop_2(blockHtml);
 	        }
 	    };
 	    /**
@@ -1461,25 +1623,113 @@
 	            });
 	        }
 	    };
+	    ServerProcess.prototype.animSearchSharedPool = function (delay) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        $('#server-process').repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1);
+	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.50).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        $('#shared-pool').repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1);
+	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.50).sleep()];
+	                    case 2:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
+	    ServerProcess.prototype.animGetDataFromDbBufferCache = function (delay) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Requisitando dados do  <span style='font-weight: bold'>DB_BufferCache</span>"));
+	                        $('#server-process').repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1);
+	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.50).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        $('#db-buffer-cache').repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1);
+	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.50).sleep()];
+	                    case 2:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
+	    ServerProcess.prototype.animSendDataToUserProcess = function (delay) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o resultado para <span style='font-weight: bold'>UserProcess</span>"));
+	                        $('#server-process').repeat().fadeTo(delay * 0.165, 0.1).fadeTo(delay * 0.165, 1).until(1);
+	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.33).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        //new Arrow(20, 190, 25, 210, delay * 0.50).moveToLeft()
+	                        //new Arrow(95, 265, 40, 40, delay*0.33).moveToLeft(()=>{})
+	                        $('#arrow-2-server-process').show().repeat().fadeTo(delay * 0.165, 0.1).fadeTo(delay * 0.165, 1).until(1);
+	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.33).sleep()];
+	                    case 2:
+	                        _a.sent();
+	                        $('#arrow-2-server-process').hide();
+	                        $('#user-process').repeat().fadeTo(delay * 0.165, 0.1).fadeTo(delay * 0.165, 1).until(1);
+	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.33).sleep()];
+	                    case 3:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
 	    /**
 	     * animateByHash
 	     * Metodo responsavel pela animacao do SOFT PARSE e do HARD PARSE
 	     * Verificando se o hash na shared pool existe, selecionando animacao especifica
 	     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
 	     */
-	    ServerProcess.prototype.animateByHash = function (hash, hashFound, delay) {
-	        var _this = this;
-	        return new Promise(function (resolve, reject) {
-	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse...'));
-	            $("#server-process").addClass("time-clock");
-	            // rodar animacao especifica se o hash foi encontrado na shared-pool ou não
-	            if (hashFound) {
-	                _this.animateHashFound(hash, delay);
-	            }
-	            else {
-	                _this.animateHashNotFound(hash, delay);
-	            }
-	            setTimeout(function () { resolve(0); }, delay);
+	    ServerProcess.prototype.animateByHash = function (hash, hashFound) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var serverProcess;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        serverProcess = Orasim.getServerProcess();
+	                        //animacao do relogio no server process
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse...'));
+	                        $("#server-process").addClass("time-clock");
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        if (!hashFound)
+	                            return [3 /*break*/, 3];
+	                        return [4 /*yield*/, this.animateHashFound(hash)];
+	                    case 2:
+	                        _a.sent();
+	                        return [3 /*break*/, 5];
+	                    case 3: return [4 /*yield*/, this.animateHashNotFound(hash)];
+	                    case 4:
+	                        _a.sent();
+	                        _a.label = 5;
+	                    case 5: 
+	                    //pegando dados do buffer cache
+	                    return [4 /*yield*/, serverProcess.animGetDataFromDbBufferCache(5000)];
+	                    case 6:
+	                        //pegando dados do buffer cache
+	                        _a.sent();
+	                        //enviando dados para user process
+	                        return [4 /*yield*/, serverProcess.animSendDataToUserProcess(8000)];
+	                    case 7:
+	                        //enviando dados para user process
+	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
+	                        return [2 /*return*/];
+	                }
+	            });
 	        });
 	    };
 	    /**
@@ -1487,64 +1737,88 @@
 	     * Animacao de hash not found
 	     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
 	     */
-	    ServerProcess.prototype.animateHashNotFound = function (hash, delay) {
-	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
-	        var dataFiles = Orasim.getOracleDatabase().getDataFiles();
-	        var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
-	        var sqlConsole = Orasim.getSqlConsole();
-	        var serverProcess = Orasim.getServerProcess();
-	        var userProcess = Orasim.getUserProcess();
-	        var blockHtmlArr;
-	        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Comando SQL não foi encontrado na <span style='font-weight: bold'>SharedPool</span>"));
-	        setTimeout(function () {
-	            sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Criando o plano de execução da query..."));
-	            setTimeout(function () {
-	                sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo, gerado \n                     <span style=\"font-weight: bold\">SQL_ID</span>: \n                     <span style=\"font-weight: bold; color: " + hash.getColor() + "\">" + hash.getHashStr() + "</span>"));
-	                $("#server-process").removeClass("time-clock");
-	                //let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado
-	                //let memLocation = sharedPool.getLastMemoryLocation() 
-	                // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
-	                // animacao adicionando hash na shared pool
-	                sharedPool.animateAddHash(hash);
-	                var memLocationArr = sharedPool.getMemoryLocation(hash);
-	                blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, delay * 0.15); // animacao requisitando dados do dataFiles
-	                serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, delay * 0.15); // animacao gravando dados no dbBufferCache
-	                serverProcess.animateGetBlockFromDbBufferCache(blockHtmlArr, dbBufferCache, delay * 0.15); // animacao pegando dados do dbBufferCache
-	                //serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15) // animacao enviando dados para userProcess
-	            }, delay * 0.20);
-	        }, delay * 0.20);
-	        //termino da animacao        
-	        setTimeout(function () {
-	            // for(let blockHtml of blockHtmlArr)
-	            //     blockHtml.remove() //removendo block do DOM
-	        }, delay);
+	    ServerProcess.prototype.animateHashNotFound = function (hash) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var sharedPool, dataFiles, dbBufferCache, sqlConsole, serverProcess, userProcess, blockHtmlArr, memLocationArr;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	                        dataFiles = Orasim.getOracleDatabase().getDataFiles();
+	                        dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	                        sqlConsole = Orasim.getSqlConsole();
+	                        serverProcess = Orasim.getServerProcess();
+	                        userProcess = Orasim.getUserProcess();
+	                        //procurando sql_id na shared pool
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Comando SQL não foi encontrado na <span style='font-weight: bold'>SharedPool</span>"));
+	                        return [4 /*yield*/, serverProcess.animSearchSharedPool(5000)];
+	                    case 1:
+	                        _a.sent();
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Criando o plano de execução da query..."));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 2:
+	                        _a.sent();
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo, gerado \n                     <span style=\"font-weight: bold\">SQL_ID</span>: \n                     <span style=\"font-weight: bold; color: " + hash.getColor() + "\">" + hash.getHashStr() + "</span>, adicionando na <span style=\"font-weight: bold\">SharedPool</span>"));
+	                        $("#server-process").removeClass("time-clock");
+	                        // animacao adicionando hash na shared pool
+	                        return [4 /*yield*/, serverProcess.animSearchSharedPool(5000)];
+	                    case 3:
+	                        // animacao adicionando hash na shared pool
+	                        _a.sent();
+	                        sharedPool.animateAddHash(hash);
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 4:
+	                        _a.sent();
+	                        memLocationArr = sharedPool.getMemoryLocation(hash);
+	                        // animacao requisitando dados do dataFiles
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 5:
+	                        _a.sent();
+	                        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 5000);
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
+	                    case 6:
+	                        _a.sent();
+	                        // animacao gravando dados no dbBufferCache
+	                        serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, 5000);
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
+	                    case 7:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
 	    };
 	    /**
 	     * animateHashFound
 	     * Animacao de hash found
 	     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
 	     */
-	    ServerProcess.prototype.animateHashFound = function (hash, delay) {
-	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
-	        var dataFiles = Orasim.getOracleDatabase().getDataFiles();
-	        var dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
-	        var sqlConsole = Orasim.getSqlConsole();
-	        var serverProcess = Orasim.getServerProcess();
-	        var userProcess = Orasim.getUserProcess();
-	        var blockHtmlArr;
-	        $("#server-process").removeClass("time-clock");
-	        // pegando ultimo hash adicionado         
-	        // animacao pegando dados do dbBufferCache
-	        // animacao enviando dados para userProcess
-	        var memLocationArr = sharedPool.getMemoryLocation(hash);
-	        blockHtmlArr = serverProcess.animateGetNewBlockFromDbBufferCache(dbBufferCache, memLocationArr, delay * 0.15);
-	        //serverProcess.animateSendBlockToUserProcess(blockHtmlArr, userProcess, delay * 0.15)
-	        //termino da animacao
-	        setTimeout(function () {
-	            //removendo block do DOM
-	            // for(let blockHtml of blockHtmlArr)
-	            //     blockHtml.remove()
-	        }, delay);
+	    ServerProcess.prototype.animateHashFound = function (hash) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var sharedPool, dataFiles, dbBufferCache, sqlConsole, serverProcess, userProcess, blockHtmlArr;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	                        dataFiles = Orasim.getOracleDatabase().getDataFiles();
+	                        dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	                        sqlConsole = Orasim.getSqlConsole();
+	                        serverProcess = Orasim.getServerProcess();
+	                        userProcess = Orasim.getUserProcess();
+	                        //comando encontrado na shated pool
+	                        $("#server-process").removeClass("time-clock");
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Comando SQL foi encontrado na \n            <span style='font-weight: bold'>SharedPool</span>"));
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>SOFT Parse</span>\n                     conclu\u00EDdo.  \n                     <span style=\"font-weight: bold\">SQL_ID</span>: \n                     <span style=\"font-weight: bold; color: " + hash.getColor() + "\">" + hash.getHashStr() + "</span>"));
+	                        $("#server-process").removeClass("time-clock");
+	                        return [4 /*yield*/, serverProcess.animSearchSharedPool(5000)];
+	                    case 1:
+	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Commando executado com sucesso!..."));
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
 	    };
 	    return ServerProcess;
 	}());
@@ -1602,7 +1876,32 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var block_1 = __webpack_require__(22);
+	var sql_console_message_1 = __webpack_require__(9);
+	/**
+	 * SqlConsoleMsgWarning
+	 * Classe responsavel por especializar mensagens de aviso do console da aplicacao
+	 */
+	var SqlConsoleMsgWarning = (function (_super) {
+	    __extends(SqlConsoleMsgWarning, _super);
+	    function SqlConsoleMsgWarning(msg) {
+	        return _super.call(this, 'warning', msg) || this;
+	    }
+	    return SqlConsoleMsgWarning;
+	}(sql_console_message_1.SqlConsoleMessage));
+	exports.SqlConsoleMsgWarning = SqlConsoleMsgWarning;
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var block_1 = __webpack_require__(23);
 	/**
 	 * DataBlock
 	 * Classe Responsavel modelar um bloco (data block)
@@ -1610,7 +1909,7 @@
 	var DataBlock = (function (_super) {
 	    __extends(DataBlock, _super);
 	    function DataBlock() {
-	        _super.call(this, $("<div class=\"cache-box\"></div>")[0], 4096, false, "#ffffff");
+	        return _super.call(this, $("<div class=\"cache-box\"></div>")[0], 4096, false, "#ffffff") || this;
 	        // super.element =         
 	        // this.size = 4096
 	        // this.isUsed = false
@@ -1622,7 +1921,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1667,7 +1966,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1686,12 +1985,32 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Delay = (function () {
+	    function Delay(milliseconds) {
+	        this.milliseconds = milliseconds;
+	    }
+	    Delay.prototype.sleep = function () {
+	        var _this = this;
+	        return new Promise(function (resolve) {
+	            setTimeout(resolve, _this.milliseconds);
+	        });
+	    };
+	    return Delay;
+	}());
+	exports.Delay = Delay;
+
+
+/***/ },
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var tooltip_1 = __webpack_require__(20);
-	var arrow_1 = __webpack_require__(25);
+	var arrow_1 = __webpack_require__(27);
 	var sql_console_msg_info_1 = __webpack_require__(8);
 	/**
 	 * UserProcess
@@ -1735,9 +2054,9 @@
 	     */
 	    UserProcess.prototype.animateSendDataToServerProcess = function (delay, nameComando) {
 	        return new Promise(function (resolve, reject) {
+	            Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Enviando comando <span style='font-weight: bold'>" + nameComando + "</span> para o <span style='font-weight: bold'>ServerProcess</span>"));
 	            $("#user-process").fadeTo(delay * 0.25, 0.1, function () {
 	                $("#user-process").fadeTo(delay * 0.25, 1, function () {
-	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Enviando comando <span style='font-weight: bold'>" + nameComando + "</span> para o <span style='font-weight: bold'>ServerProcess</span>"));
 	                    $("#connection-arrow").fadeTo(delay * 0.25, 0.1, function () {
 	                        $("#connection-arrow").fadeTo(delay * 0.25, 1);
 	                    });
@@ -1774,7 +2093,7 @@
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2124,14 +2443,14 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var tooltip_1 = __webpack_require__(20);
 	var sql_console_msg_info_1 = __webpack_require__(8);
-	var sql_console_msg_warning_1 = __webpack_require__(27);
-	var arrow_1 = __webpack_require__(25);
+	var sql_console_msg_warning_1 = __webpack_require__(21);
+	var arrow_1 = __webpack_require__(27);
 	/**
 	 * ListenerProcess
 	 * Classe responsavel por modelar o objeto ListenerProcess da animacao
@@ -2204,36 +2523,11 @@
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var sql_console_message_1 = __webpack_require__(9);
-	/**
-	 * SqlConsoleMsgWarning
-	 * Classe responsavel por especializar mensagens de aviso do console da aplicacao
-	 */
-	var SqlConsoleMsgWarning = (function (_super) {
-	    __extends(SqlConsoleMsgWarning, _super);
-	    function SqlConsoleMsgWarning(msg) {
-	        _super.call(this, 'warning', msg);
-	    }
-	    return SqlConsoleMsgWarning;
-	}(sql_console_message_1.SqlConsoleMessage));
-	exports.SqlConsoleMsgWarning = SqlConsoleMsgWarning;
-
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var data_files_1 = __webpack_require__(29);
+	var data_files_1 = __webpack_require__(30);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -2247,11 +2541,11 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_block_1 = __webpack_require__(21);
+	var data_block_1 = __webpack_require__(22);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -2290,17 +2584,17 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(31);
-	var pmon_1 = __webpack_require__(39);
-	var smon_1 = __webpack_require__(40);
-	var dbwr_1 = __webpack_require__(41);
-	var ckpt_1 = __webpack_require__(42);
-	var lgwr_1 = __webpack_require__(43);
-	var arcn_1 = __webpack_require__(44);
+	var sga_1 = __webpack_require__(32);
+	var pmon_1 = __webpack_require__(40);
+	var smon_1 = __webpack_require__(41);
+	var dbwr_1 = __webpack_require__(42);
+	var ckpt_1 = __webpack_require__(43);
+	var lgwr_1 = __webpack_require__(44);
+	var arcn_1 = __webpack_require__(45);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -2323,13 +2617,13 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(32);
-	var shared_pool_1 = __webpack_require__(33);
-	var redo_log_buffer_1 = __webpack_require__(37);
+	var db_buffer_cache_1 = __webpack_require__(33);
+	var shared_pool_1 = __webpack_require__(34);
+	var redo_log_buffer_1 = __webpack_require__(38);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -2367,12 +2661,12 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var tooltip_1 = __webpack_require__(20);
-	var data_block_1 = __webpack_require__(21);
+	var data_block_1 = __webpack_require__(22);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -2472,12 +2766,12 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var std = __webpack_require__(34);
-	var rand_1 = __webpack_require__(36);
+	var std = __webpack_require__(35);
+	var rand_1 = __webpack_require__(37);
 	var tooltip_1 = __webpack_require__(20);
 	/**
 	 * SharedPool
@@ -2533,12 +2827,12 @@
 	        var releasedBlocksIndexes = dbBufferCache.getReleasedBlocksMemLocation();
 	        console.log('released blocks indexes:', releasedBlocksIndexes.length);
 	        //retornando se nao existir mais blocks released
-	        if (releasedBlocksIndexes.length < 2) {
+	        if (releasedBlocksIndexes.length < 3) {
 	            console.log('SharedPool::addHash no freedBlocksIndexes found!');
 	            return;
 	        }
-	        //selecionando numero randomico de blocos
-	        var randomNumBlocks = new rand_1.Random().getIntBetweenRange(2, (releasedBlocksIndexes.length <= 4) ? releasedBlocksIndexes.length : 4);
+	        //selecionando numero randomico de blocos 3 ou 6 blocks
+	        var randomNumBlocks = new rand_1.Random().getIntBetweenRange(0, 1) == 0 ? 3 : 6; //2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
 	        // construindo array com indexes preenchidos com blocos
 	        var dirtyBLocks = [];
 	        for (var i = 0; i < randomNumBlocks; i++) {
@@ -2578,7 +2872,7 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {var __extends = (this && this.__extends) || function (d, b) {
@@ -13806,10 +14100,10 @@
 	}
 	catch (exception) { }
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)))
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -13995,7 +14289,7 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -14016,13 +14310,13 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var tooltip_1 = __webpack_require__(20);
-	var data_block_redo_1 = __webpack_require__(38);
-	var data_block_1 = __webpack_require__(21);
+	var data_block_redo_1 = __webpack_require__(39);
+	var data_block_1 = __webpack_require__(22);
 	/**
 	 * Redo Log Buffer
 	 * Classe responsavel por modelar o objeto RedoLogBuffer do oracle instance
@@ -14077,7 +14371,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14086,7 +14380,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var block_1 = __webpack_require__(22);
+	var block_1 = __webpack_require__(23);
 	/**
 	 * DataBlockRedo
 	 * Classe Responsavel modelar um bloco (data block redo)
@@ -14094,7 +14388,7 @@
 	var DataBlockRedo = (function (_super) {
 	    __extends(DataBlockRedo, _super);
 	    function DataBlockRedo() {
-	        _super.call(this, $("<div class=\"buffer-box\"></div>")[0], 4096, false, "#ffffff");
+	        return _super.call(this, $("<div class=\"buffer-box\"></div>")[0], 4096, false, "#ffffff") || this;
 	    }
 	    return DataBlockRedo;
 	}(block_1.Block));
@@ -14102,7 +14396,7 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14119,7 +14413,7 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14136,7 +14430,7 @@
 
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14153,7 +14447,7 @@
 
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14170,7 +14464,7 @@
 
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14182,7 +14476,7 @@
 	        new tooltip_1.Tooltip("#lgwr", "Log Writer (LGWR)", "Olá, eu sou o LGWR!");
 	    }
 	    Lgwr.prototype.animSendBlocksToRedoLogFiles = function (blocks, delay) {
-	        var _loop_1 = function(block) {
+	        var _loop_1 = function (block) {
 	            Orasim.getAnimation().moveTo(block.getElement(), $("#redo-log-file-1")[0], delay, 0, function () {
 	            }, function () {
 	                //remova no fim da animacao
@@ -14213,7 +14507,7 @@
 
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

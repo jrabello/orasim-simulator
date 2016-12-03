@@ -31,7 +31,8 @@ export class Animation {
      * start
      * Este metodo desta classe base não executa nenhuma animação     
      */
-    start() : void{        
+    start() : void{       
+        
     }
 
     /**
