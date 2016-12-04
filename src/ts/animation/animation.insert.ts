@@ -1,6 +1,7 @@
 import { Hash } from '../crypt/hash'
 import { Animation } from './animation'
 import { ServerProcess } from '../process/server.process'
+import { ServerProcessInsert } from '../process/server.process.insert'
 import { UserProcess } from '../process/user.process'
 import { SharedPool } from '../oracle-instance/shared.pool'
 import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
@@ -24,32 +25,22 @@ export class AnimationInsert extends Animation{
      * start
      * Inicio da animacao do insert
      */
-    start(): void{
+    async start(){
         // setando estado de inicio da animacao
         Orasim.getAnimation().setAnimating(true)
         let userProcess: UserProcess = Orasim.getUserProcess()
         let serverProcess: ServerProcess = Orasim.getServerProcess()
-        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
-        let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
       
-        userProcess.animateSendDataToServerProcess(this.animationTime*0.25, "INSERT")
+        userProcess.animateSendDataToServerProcess(this.animationTime, "INSERT")
         .then((result: number) => { 
-            return new Promise <number> ((resolve: Function, reject: Function) => {               
-                //pegando dados da shared pool
-                let localAnimTime = this.animationTime*0.75
-                // animacao adicionando hash na shared pool
-                sharedPool.animateAddHash(this.hash) 
-                //let lastAddedHash = sharedPool.getLastHash() // pegando ultimo hash adicionado                
-                let memLocationArr = sharedPool.getMemoryLocation(this.hash) // pegando a area de memoria do ultimo dado adicionado no db-buffer-cache
-                
-                //ambos tem a mesma porcentagem de tempo para animar porque a animacao eh feita ao mesmo tempo
-                serverProcess.animateSendBlockTo('#redo-log-buffer', this.hash, localAnimTime)
-                serverProcess.animateSendBlockTo('#db-buffer-cache', this.hash, localAnimTime)
-                setTimeout(() => {resolve(0)}, localAnimTime)
-                //serverProcess.animateSendBlockTo()
-            })
+            // return new Promise <number> ((resolve: Function, reject: Function) => {               
+                return new ServerProcessInsert().animateInsert(this.hash)        
+            // })
          })
-         .then((result: number) => {
+         .then((result: void) => {
+             console.log("insert animating = false")
              return Orasim.getAnimation().setAnimating(false)
          })
 

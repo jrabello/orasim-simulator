@@ -10,6 +10,7 @@ import { DataBlock } from '../oracle-database/data.block'
 import { SqlConsole } from '../sql-console/sql.console'
 import { Hash } from '../crypt/hash'
 import { Pga } from './pga'
+import { ServerProcessInsert } from './server.process.insert'
 import { Block } from '../oracle-database/block'
 import { Delay } from '../time/delay'
 import { Arrow } from '../animation/arrow'
@@ -22,10 +23,12 @@ import { Arrow } from '../animation/arrow'
 export class ServerProcess {
     private element: HTMLElement
     private pga: Pga
+    //private insertInstance: ServerProcessInsert
 
     constructor() {
         this.pga = new Pga()
         this.element = $("#server-process")[0]
+        //this.insertInstance = new ServerProcessInsert()
 
         //criando arrow que representa envio de dados de server process para user process
         $("<div id='arrow-2-server-process' class='left-arrow end'>").css({
@@ -64,6 +67,10 @@ export class ServerProcess {
         )
     }
 
+    // getInsertInstance(){
+    //     return this.insertInstance
+    // }
+
     getElement(): HTMLElement {
         return this.element
     }
@@ -93,7 +100,7 @@ export class ServerProcess {
      * animateSendBlockTo
      * metodo um pouco mais generico que permite o envio dos dados para elementos usando id  
      */
-    animateSendBlockTo(elementId: string, hash: Hash, delay: number): void {
+    async animateSendBlockTo(elementId: string, hash: Hash, delay: number) {
         //criando novo block dentro do server process
         let block = this.createNewBlock()
         block.setColor(hash.getColor())
@@ -119,6 +126,8 @@ export class ServerProcess {
                     break;
             }
         })
+
+        new Delay(delay).sleep()        
     }
 
     /**
@@ -390,7 +399,7 @@ export class ServerProcess {
         let userProcess: UserProcess = Orasim.getUserProcess()
         let blockHtmlArr: HTMLElement[]
 
-        //comando encontrado na shated pool
+        //comando encontrado na shared pool
         $("#server-process").removeClass("time-clock")        
         sqlConsole.addMsg(new SqlConsoleMsgInfo(
             `< SP > Comando SQL foi encontrado na 

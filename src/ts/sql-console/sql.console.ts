@@ -56,8 +56,6 @@ export class SqlConsole {
         }
     }*/
 
-
-
     /**
      *  addMsg
      *  Responsável por adicionar mensagens no console
