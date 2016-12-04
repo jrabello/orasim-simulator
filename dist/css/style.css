@@ -335,7 +335,7 @@ h1 {
 
 #oracle-bds-container {
   width: 350px;
-  height: 115px;
+  height: 121px;
   position: absolute;
   left: 10px;
   top: 10px;
@@ -348,7 +348,7 @@ h1 {
 }
 
 #oracle-log-container {
-  height: 115px;
+  height: 121px;
   width: 100px;
   position: absolute;
   right: 10px;
@@ -466,7 +466,7 @@ h1 {
 }
 
 #parameter-file {
-  width: 105px;
+  width: 117px;
   height: 40px;
   position: absolute;
   left: 10px;
@@ -649,3 +649,5 @@ h1 {
 .qtip-content{
   font-size: 14px
 }
+
+

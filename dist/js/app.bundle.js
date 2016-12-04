@@ -1456,7 +1456,8 @@
 	            "left": "95px",
 	            "top": "275px",
 	            "width": "40px",
-	            "color": "green"
+	            "color": "green",
+	            "border-top": "2px solid lime"
 	        }).hide().appendTo("#animation-container");
 	        // criando tooltip para o ServerProcess
 	        var tooltip = new tooltip_1.Tooltip("#server-process", "Server Process", "\n        <p align=\"justify\">\n\n        Oracle Database cria o Server Process para lidar com as solicita\u00E7\u00F5es dos User Process conectados \u00E0 inst\u00E2ncia. \n        O User Process sempre se comunica com um banco de dados atrav\u00E9s de um Server Process separado.\n        <br><br>\n        Os Server Process criados pela solicia\u00E7\u00E3o de uma aplica\u00E7\u00E3o de banco de dados pode executar uma ou mais das seguintes tarefas:\n        \n        <br><br>\n        - Analisar e executar instru\u00E7\u00F5es SQL emitidas atrav\u00E9s da aplica\u00E7\u00E3o, incluindo a cria\u00E7\u00E3o e execu\u00E7\u00E3o do plano de consulta.\n        \n        <br><br>\n        - Executa c\u00F3digo PL/SQL.\n        \n        <br><br>\n        - Realizar a leitura dos blocos de dados que est\u00E3o armazenados nos datafiles e carregar no Db Buffer Cache \n        (O processo background DBWn \u00E9 o respons\u00E1vel por gravar os blocos modificados de volta para o disco)\n        \n        <br><br>\n        - Retorna os resultados solicitados de uma forma que a aplica\u00E7\u00E3o pode processar as informa\u00E7\u00F5es.\n        \n        <span style='font-weight: bold'>\n        </span>\n         ");

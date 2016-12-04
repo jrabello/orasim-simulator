@@ -101,3 +101,8 @@ Estilo da cabeça das setas
   top: 100%;
   transform: rotate(45deg) translate(-100%, -15%);
 }
+
+#arrow-2-server-process:before{
+  border-bottom-color: lime;
+  border-right-color: lime;
+}
