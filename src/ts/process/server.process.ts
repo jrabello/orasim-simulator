@@ -371,8 +371,8 @@ export class ServerProcess {
         // animacao requisitando dados do dataFiles
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"))
         await new Delay(3000).sleep()
-        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 15000)
-        await new Delay(15000).sleep()
+        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 5000)
+        await new Delay(5000).sleep()
         // animacao gravando dados no dbBufferCache
         serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, 5000)
         await new Delay(5000).sleep()
