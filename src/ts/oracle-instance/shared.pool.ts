@@ -61,6 +61,7 @@ export class SharedPool {
         $(hashElement).attr('id', idHashHtmlElement+'-sharedPool')        
         //hash.setColor('#' + hash.getHash())
         $('#'+idHashHtmlElement+'-sharedPool').css('color', hash.getColor())
+        $('#'+idHashHtmlElement+'-sharedPool').css('font-family', 'courier')
         $('#'+idHashHtmlElement+'-sharedPool').append(hash.getHashStr())
         //$(hashElement).append(lastAddedHash.getHashStr())[0].outerHTML)                
     }

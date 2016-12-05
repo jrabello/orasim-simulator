@@ -15,7 +15,7 @@ export class RedoLogBuffer {
     private size: number
 
     constructor() {
-        this.size = 8
+        this.size = 6
         this.dataBlockRedoList = new Array<DataBlockRedo>()
         this.element = $("#redo-log-buffer")[0]
         this.setToopTip()

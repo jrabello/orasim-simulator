@@ -814,8 +814,8 @@
 	        var _this = _super.call(this) || this;
 	        var sqlId = _this.genSqlId(data);
 	        // se sqlid tiver tamanho <= 13 nao aparece direito na shared pool
-	        while (sqlId.length <= 13)
-	            sqlId += ' ';
+	        // while (sqlId.length <= 13)
+	        //     sqlId += ' '
 	        _super.prototype.setHashStr.call(_this, sqlId);
 	        _super.prototype.setHash.call(_this, new crc32_1.Crc32(sqlId).getHash());
 	        return _this;
@@ -1927,8 +1927,8 @@
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 5:
 	                        _a.sent();
-	                        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 15000);
-	                        return [4 /*yield*/, new delay_1.Delay(15000).sleep()];
+	                        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 5000);
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
 	                    case 6:
 	                        _a.sent();
 	                        // animacao gravando dados no dbBufferCache
@@ -3108,6 +3108,7 @@
 	        $(hashElement).attr('id', idHashHtmlElement + '-sharedPool');
 	        //hash.setColor('#' + hash.getHash())
 	        $('#' + idHashHtmlElement + '-sharedPool').css('color', hash.getColor());
+	        $('#' + idHashHtmlElement + '-sharedPool').css('font-family', 'courier');
 	        $('#' + idHashHtmlElement + '-sharedPool').append(hash.getHashStr());
 	        //$(hashElement).append(lastAddedHash.getHashStr())[0].outerHTML)                
 	    };
@@ -14622,7 +14623,7 @@
 	 */
 	var RedoLogBuffer = (function () {
 	    function RedoLogBuffer() {
-	        this.size = 8;
+	        this.size = 6;
 	        this.dataBlockRedoList = new Array();
 	        this.element = $("#redo-log-buffer")[0];
 	        this.setToopTip();
