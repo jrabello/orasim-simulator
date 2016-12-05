@@ -5,6 +5,7 @@ import { Lgwr } from '../oracle-instance/lgwr'
 import { DataBlock } from '../oracle-database/data.block'
 import { Delay } from '../time/delay'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
+import { SqlConsoleMsgWarning } from '../sql-console/sql.console.msg.warning'
 
 export class AnimationCommit extends Animation {
     private animationTime: number
@@ -29,9 +30,10 @@ export class AnimationCommit extends Animation {
  
         //pegando dirty blocks from redoLogBuffer
         let blocks = lgwr.getDirtyBlocksFromRedoLogBuffer()
+
         //enviando blocks para redo.log.files
         await lgwr.sendBlocksToRedoLogFiles(blocks)
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
         Orasim.getAnimation().setAnimating(false)
     }
-
 }

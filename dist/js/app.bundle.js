@@ -1525,22 +1525,28 @@
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 4:
 	                        _a.sent();
-	                        return [4 /*yield*/, _super.prototype.animateSendBlockTo.call(this, '#db-buffer-cache', hash, 5000)];
+	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#db-buffer-cache', 5000)];
 	                    case 5:
 	                        _a.sent();
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                        return [4 /*yield*/, _super.prototype.animateSendBlockTo.call(this, '#db-buffer-cache', hash, 5000)];
 	                    case 6:
+	                        _a.sent();
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 7:
 	                        _a.sent();
 	                        //escrevendo no redo-log-files
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 7:
-	                        _a.sent();
-	                        return [4 /*yield*/, _super.prototype.animateSendBlockTo.call(this, '#redo-log-buffer', hash, 5000)];
 	                    case 8:
 	                        _a.sent();
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#redo-log-buffer', 5000)];
 	                    case 9:
+	                        _a.sent();
+	                        return [4 /*yield*/, _super.prototype.animateSendBlockTo.call(this, '#redo-log-buffer', hash, 5000)];
+	                    case 10:
+	                        _a.sent();
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 11:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
@@ -2266,6 +2272,7 @@
 	var animation_1 = __webpack_require__(4);
 	var delay_1 = __webpack_require__(5);
 	var sql_console_msg_info_1 = __webpack_require__(9);
+	var sql_console_msg_warning_1 = __webpack_require__(21);
 	var AnimationCommit = (function (_super) {
 	    __extends(AnimationCommit, _super);
 	    function AnimationCommit() {
@@ -2301,6 +2308,7 @@
 	                    case 4:
 	                        //enviando blocks para redo.log.files
 	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        Orasim.getAnimation().setAnimating(false);
 	                        return [2 /*return*/];
 	                }

@@ -39,13 +39,15 @@ export class ServerProcessInsert extends ServerProcess{
 
         //escrevendo no dbBufferCache
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>DB_BufferCache</span>"))
-        await new Delay(3000).sleep()        
+        await new Delay(3000).sleep()
+        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)        
         await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
         await new Delay(3000).sleep()
 
         //escrevendo no redo-log-files
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"))
         await new Delay(3000).sleep()         
+        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#redo-log-buffer', 5000)
         await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
         await new Delay(3000).sleep()        
     }
