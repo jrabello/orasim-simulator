@@ -34,21 +34,23 @@ export class ServerProcessInsert extends ServerProcess{
         $("#server-process").removeClass("time-clock")        
         await super.animSearchSharedPool(5000)        
         sharedPool.animateAddHash(hash)
-        let memLocationArr = sharedPool.getMemoryLocation(hash)
+        //let memLocationArr = sharedPool.getMemoryLocation(hash)
         await new Delay(3000).sleep()
 
         //escrevendo no dbBufferCache
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>DB_BufferCache</span>"))
         await new Delay(3000).sleep()
-        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)        
-        await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
+        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)                
+        //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
+        await super.animStoreBlocksInDbBufferCache(hash, 5000)        
         await new Delay(3000).sleep()
 
         //escrevendo no redo-log-files
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"))
         await new Delay(3000).sleep()         
         await Orasim.getAnimation().animBlinkTwoElements('#server-process','#redo-log-buffer', 5000)
-        await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
-        await new Delay(3000).sleep()        
+        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
+        await super.animStoreBlocksInRedoLogBuffer(hash, 10000)
+        await new Delay(1000).sleep()        
     }
 }

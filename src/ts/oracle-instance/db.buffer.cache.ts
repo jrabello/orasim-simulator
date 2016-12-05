@@ -101,6 +101,7 @@ export class DbBufferCache {
 
     setMemoryLocationUsedWithHash(memLocationArr: number[], hash: Hash){
         this.setMemoryLocationUsed(memLocationArr)
+        //setting hash color
         for(let memLocation of memLocationArr){            
             this.blocks[memLocation].setColor(hash.getColor())
         }

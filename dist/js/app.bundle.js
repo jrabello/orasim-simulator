@@ -1226,8 +1226,8 @@
 	    __extends(AnimationConnect, _super);
 	    function AnimationConnect() {
 	        var _this = _super.call(this) || this;
-	        _this.animUserProcessDelay = _super.prototype.getDelay.call(_this) * 3;
-	        _this.animListenerProcessDelay = _super.prototype.getDelay.call(_this) * 3;
+	        _this.animUserProcessDelay = _super.prototype.getDelay.call(_this) * 0.1;
+	        _this.animListenerProcessDelay = _super.prototype.getDelay.call(_this) * 0.1;
 	        return _this;
 	    }
 	    /**
@@ -1421,7 +1421,7 @@
 	                        serverProcess = Orasim.getServerProcess();
 	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
 	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
-	                        return [4 /*yield*/, userProcess.animateSendDataToServerProcessAsync(10000, "INSERT")];
+	                        return [4 /*yield*/, userProcess.animateSendDataToServerProcessAsync(5000, "INSERT")];
 	                    case 1:
 	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
 	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
@@ -1497,7 +1497,7 @@
 	    }
 	    ServerProcessInsert.prototype.animateInsert = function (hash) {
 	        return __awaiter(this, void 0, void 0, function () {
-	            var sharedPool, memLocationArr;
+	            var sharedPool;
 	            return __generator(this, function (_a) {
 	                switch (_a.label) {
 	                    case 0:
@@ -1516,9 +1516,10 @@
 	                    case 2:
 	                        _a.sent();
 	                        sharedPool.animateAddHash(hash);
-	                        memLocationArr = sharedPool.getMemoryLocation(hash);
+	                        //let memLocationArr = sharedPool.getMemoryLocation(hash)
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 3:
+	                        //let memLocationArr = sharedPool.getMemoryLocation(hash)
 	                        _a.sent();
 	                        //escrevendo no dbBufferCache
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>DB_BufferCache</span>"));
@@ -1528,8 +1529,10 @@
 	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#db-buffer-cache', 5000)];
 	                    case 5:
 	                        _a.sent();
-	                        return [4 /*yield*/, _super.prototype.animateSendBlockTo.call(this, '#db-buffer-cache', hash, 5000)];
+	                        //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
+	                        return [4 /*yield*/, _super.prototype.animStoreBlocksInDbBufferCache.call(this, hash, 5000)];
 	                    case 6:
+	                        //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
 	                        _a.sent();
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 7:
@@ -1542,10 +1545,12 @@
 	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#redo-log-buffer', 5000)];
 	                    case 9:
 	                        _a.sent();
-	                        return [4 /*yield*/, _super.prototype.animateSendBlockTo.call(this, '#redo-log-buffer', hash, 5000)];
+	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
+	                        return [4 /*yield*/, _super.prototype.animStoreBlocksInRedoLogBuffer.call(this, hash, 10000)];
 	                    case 10:
+	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
 	                        _a.sent();
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                        return [4 /*yield*/, new delay_1.Delay(1000).sleep()];
 	                    case 11:
 	                        _a.sent();
 	                        return [2 /*return*/];
@@ -1713,6 +1718,95 @@
 	        }
 	        return blockHtmlArr;
 	    };
+	    ServerProcess.prototype.createNewBlocks = function (numBlocks, color) {
+	        var blockHtmlArr = new Array();
+	        for (var i = 0; i < numBlocks; i++) {
+	            var block = this.createNewBlock();
+	            block.setColor(color);
+	            blockHtmlArr.push(block);
+	        }
+	        return blockHtmlArr;
+	    };
+	    /**
+	     * animStoreBlockInDbBufferCache
+	     * a diferenca desse metodo para o definido abaixo,
+	     * eh que esse gera os blocks html dentro do proprio metodo
+	     */
+	    ServerProcess.prototype.animStoreBlocksInDbBufferCache = function (hash, delay) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var sharedPool, memLocationArr, dbBufferCache, blockHtmlArr, j, _loop_1, _i, blockHtmlArr_1, block;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	                        memLocationArr = sharedPool.getMemoryLocation(hash);
+	                        dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	                        blockHtmlArr = this.createNewBlocks(memLocationArr.length, hash.getColor());
+	                        j = 0;
+	                        _loop_1 = function (block) {
+	                            // console.log(dbBufferCache.getBlocks()[memLocationArr[j]].getElement())
+	                            // console.log(dbBufferCache.getBlocks(), memLocationArr[j])            
+	                            // console.log(block)            
+	                            Orasim.getAnimation().moveTo(block.getElement(), dbBufferCache.getBlocks()[memLocationArr[j]].getElement(), delay, delay / 6, function () {
+	                                // no inicio da animacao piscar server-process e db-buffer-cache                
+	                                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
+	                            }, function () {
+	                                dbBufferCache.setMemoryLocationUsedWithHash(memLocationArr, hash);
+	                                $(block.getElement()).remove();
+	                            });
+	                            j++;
+	                        };
+	                        for (_i = 0, blockHtmlArr_1 = blockHtmlArr; _i < blockHtmlArr_1.length; _i++) {
+	                            block = blockHtmlArr_1[_i];
+	                            _loop_1(block);
+	                        }
+	                        return [4 /*yield*/, new delay_1.Delay(delay).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
+	    ServerProcess.prototype.animStoreBlocksInRedoLogBuffer = function (hash, delay) {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var sharedPool, redoLogBuffer, memLocationArr, blockHtmlArr, animCounter, animDelay, _loop_2, _i, blockHtmlArr_2, block;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	                        redoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer();
+	                        memLocationArr = sharedPool.getMemoryLocation(hash);
+	                        blockHtmlArr = this.createNewBlocks(memLocationArr.length, hash.getColor());
+	                        animCounter = 0;
+	                        animDelay = 0;
+	                        _loop_2 = function (block) {
+	                            // console.log(dbBufferCache.getBlocks()[memLocationArr[j]].getElement())
+	                            // console.log(dbBufferCache.getBlocks(), memLocationArr[j])            
+	                            // console.log(block)            
+	                            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), delay - (delay * (animDelay)), delay / 6, function () {
+	                                // no inicio da animacao piscar server-process e db-buffer-cache                
+	                                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
+	                            }, function () {
+	                                // depois da animacao completa marcando o bloco como utilizado                
+	                                $(block.getElement()).remove();
+	                                if (++animCounter == blockHtmlArr.length)
+	                                    redoLogBuffer.setMemoryLocationUsed(hash);
+	                            });
+	                            animDelay += 0.05;
+	                        };
+	                        for (_i = 0, blockHtmlArr_2 = blockHtmlArr; _i < blockHtmlArr_2.length; _i++) {
+	                            block = blockHtmlArr_2[_i];
+	                            _loop_2(block);
+	                        }
+	                        return [4 /*yield*/, new delay_1.Delay(delay).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
 	    /**
 	     * animateStoreBlockInDbBufferCache
 	     * Metodo responsavel por animar o bloco sendo salvo no db-buffer-cache
@@ -1725,8 +1819,7 @@
 	        var i = 0;
 	        var animCounterAftr = 0;
 	        var animCounterBef = 0;
-	        for (var _i = 0, blockHtmlArr_1 = blockHtmlArr; _i < blockHtmlArr_1.length; _i++) {
-	            var blockHtml = blockHtmlArr_1[_i];
+	        var _loop_3 = function (blockHtml) {
 	            Orasim.getAnimation().moveTo(blockHtml, dbBufferCache.getBlocks()[memLocationArr[i]].getElement(), delay, delay / 6, function () {
 	                // no inicio da animacao piscar server-process e db-buffer-cache
 	                if (animCounterBef++ == 0) {
@@ -1738,8 +1831,13 @@
 	                // depois da animacao completa marcando o bloco como utilizado
 	                if (++animCounterAftr == blockHtmlArr.length)
 	                    dbBufferCache.setMemoryLocationUsedWithHash(memLocationArr, hash);
+	                $(blockHtml).remove();
 	            });
 	            i++;
+	        };
+	        for (var _i = 0, blockHtmlArr_3 = blockHtmlArr; _i < blockHtmlArr_3.length; _i++) {
+	            var blockHtml = blockHtmlArr_3[_i];
+	            _loop_3(blockHtml);
 	        }
 	    };
 	    /**
@@ -1755,7 +1853,7 @@
 	    ServerProcess.prototype.animateGetNewBlockFromDbBufferCache = function (dbBufferCache, memLocationArr, delay) {
 	        var animCounter = 0;
 	        var blockHtmlArr = [];
-	        var _loop_1 = function (memLocation) {
+	        var _loop_4 = function (memLocation) {
 	            var blockHtml = dbBufferCache.getNewBlockHtmlAt(memLocation);
 	            blockHtmlArr.push(blockHtml);
 	            Orasim.getAnimation().moveTo(blockHtml, this_1.getElement(), delay, 0, function () {
@@ -1773,7 +1871,7 @@
 	        //iterating memory locations        
 	        for (var _i = 0, memLocationArr_2 = memLocationArr; _i < memLocationArr_2.length; _i++) {
 	            var memLocation = memLocationArr_2[_i];
-	            _loop_1(memLocation);
+	            _loop_4(memLocation);
 	        }
 	        return blockHtmlArr;
 	    };
@@ -1787,7 +1885,7 @@
 	     */
 	    ServerProcess.prototype.animateGetBlockFromDbBufferCache = function (blockHtmlArr, dbBufferCache, delay) {
 	        var animCounter = 0;
-	        var _loop_2 = function (blockHtml) {
+	        var _loop_5 = function (blockHtml) {
 	            Orasim.getAnimation().moveTo(blockHtml, this_2.getElement(), delay, 0, function () {
 	                if (animCounter++ == 0) {
 	                    $('#server-process').repeat().fadeTo(delay / 2, 0.1).fadeTo(delay / 2, 1).until(1);
@@ -1800,9 +1898,9 @@
 	            });
 	        };
 	        var this_2 = this;
-	        for (var _i = 0, blockHtmlArr_2 = blockHtmlArr; _i < blockHtmlArr_2.length; _i++) {
-	            var blockHtml = blockHtmlArr_2[_i];
-	            _loop_2(blockHtml);
+	        for (var _i = 0, blockHtmlArr_4 = blockHtmlArr; _i < blockHtmlArr_4.length; _i++) {
+	            var blockHtml = blockHtmlArr_4[_i];
+	            _loop_5(blockHtml);
 	        }
 	    };
 	    /**
@@ -1815,8 +1913,8 @@
 	    ServerProcess.prototype.animateSendBlockToUserProcess = function (blockHtmlArr, userProcess, delay) {
 	        var animCounterAftr = 0;
 	        var animCounterBfr = 0;
-	        for (var _i = 0, blockHtmlArr_3 = blockHtmlArr; _i < blockHtmlArr_3.length; _i++) {
-	            var blockHtml = blockHtmlArr_3[_i];
+	        for (var _i = 0, blockHtmlArr_5 = blockHtmlArr; _i < blockHtmlArr_5.length; _i++) {
+	            var blockHtml = blockHtmlArr_5[_i];
 	            Orasim.getAnimation().moveTo(blockHtml, userProcess.getElement(), delay, 0, function () {
 	                if (animCounterBfr++ == 0) {
 	                    //no inicio da animacao, piscar user-process e server-process     
@@ -3085,6 +3183,7 @@
 	    };
 	    DbBufferCache.prototype.setMemoryLocationUsedWithHash = function (memLocationArr, hash) {
 	        this.setMemoryLocationUsed(memLocationArr);
+	        //setting hash color
 	        for (var _i = 0, memLocationArr_2 = memLocationArr; _i < memLocationArr_2.length; _i++) {
 	            var memLocation = memLocationArr_2[_i];
 	            this.blocks[memLocation].setColor(hash.getColor());
@@ -14730,15 +14829,34 @@
 	        $(newBlock.getElement()).css("z-index", 100);
 	        return newBlock;
 	    };
-	    RedoLogBuffer.prototype.setMemoryLocationUsed = function (hash) {
+	    RedoLogBuffer.prototype.getFirstCleanBlock = function () {
 	        for (var _i = 0, _a = this.dataBlockRedoList; _i < _a.length; _i++) {
 	            var block = _a[_i];
-	            if (!block.used()) {
+	            if (!block.used())
+	                return block;
+	        }
+	    };
+	    RedoLogBuffer.prototype.setMemoryLocationUsed = function (hash) {
+	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	        var lgwr = Orasim.getOracleInstance().getLgwr();
+	        var memLocationArr = sharedPool.getMemoryLocation(hash);
+	        if (lgwr.hasRedoBufferBlockArr(hash))
+	            return;
+	        //verificando quais blocks nao estao sendo utilizados e adicionando os mesmos no log writer
+	        var i = 0;
+	        var numDirtyBlocks = memLocationArr.length;
+	        var blockIndexArr = new Array();
+	        for (var _i = 0, _a = this.dataBlockRedoList; _i < _a.length; _i++) {
+	            var block = _a[_i];
+	            if (!block.used() && numDirtyBlocks) {
 	                block.setUsed(true);
 	                block.setColor(hash.getColor());
-	                break;
+	                numDirtyBlocks -= 3;
+	                blockIndexArr.push(i);
 	            }
+	            i++;
 	        }
+	        lgwr.addRedoBufferBlockArr(hash, blockIndexArr);
 	    };
 	    RedoLogBuffer.prototype.setToopTip = function () {
 	        // criando tooltip para o RedoLogBuffer
@@ -14886,10 +15004,19 @@
 	var tooltip_1 = __webpack_require__(20);
 	var Lgwr = (function () {
 	    function Lgwr() {
-	        this.element = $('#lgwr')[0];
 	        //tooltip do pmon
+	        this.element = $('#lgwr')[0];
 	        new tooltip_1.Tooltip("#lgwr", "Log Writer (LGWR)", "Olá, eu sou o LGWR!");
+	        this.redoBufferBlocksMap = new std.HashMap();
+	        this.redoDataFIlesMap = new std.HashMap();
+	        //this.redoBufferBlocks.has(123)
 	    }
+	    Lgwr.prototype.hasRedoBufferBlockArr = function (hash) {
+	        return this.redoBufferBlocksMap.has(hash.getHash());
+	    };
+	    Lgwr.prototype.addRedoBufferBlockArr = function (hash, indexBlocksArr) {
+	        this.redoBufferBlocksMap.insert(std.make_pair(hash.getHash(), indexBlocksArr));
+	    };
 	    //counting number of blocks used
 	    //apagando status dos blocks do redo-log-buffer
 	    //criando numero de blocks dirty dentro de redo-log-buffer para usar na animacao

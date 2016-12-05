@@ -1,17 +1,32 @@
+import { Hash } from '../crypt/hash'
 import { Delay } from '../time/delay'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlock } from '../oracle-database/data.block'
 import { RedoLogBuffer } from '../oracle-instance/redo.log.buffer'
 import { UserProcess } from '../process/user.process'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
+ 
 
 export class Lgwr {
     private element: HTMLElement
+    private redoBufferBlocksMap: std.HashMap<number, number[]>
+    private redoDataFIlesMap: std.HashMap<number, number[]>
 
     constructor() {
-        this.element = $('#lgwr')[0]
         //tooltip do pmon
+        this.element = $('#lgwr')[0]        
         new Tooltip("#lgwr", "Log Writer (LGWR)", "Olá, eu sou o LGWR!")
+        this.redoBufferBlocksMap = new std.HashMap<number, number[]>()
+        this.redoDataFIlesMap = new std.HashMap<number, number[]>()
+        //this.redoBufferBlocks.has(123)
+    }
+
+    hasRedoBufferBlockArr(hash: Hash): boolean{
+        return this.redoBufferBlocksMap.has(hash.getHash())
+    }
+
+    addRedoBufferBlockArr(hash: Hash, indexBlocksArr: number[]): void{
+        this.redoBufferBlocksMap.insert(std.make_pair(hash.getHash(), indexBlocksArr))
     }
 
     //counting number of blocks used
