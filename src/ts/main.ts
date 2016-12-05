@@ -6,6 +6,7 @@ import { ListenerProcess } from './process/listener.process'
 import { Animation } from './animation/animation'
 import { OracleDatabase } from './oracle-database/oracle.database'
 import { OracleInstance } from './oracle-instance/oracle.instance'
+import {Delay} from './time/delay'
 
 /** 
  * Main
@@ -32,6 +33,17 @@ class Main {
         this.animation = new Animation()
         this.oracleInstance = new OracleInstance()
         this.oracleDatabase = new OracleDatabase()
+        //this.someDelay()    
+    }
+
+    async someDelay(){
+        console.log('lol')
+        await new Delay(5000).sleep();
+        for (let i = 0; i < 3; i++) {            
+            console.log(".");
+            await new Delay(1000).sleep();
+        }
+        console.log('lal')
     }
 
     getSqlButtons(): SqlButtons{

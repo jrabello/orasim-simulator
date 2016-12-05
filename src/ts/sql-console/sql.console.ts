@@ -56,14 +56,13 @@ export class SqlConsole {
         }
     }*/
 
-
-
     /**
      *  addMsg
      *  Responsável por adicionar mensagens no console
      *  @param   {msg}     Mensagem a ser adicionada no console      
      */
-    addMsg(msg: SqlConsoleMessage): void {
+    addMsg(msg: SqlConsoleMessage): void {        
         $("#console-msg-list-container").append(msg.getMsg())
+        $("#console").scrollTop(1000);
     }
 }

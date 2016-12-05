@@ -1,3 +1,4 @@
+import { Delay } from '../time/delay'
 import { Tooltip } from '../utils/tooltip'
 import { Arrow } from '../animation/arrow'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
@@ -12,10 +13,10 @@ export class UserProcess {
 
     constructor() {
         this.element = $("#user-process")[0]
-        
+
         // criando tooltip para o UserProcess
-        let tooltip = new Tooltip("#user-process", "User Process", 
-        `
+        let tooltip = new Tooltip("#user-process", "User Process",
+            `
         <p align="justify">
 
         Quando um usuário executa uma aplicação, como por exemplo o SQL*Plus, o sistema operacional cria um processo cliente (User Process) para executar a aplicação do usuário.
@@ -43,8 +44,8 @@ export class UserProcess {
      * @param {delay} duracao da animacao
      * @returns uma promise retornada logo apos o tempo de animacao
      */
-    createUserProcess(delay: number): Promise < number > {
-        return new Promise < number > ((resolve, reject) => {
+    createUserProcess(delay: number): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Criando <span style="font-weight: bold">UserProcess</span>'))
             $("#user").fadeTo(delay * 0.4, 0.1, () => {
                 $("#user").fadeTo(delay * 0.4, 1, () => {
@@ -64,11 +65,11 @@ export class UserProcess {
      * @param {nameComando} nome do comando que sera enviado para server process
      * @returns uma promise retornada logo apos o tempo de animacao
      */
-    animateSendDataToServerProcess(delay: number, nameComando: string): Promise < number > {
-        return new Promise < number > ((resolve, reject) => {
-            $("#user-process").fadeTo(delay * 0.25, 0.1, () => {              
+    animateSendDataToServerProcess(delay: number, nameComando: string): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Enviando comando <span style='font-weight: bold'>" + nameComando + "</span> para o <span style='font-weight: bold'>ServerProcess</span>"))
+            $("#user-process").fadeTo(delay * 0.25, 0.1, () => {
                 $("#user-process").fadeTo(delay * 0.25, 1, () => {
-                    Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Enviando comando <span style='font-weight: bold'>" + nameComando + "</span> para o <span style='font-weight: bold'>ServerProcess</span>"))
                     $("#connection-arrow").fadeTo(delay * 0.25, 0.1, () => {
                         $("#connection-arrow").fadeTo(delay * 0.25, 1)
                     })
@@ -80,14 +81,34 @@ export class UserProcess {
         })
     }
 
+    async animateSendDataToServerProcessAsync(delay: number, nameComando: string) {
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Enviando comando <span style='font-weight: bold'>" + nameComando + "</span> para o <span style='font-weight: bold'>ServerProcess</span>"))
+
+        $("#user-process").fadeTo(delay * 0.166, 0.1, () => {
+            $("#user-process").fadeTo(delay * 0.166, 1, () => {
+                $("#connection-arrow").fadeTo(delay * 0.166, 0.1, () => {
+                    $("#connection-arrow").fadeTo(delay * 0.166, 1, () => {
+                        $("#server-process").fadeTo(delay * 0.166, 0.1, () => {
+                            $("#server-process").fadeTo(delay * 0.166, 1, () => {
+
+                            })
+                        })
+                    })
+                })
+            })
+        })
+        
+        await new Delay(delay).sleep()
+    }
+
     /**
      * animateSendDataToListener
      * Metodo responsavel por animar o envio de dados ao listener     
      * @param {delay} duracao da animacao
      * @returns uma promise retornada logo apos o tempo de animacao
      */
-    animateSendDataToListener(delay: number): Promise < number > {
-        return new Promise < number > ((resolve, reject) => {
+    animateSendDataToListener(delay: number): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Solicitando conexão com o <span style='font-weight: bold'>DB</span> através do <span style='font-weight: bold'>Listener</span>"))
             $("#user-process").fadeTo(delay * 0.25, 0.1, () => {
                 $("#user-process").fadeTo(delay * 0.25, 1, () => {

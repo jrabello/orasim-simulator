@@ -19,16 +19,15 @@ export class SqlButtonSelect{
             return
                             
         //gerando o mesmo hash(crc do 'select') para todos os clicks
+        let hashFound = false
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let query = 'select'            
-        //let hash: Hash = new Crc32(query)
-        let hash: Hash = new SqlId(query)                
-        let isHashFound = sharedPool.findHash(hash)
-                
-        // caso o hash nao seja encontrado, adicione na shared-pool 
-        if(!isHashFound)
-            sharedPool.addHash(hash)               
-
-        new AnimationSelect(isHashFound).start()
+        let hash: Hash = new SqlId(query)
+        //tentando encontrar hash na shared pool
+        if(sharedPool.findHash(hash))
+            hashFound = true
+        //adicionando na shared pool, caso nao encontrado
+        sharedPool.addHash(hash)        
+        new AnimationSelect(hash, hashFound).start()
     }
 }

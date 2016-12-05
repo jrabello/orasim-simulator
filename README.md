@@ -1,6 +1,5 @@
-# Agora Vai!!!
-# sgbd-emulator
-Oracle SGBD Emulator
+# sgbd-simulator
+Oracle SGBD Simulator
 
 ## Instalação
 Dependências: (Vscode, Nodejs 6.x.x e Npm 3.x.x)

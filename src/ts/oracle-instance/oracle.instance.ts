@@ -29,4 +29,8 @@ export class OracleInstance{
     getSga(){
         return this.sga
     }
+
+    getLgwr(){
+        return this.lgwr
+    }
 }

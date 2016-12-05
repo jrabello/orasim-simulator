@@ -23,6 +23,10 @@
 				<a class="btnCommands displayNone" id="btnInsert" href="#">INSERT</a>
 				<a class="btnCommands displayNone" id="btnUpdate" href="#">UPDATE</a>
 				<a class="btnCommands displayNone" id="btnDelete" href="#">DELETE</a>
+				<br>
+				<a class="btnCommands displayNone" id="btnRollback" href="#">ROLLBACK</a>
+				<a class="btnCommands displayNone" id="btnCommit" href="#">COMMIT</a>
+		
        		</div>
 
 			<div id="console" class="console-view" disabled="disabled">
@@ -71,6 +75,9 @@
 
 						<li id="shared-pool" class="green-bg">
 							<p class="content-title-sga-blocks cursorHand">Shared Pool</p>
+							<p style="font-family: courier; color: white; font-weight: bold; font-size: 0.74em;padding-bottom: 5px;float: left;padding-left: 5px;">
+								SQL_ID:&nbsp;
+							</p>
 							<ul id="hash-ul-container">
 							</ul>
 						</li>
@@ -87,11 +94,11 @@
 							<p class="content-title-sga-blocks cursorHand">Redo Log Buffer</p>
 
 							<div id="cache-container">
-								<div class="buffer-box"></div>
+								<!--<div class="buffer-box"></div>
 								<div class="buffer-box"></div>
 
 								<div class="buffer-box"></div>
-								<div class="buffer-box"></div>
+								<div class="buffer-box"></div>-->
 								
 							</div>
 						</li>
@@ -193,12 +200,11 @@
 
 	<!-- <footer class="footer-page">© TCC UAM 2016</footer> -->
 	<!-- includes -->
-
 	
 	<script src="js/third-party/jquery-3.1.min.js"></script>
 	<script src="js/third-party/jquery-timing.min.js"></script>
 	<script src="js/third-party/jquery.qtip.js"></script>	
-	<script src="js/third-party/sql-parser.min.js"></script>
+	<script src="js/third-party/typescript-stl.js"></script>	
 	<script type="text/javascript" src="js/app.bundle.js"></script>
 
 </body>

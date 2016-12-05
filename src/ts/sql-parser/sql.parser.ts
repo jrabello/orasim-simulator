@@ -54,7 +54,7 @@ export class SqlParser{
                     sharedPool.addHash(hash)               
                 
                 this.isParsedSuccess = true
-                return new AnimationSelect(isHashFound)
+                return new AnimationSelect(hash, isHashFound)
                 
             case "insert":
                 console.log('insert')

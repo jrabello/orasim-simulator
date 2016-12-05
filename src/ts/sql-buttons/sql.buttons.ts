@@ -1,16 +1,29 @@
 import { SqlButtonSelect } from './sql.button.select'
 import { SqlButtonConnect } from './sql.button.connect'
+import { SqlButtonInsert } from './sql.button.insert'
+import { SqlButtonCommit } from './sql.button.commit'
 import { AnimationConnect } from '../animation/animation.connect'
 
 export class SqlButtons {
     private sqlButtonSelect: SqlButtonSelect
-    private sqlButtonConnect: SqlButtonConnect 
+    private sqlButtonConnect: SqlButtonConnect
+    private sqlButtonInsert: SqlButtonInsert 
+    private sqlButtonCommit: SqlButtonCommit
 
     constructor() {        
-        //criando instancia de button select
-        //criando instancia de button connect
+        //criando instancia de button select, insert, connect        
         this.sqlButtonSelect = new SqlButtonSelect()
         this.sqlButtonConnect = new SqlButtonConnect()
+        this.sqlButtonInsert = new SqlButtonInsert()
+        this.sqlButtonCommit = new SqlButtonCommit()
+    }
+
+    getButtonCommit(): SqlButtonCommit{
+        return this.sqlButtonCommit
+    }
+
+    getButtonInsert(): SqlButtonInsert{
+        return this.sqlButtonInsert
     }
 
     getButtonConnect(): SqlButtonConnect{

@@ -41,6 +41,16 @@ export class Hash implements IHashable{
 
     setHash(hash: number){
         this.hash = hash
+        let formattedHash = hash
+        //cortando alguns niveis de verde com bit shifting :p
+        formattedHash &= ~(0x01 << 15)>>>0
+        formattedHash &= ~(0x01 << 14)>>>0
+        formattedHash &= ~(0x01 << 13)>>>0
+        formattedHash &= ~(0x01 << 12)>>>0
+        let hashWithLessGreen = ("000000" + formattedHash.toString(16)).substr(-6);
+        console.log('hashWithLessGreen',hashWithLessGreen)
+        this.color = '#' + hashWithLessGreen 
+        console.log(this.color)
     }
 
     getHash(): number{
