@@ -24,5 +24,4 @@ export class AnimationCommit extends Animation {
         Orasim.getAnimation().setAnimating(false)
     }
 
-
 }

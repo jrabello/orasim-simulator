@@ -42,7 +42,7 @@ export class Lgwr {
         //enviando commit
         await userProcess.animateSendDataToServerProcessAsync(10000, "COMMIT")
         //anima-los para log-writer
-        await this.animGetBlocksFromRedoLogBuffer(blocks, 10000)
+        await this.animGetBlocksFromRedoLogBuffer(blocks, 5000)
         //uma vez no log-writer precisamos envia-los ao redo-log-files
         await this.animSendBlocksToRedoLogFiles(blocks, 10000)        
     }

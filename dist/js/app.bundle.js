@@ -1148,8 +1148,8 @@
 	    __extends(AnimationConnect, _super);
 	    function AnimationConnect() {
 	        var _this = _super.call(this) || this;
-	        _this.animUserProcessDelay = _super.prototype.getDelay.call(_this) * 1;
-	        _this.animListenerProcessDelay = _super.prototype.getDelay.call(_this) * 1;
+	        _this.animUserProcessDelay = _super.prototype.getDelay.call(_this) * 3;
+	        _this.animListenerProcessDelay = _super.prototype.getDelay.call(_this) * 3;
 	        return _this;
 	    }
 	    /**
@@ -14842,7 +14842,7 @@
 	                        //enviando commit
 	                        _a.sent();
 	                        //anima-los para log-writer
-	                        return [4 /*yield*/, this.animGetBlocksFromRedoLogBuffer(blocks, 10000)];
+	                        return [4 /*yield*/, this.animGetBlocksFromRedoLogBuffer(blocks, 5000)];
 	                    case 2:
 	                        //anima-los para log-writer
 	                        _a.sent();
