@@ -6,6 +6,9 @@ export class SqlId extends Hash {
     constructor(data: string) {
         super()        
         let sqlId: string = this.genSqlId(data)
+        // se sqlid tiver tamanho <= 13 nao aparece direito na shared pool
+        while (sqlId.length <= 13)
+            sqlId += ' '
         super.setHashStr(sqlId)
         super.setHash(new Crc32(sqlId).getHash())        
     }

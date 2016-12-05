@@ -1,3 +1,4 @@
+import { Delay } from '../time/delay'
 import { Tooltip } from '../utils/tooltip'
 import { Arrow } from '../animation/arrow'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
@@ -78,6 +79,26 @@ export class UserProcess {
                 resolve(0)
             }, delay)
         })
+    }
+
+    async animateSendDataToServerProcessAsync(delay: number, nameComando: string) {
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Enviando comando <span style='font-weight: bold'>" + nameComando + "</span> para o <span style='font-weight: bold'>ServerProcess</span>"))
+
+        $("#user-process").fadeTo(delay * 0.166, 0.1, () => {
+            $("#user-process").fadeTo(delay * 0.166, 1, () => {
+                $("#connection-arrow").fadeTo(delay * 0.166, 0.1, () => {
+                    $("#connection-arrow").fadeTo(delay * 0.166, 1, () => {
+                        $("#server-process").fadeTo(delay * 0.166, 0.1, () => {
+                            $("#server-process").fadeTo(delay * 0.166, 1, () => {
+
+                            })
+                        })
+                    })
+                })
+            })
+        })
+        
+        await new Delay(delay).sleep()
     }
 
     /**

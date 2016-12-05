@@ -128,7 +128,7 @@ export class ServerProcess {
             }
         })
 
-        new Delay(delay).sleep()        
+        await new Delay(delay).sleep()        
     }
 
     /**
@@ -324,7 +324,8 @@ export class ServerProcess {
         } else {
             await this.animateHashNotFound(hash)
         }
-
+        
+        //animacoes que acontecem em ambos os casos
         //pegando dados do buffer cache
         await serverProcess.animGetDataFromDbBufferCache(5000)        
         //enviando dados para user process

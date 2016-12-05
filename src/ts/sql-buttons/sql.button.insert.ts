@@ -12,7 +12,7 @@ export class SqlButtonInsert{
         })
     }
 
-    handleInsert(): void{
+    async handleInsert(){
         if(Orasim.getAnimation().isAnimating())
             return
 
@@ -26,6 +26,6 @@ export class SqlButtonInsert{
         //adicionando hash na shared pool, caso nao encontrado
         sharedPool.addHash(hash)                       
 
-        new AnimationInsert(hash).start()
+        await new AnimationInsert(hash).start()
     }
 }

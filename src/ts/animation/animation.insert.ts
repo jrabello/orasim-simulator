@@ -1,3 +1,5 @@
+
+import {Delay} from '../time/delay'
 import { Hash } from '../crypt/hash'
 import { Animation } from './animation'
 import { ServerProcess } from '../process/server.process'
@@ -6,6 +8,7 @@ import { UserProcess } from '../process/user.process'
 import { SharedPool } from '../oracle-instance/shared.pool'
 import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
 import { DataBlock } from '../oracle-database/data.block'
+import { SqlConsoleMsgWarning } from '../sql-console/sql.console.msg.warning'
 
 /**
  * AnimationInsert
@@ -33,16 +36,12 @@ export class AnimationInsert extends Animation{
         // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
       
-        userProcess.animateSendDataToServerProcess(this.animationTime, "INSERT")
-        .then((result: number) => { 
-            // return new Promise <number> ((resolve: Function, reject: Function) => {               
-                return new ServerProcessInsert().animateInsert(this.hash)        
-            // })
-         })
-         .then((result: void) => {
-             console.log("insert animating = false")
-             return Orasim.getAnimation().setAnimating(false)
-         })
+        await userProcess.animateSendDataToServerProcessAsync(10000, "INSERT")             
+        await new ServerProcessInsert().animateInsert(this.hash)        
+
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
+        console.log("insert animating = false ", this.animationTime)
+        Orasim.getAnimation().setAnimating(false)       
 
         // .then((result: number) => {
         // })
