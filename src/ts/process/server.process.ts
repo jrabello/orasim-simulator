@@ -36,7 +36,7 @@ export class ServerProcess {
             "top": "275px",
             "width": "40px",
             "color": "green",
-            "border-top": "3px solid lime" 
+            "border-top": "4px solid lime" 
         }).hide().appendTo("#animation-container")
 
         // criando tooltip para o ServerProcess
@@ -273,6 +273,8 @@ export class ServerProcess {
                 })
         }
     }
+
+    
 
     async animSearchSharedPool(delay: number) {
         $('#server-process').repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1)

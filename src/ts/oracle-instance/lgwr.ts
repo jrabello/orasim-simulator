@@ -3,6 +3,7 @@ import { Tooltip } from '../utils/tooltip'
 import { DataBlock } from '../oracle-database/data.block'
 import { RedoLogBuffer } from '../oracle-instance/redo.log.buffer'
 import { UserProcess } from '../process/user.process'
+import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 
 export class Lgwr {
     private element: HTMLElement
@@ -38,13 +39,12 @@ export class Lgwr {
 
     //implementando animacao pegando do redo.log.buffer e enviando blocks para redo-log-files
     async sendBlocksToRedoLogFiles(blocks: DataBlock[]) {       
-        let userProcess: UserProcess = Orasim.getUserProcess()        
-        //enviando commit
-        await userProcess.animateSendDataToServerProcessAsync(10000, "COMMIT")
+        
         //anima-los para log-writer
         await this.animGetBlocksFromRedoLogBuffer(blocks, 5000)
+
         //uma vez no log-writer precisamos envia-los ao redo-log-files
-        await this.animSendBlocksToRedoLogFiles(blocks, 10000)        
+        await this.animSendBlocksToRedoLogFiles(blocks, 5000)        
     }
 
     async animSendBlocksToRedoLogFiles(blocks: DataBlock[], delay: number){
