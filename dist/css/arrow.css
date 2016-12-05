@@ -16,23 +16,23 @@ Estilo do corpo das setas
 .down-arrow, .up-arrow, 
 .left-up-arrow, .left-down-arrow,
 .down-right-arrow, .up-right-arrow {
-  border-left: 2px solid red;
+  border-left: 4px solid red;
 }
 
 .left-arrow, .right-arrow,
 .left-down-arrow, .right-down-arrow,
 .up-left-arrow, .up-right-arrow {
-  border-top: 3px solid red;
+  border-top: 4px solid red;
 }
 
 .left-up-arrow, .right-up-arrow,
 .down-right-arrow, .down-left-arrow {
-  border-bottom: 2px solid red;
+  border-bottom: 4px solid red;
 }
 
 .right-up-arrow, .right-down-arrow,
 .up-left-arrow, .down-left-arrow {
-  border-right: 2px solid red;
+  border-right: 4px solid red;
 }
 
 /*--------------------------------------------------------------------------------

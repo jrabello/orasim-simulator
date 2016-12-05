@@ -10,6 +10,7 @@ import { SqlConsoleMsgError } from '../sql-console/sql.console.msg.error'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 import { ServerProcess } from '../process/server.process'
 import { UserProcess } from '../process/user.process'
+import { Delay } from '../time/delay'
 
 /**
  * Animation
@@ -59,6 +60,17 @@ export class Animation {
      */
     getDelay(): number{
         return this.delay
+    }
+
+    /**
+     * animBlinkTwoElements
+     * Animate blink two elements by html ID
+     */
+    async animBlinkTwoElements(elementOneId: string, elementTwoId: string, delay: number) {
+        $(elementOneId).repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1)
+        await new Delay(delay * 0.50).sleep()
+        $(elementTwoId).repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1)
+        await new Delay(delay * 0.50).sleep()
     }
 
     /**
