@@ -36,13 +36,13 @@ export class AnimationInsert extends Animation{
         // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
       
-        await userProcess.animateSendDataToServerProcessAsync(10000, "INSERT")             
+        await userProcess.animateSendDataToServerProcessAsync(5000, "INSERT")             
         await new ServerProcessInsert().animateInsert(this.hash)        
 
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
         console.log("insert animating = false ", this.animationTime)
         Orasim.getAnimation().setAnimating(false)       
-
+        
         // .then((result: number) => {
         // })
     }

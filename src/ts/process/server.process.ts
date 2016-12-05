@@ -156,6 +156,77 @@ export class ServerProcess {
         return blockHtmlArr
     }
 
+    createNewBlocks(numBlocks: number, color: string): DataBlock[]{
+        let blockHtmlArr = new Array<DataBlock>()
+        for(let i = 0; i < numBlocks; i++){
+            let block = this.createNewBlock()
+            block.setColor(color)
+            blockHtmlArr.push(block)
+        }
+        return blockHtmlArr
+    }
+
+    /**
+     * animStoreBlockInDbBufferCache   
+     * a diferenca desse metodo para o definido abaixo, 
+     * eh que esse gera os blocks html dentro do proprio metodo      
+     */
+    async animStoreBlocksInDbBufferCache(hash: Hash, delay: number) {        
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let memLocationArr = sharedPool.getMemoryLocation(hash)        
+        let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+
+        //generating new blocks
+        let blockHtmlArr = this.createNewBlocks(memLocationArr.length, hash.getColor())
+                
+        //moving blocks 2 dbBufferCache
+        let j = 0
+        for (let block of blockHtmlArr) {
+            // console.log(dbBufferCache.getBlocks()[memLocationArr[j]].getElement())
+            // console.log(dbBufferCache.getBlocks(), memLocationArr[j])            
+            // console.log(block)            
+            Orasim.getAnimation().moveTo(block.getElement(), dbBufferCache.getBlocks()[memLocationArr[j]].getElement(), delay, delay / 6, () => {                
+                // no inicio da animacao piscar server-process e db-buffer-cache                
+                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
+            }, () => {                                // depois da animacao completa marcando o bloco como utilizado                         
+                dbBufferCache.setMemoryLocationUsedWithHash(memLocationArr, hash)
+                $(block.getElement()).remove()
+            })
+            j++            
+        }
+
+        await new Delay(delay).sleep()
+    }
+
+    async animStoreBlocksInRedoLogBuffer(hash: Hash, delay: number) {
+        //generating new blocks
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let redoLogBuffer: RedoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer()
+        let memLocationArr = sharedPool.getMemoryLocation(hash)
+        let blockHtmlArr = this.createNewBlocks(memLocationArr.length, hash.getColor())
+                
+        //moving blocks 2 dbBufferCache
+        let animCounter = 0
+        let animDelay = 0
+        for (let block of blockHtmlArr) {
+            // console.log(dbBufferCache.getBlocks()[memLocationArr[j]].getElement())
+            // console.log(dbBufferCache.getBlocks(), memLocationArr[j])            
+            // console.log(block)            
+            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), 
+            delay-(delay*(animDelay)), delay / 6, () => {                
+                // no inicio da animacao piscar server-process e db-buffer-cache                
+                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
+            }, () => {                                
+                // depois da animacao completa marcando o bloco como utilizado                
+                $(block.getElement()).remove()                
+                if(++animCounter == blockHtmlArr.length)                         
+                    redoLogBuffer.setMemoryLocationUsed(hash)
+                
+            })            
+            animDelay += 0.05      
+        }
+        await new Delay(delay).sleep()
+    }
 
     /**
      * animateStoreBlockInDbBufferCache
@@ -181,6 +252,7 @@ export class ServerProcess {
                 // depois da animacao completa marcando o bloco como utilizado
                 if (++animCounterAftr == blockHtmlArr.length)
                     dbBufferCache.setMemoryLocationUsedWithHash(memLocationArr, hash)
+                $(blockHtml).remove()
             })
             i++
         }

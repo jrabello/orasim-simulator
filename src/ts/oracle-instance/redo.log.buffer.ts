@@ -2,6 +2,8 @@ import { Hash } from '../crypt/hash'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlockRedo } from '../oracle-database/data.block.redo'
 import { DataBlock } from '../oracle-database/data.block'
+import { SharedPool } from '../oracle-instance/shared.pool'
+import { Lgwr } from '../oracle-instance/lgwr'
 
 /**
  * Redo Log Buffer
@@ -47,14 +49,35 @@ export class RedoLogBuffer {
         return newBlock
     }
 
-    setMemoryLocationUsed(hash: Hash) {
+    getFirstCleanBlock(): DataBlock{
         for (let block of this.dataBlockRedoList) {
-            if (!block.used()) {
-                block.setUsed(true)
-                block.setColor(hash.getColor())
-                break
-            }
+            if (!block.used())
+            return block
         }
+    }
+
+    setMemoryLocationUsed(hash: Hash): void {
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let lgwr: Lgwr = Orasim.getOracleInstance().getLgwr()
+        let memLocationArr = sharedPool.getMemoryLocation(hash)
+                
+        if(lgwr.hasRedoBufferBlockArr(hash))
+            return        
+        
+        //verificando quais blocks nao estao sendo utilizados e adicionando os mesmos no log writer
+        let i = 0
+        let numDirtyBlocks = memLocationArr.length
+        let blockIndexArr:number[] = new Array<number>()
+        for (let block of this.dataBlockRedoList) {
+            if (!block.used() && numDirtyBlocks) {
+                block.setUsed(true)
+                block.setColor(hash.getColor())    
+                numDirtyBlocks -= 3
+                blockIndexArr.push(i)            
+            }            
+            i++
+        }
+        lgwr.addRedoBufferBlockArr(hash, blockIndexArr)
     }
 
     setToopTip(): void {
