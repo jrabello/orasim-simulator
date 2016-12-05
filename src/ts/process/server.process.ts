@@ -36,7 +36,7 @@ export class ServerProcess {
             "top": "275px",
             "width": "40px",
             "color": "green",
-            "border-top": "2px solid lime" 
+            "border-top": "3px solid lime" 
         }).hide().appendTo("#animation-container")
 
         // criando tooltip para o ServerProcess

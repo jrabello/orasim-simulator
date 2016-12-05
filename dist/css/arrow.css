@@ -22,7 +22,7 @@ Estilo do corpo das setas
 .left-arrow, .right-arrow,
 .left-down-arrow, .right-down-arrow,
 .up-left-arrow, .up-right-arrow {
-  border-top: 2px solid red;
+  border-top: 3px solid red;
 }
 
 .left-up-arrow, .right-up-arrow,
