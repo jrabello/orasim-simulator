@@ -38,8 +38,7 @@ export class Lgwr {
     }
 
     //implementando animacao pegando do redo.log.buffer e enviando blocks para redo-log-files
-    async sendBlocksToRedoLogFiles(blocks: DataBlock[]) {       
-        
+    async sendBlocksToRedoLogFiles(blocks: DataBlock[]) {               
         //anima-los para log-writer
         await this.animGetBlocksFromRedoLogBuffer(blocks, 5000)
 
