@@ -49,6 +49,18 @@ export class RedoLogBuffer {
         return newBlock
     }
 
+    createNewDataBlockRedo(): DataBlockRedo {
+        let newBlock = new DataBlockRedo()
+
+        //criando block dentro do do elemento atual        
+        $(this.element).prepend(newBlock.getElement())
+        $(newBlock.getElement()).offset($(this.element).offset())
+        $(newBlock.getElement()).css("position", "absolute")
+        $(newBlock.getElement()).css("z-index", 100)
+
+        return newBlock
+    }
+
     getFirstCleanBlock(): DataBlock{
         for (let block of this.dataBlockRedoList) {
             if (!block.used())
@@ -60,7 +72,8 @@ export class RedoLogBuffer {
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let lgwr: Lgwr = Orasim.getOracleInstance().getLgwr()
         let memLocationArr = sharedPool.getMemoryLocation(hash)
-                
+        
+        //se ja tiver os blocos mapeados retorne
         if(lgwr.hasRedoBufferBlockArr(hash))
             return        
         

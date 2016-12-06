@@ -212,8 +212,7 @@ export class ServerProcess {
             // console.log(dbBufferCache.getBlocks()[memLocationArr[j]].getElement())
             // console.log(dbBufferCache.getBlocks(), memLocationArr[j])            
             // console.log(block)            
-            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), 
-            delay-(delay*(animDelay)), delay / 6, () => {                
+            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), delay-(delay*(animDelay)), delay / 6, () => {                
                 // no inicio da animacao piscar server-process e db-buffer-cache                
                 //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
             }, () => {                                

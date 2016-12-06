@@ -14829,6 +14829,15 @@
 	        $(newBlock.getElement()).css("z-index", 100);
 	        return newBlock;
 	    };
+	    RedoLogBuffer.prototype.createNewDataBlockRedo = function () {
+	        var newBlock = new data_block_redo_1.DataBlockRedo();
+	        //criando block dentro do do elemento atual        
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.element).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        $(newBlock.getElement()).css("z-index", 100);
+	        return newBlock;
+	    };
 	    RedoLogBuffer.prototype.getFirstCleanBlock = function () {
 	        for (var _i = 0, _a = this.dataBlockRedoList; _i < _a.length; _i++) {
 	            var block = _a[_i];
@@ -14840,6 +14849,7 @@
 	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	        var lgwr = Orasim.getOracleInstance().getLgwr();
 	        var memLocationArr = sharedPool.getMemoryLocation(hash);
+	        //se ja tiver os blocos mapeados retorne
 	        if (lgwr.hasRedoBufferBlockArr(hash))
 	            return;
 	        //verificando quais blocks nao estao sendo utilizados e adicionando os mesmos no log writer
@@ -15027,12 +15037,26 @@
 	            var block = redoLogBuffer.getBlocks()[index];
 	            if (block.used()) {
 	                //criando novo bloco que sera usado na animacao de envio para o log writer         
-	                var newBlock = redoLogBuffer.createNewDataBlock();
+	                var newBlock = redoLogBuffer.createNewDataBlockRedo();
 	                newBlock.setColor(block.getColor());
 	                blocks.push(newBlock);
 	                //resetando o estado dos blocos do redo log buffer
 	                block.setUsed(false);
 	                block.setColor("#ffffff");
+	                //removendo entries usadas do map                
+	                var hashForDelete = new std.HashSet();
+	                for (var it = this.redoBufferBlocksMap.begin(); !it.equals(this.redoBufferBlocksMap.end()); it = it.next()) {
+	                    for (var _i = 0, _a = it.second; _i < _a.length; _i++) {
+	                        var index2 = _a[_i];
+	                        if (index2.toString() == index) {
+	                            hashForDelete.insert(it.first);
+	                            continue;
+	                        }
+	                    }
+	                }
+	                for (var it = hashForDelete.begin(); !it.equals(hashForDelete.end()); it = it.next()) {
+	                    this.redoBufferBlocksMap.erase(it.value);
+	                }
 	            }
 	        }
 	        return blocks;
