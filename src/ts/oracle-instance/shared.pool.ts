@@ -88,9 +88,10 @@ export class SharedPool {
         }
 
         //selecionando numero randomico de blocos 3 ou 6 blocks
-        let randomNumBlocks = new Random().getIntBetweenRange(0,1) == 0 ? 3 : 6 //2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
+        //let randomNumBlocks = new Random().getIntBetweenRange(0,1) == 0 ? 3 : 6 //2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
+        let randomNumBlocks = 3
 
-        // construindo array com indexes preenchidos com blocos
+        // construindo array com indexes preenchidos com blocos randomicos
         let dirtyBLocks = []
         for(let i = 0; i < randomNumBlocks; i++){
             let randomIndex = new Random().getIntBetweenRange(0, releasedBlocksIndexes.length-1)

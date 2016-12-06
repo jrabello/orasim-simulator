@@ -1403,19 +1403,25 @@
 	                        Orasim.getAnimation().setAnimating(true);
 	                        userProcess = Orasim.getUserProcess();
 	                        serverProcess = Orasim.getServerProcess();
+	                        //animacao do relogio
 	                        return [4 /*yield*/, userProcess.animateSendDataToServerProcessAsync(5000, "INSERT")];
 	                    case 1:
+	                        //animacao do relogio
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse...'));
 	                        $("#server-process").addClass("time-clock");
 	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
 	                    case 2:
 	                        _a.sent();
+	                        //animacao hash nao encontrado no dbBufferCache
 	                        return [4 /*yield*/, serverProcess.animateHashNotFound(this.hash)];
 	                    case 3:
+	                        //animacao hash nao encontrado no dbBufferCache
 	                        _a.sent();
+	                        //resto da animacao de insert             
 	                        return [4 /*yield*/, new server_process_insert_1.ServerProcessInsert().animateInsert(this.hash)];
 	                    case 4:
+	                        //resto da animacao de insert             
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        Orasim.getAnimation().setAnimating(false);
@@ -1484,26 +1490,39 @@
 	    }
 	    ServerProcessInsert.prototype.animateInsert = function (hash) {
 	        return __awaiter(this, void 0, void 0, function () {
-	            var sharedPool;
+	            var sharedPool, dbBufferCache, randomMem;
 	            return __generator(this, function (_a) {
 	                switch (_a.label) {
 	                    case 0:
 	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
-	                        //escrevendo no redo-log-files
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"));
+	                        dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	                        //lockando blocos sujos
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lockando registros nos \"blocos sujos\""));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 1:
 	                        _a.sent();
-	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#redo-log-buffer', 5000)];
+	                        dbBufferCache.setMemoryAttribute(hash, "block-locked");
+	                        //duplicando entradas no dbBufferCache(UNDO)
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Copiando blocos atuais e salvando na área de <span style='font-weight: bold'>UNDO</span>"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 2:
 	                        _a.sent();
-	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
-	                        return [4 /*yield*/, _super.prototype.animStoreRedoBlocksInRedoLogBuffer.call(this, hash, 10000)];
+	                        randomMem = dbBufferCache.duplicateAllocRandomMemory(hash);
+	                        dbBufferCache.setMemoryAttributeByArray(randomMem, "undo-block");
+	                        //escrevendo no redo-log-files
+	                        //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"))
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Salvando informações da transação na área de <span style='font-weight: bold'>REDO</span>"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 3:
-	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
+	                        _a.sent();
+	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#redo-log-buffer', 5000)];
+	                    case 4:
+	                        _a.sent();
+	                        return [4 /*yield*/, _super.prototype.animStoreRedoBlocksInRedoLogBuffer.call(this, hash, 10000)];
+	                    case 5:
 	                        _a.sent();
 	                        return [4 /*yield*/, new delay_1.Delay(1000).sleep()];
-	                    case 4:
+	                    case 6:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
@@ -2365,7 +2384,7 @@
 	                    case 1:
 	                        //enviando commit
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > Gravando alterações em disco"));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > Lendo as entradas no Redo Log Buffer"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 2:
 	                        _a.sent();
@@ -3123,7 +3142,7 @@
 
 	"use strict";
 	var db_buffer_cache_1 = __webpack_require__(37);
-	var shared_pool_1 = __webpack_require__(38);
+	var shared_pool_1 = __webpack_require__(39);
 	var redo_log_buffer_1 = __webpack_require__(42);
 	var Sga = (function () {
 	    function Sga() {
@@ -3166,6 +3185,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var rand_1 = __webpack_require__(38);
 	var tooltip_1 = __webpack_require__(23);
 	var data_block_1 = __webpack_require__(24);
 	/**
@@ -3184,6 +3204,23 @@
 	        // criando tooltip para o DbBufferCache
 	        var tooltip = new tooltip_1.Tooltip("#db-buffer-cache", "DB Buffer Cache", "\n        <p align=\"justify\">\n        O DB Buffer Cache ou apenas Buffer Cache, \u00E9 a \u00E1rea de mem\u00F3ria que armazena as c\u00F3pias dos blocos de dados lidos a partir dos datafiles. \n        <br><br>\n        Um buffer \u00E9 um endere\u00E7o de mem\u00F3ria principal em que o gerenciador de buffer armazena temporariamente um bloco de dados usado no momento ou recentemente. \n        <br><br>\n        Todos os usu\u00E1rios conectados simultaneamente na inst\u00E2ncia do banco de dados compartilham os acessos ao Buffer Cache.\n        <br><br><br>\n        \n        O Oracle usa o buffer cache para atingir os seguintes objectivos:\n        <br><br>\n        <span style='font-weight: bold'>\n        # Otimiza\u00E7\u00E3o do I/O f\u00EDsico \n        </span><br><br>\n        \n        O banco de dados atualiza os blocos de dados no cache e armazena os metadados refer\u00EAnte a essas mudan\u00E7as no Redo Log Buffer.\n        Depois de um COMMIT, o Oracle grava os redo buffers no disco, mas n\u00E3o escreve imediatamente os blocos de dados no disco. \n        Quem faz essa escrita \u00E9 o Database Writer (DBWn) com algumas condi\u00E7\u00F5es.\n \n        <br><br>\n        <span style='font-weight: bold'>\n        # Manter blocos frequentemente acessados no buffer cache e escrever blocos pouco acessados no disco.\n        </span><br><br>\n\n        <span style='font-weight: bold'>\n        # Estados do buffer\n        </span><br><br>\n\n        O Oracle usa algoritmos internos para gerenciar buffers no cache. \n        Um buffer pode estar qualquer um dos seguintes estados que se excluem mutuamente:\n        <br><br>\n        \n        - Unused (N\u00E3o usado)\n        <br>\n        O buffer est\u00E1 dispon\u00EDvel para uso, porque ele nunca foi usado ou est\u00E1 atualmente sem uso. \n        <br>\n        Este tipo de buffer \u00E9 o mais f\u00E1cil para o banco de dados para usar.\n        <br><br>\n        \n        - Clean (Limpo)\n        <br>\n        Este buffer foi utilizado anteriormente e agora cont\u00E9m uma vers\u00E3o de leitura consistente de um bloco a partir de um ponto no tempo. \n        O bloco cont\u00E9m dados, mas est\u00E1 \"limpo\" e n\u00E3o precisa de checkpoint, ou seja, ser gravado em disco pelo Database Writer. \n        O Oracle pode selecionar este bloco e reutiliz\u00E1-lo.\n        <br><br>\n        \n        - Dirty (Sujo)\n        <br>\n        O buffer cont\u00EAm dados modificados que ainda n\u00E3o foram gravadas no disco. \n        O Oracle precisa fazer o checkpoint do bloco antes de reutiliz\u00E1-lo.\n         ");
 	    }
+	    /**
+	     * DuplicateAllocRandomMemory
+	     * duplicates memory allocated by hash reference(allocs the same amount of memory)
+	     */
+	    DbBufferCache.prototype.duplicateAllocRandomMemory = function (hash) {
+	        var selectedItemsArr = new Array();
+	        var cleanMemLocationArr = this.getReleasedBlocksMemLocation();
+	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	        var sizeDirtyBlocksFromHash = sharedPool.getMemoryLocation(hash).length;
+	        for (var i = 0; i < sizeDirtyBlocksFromHash; i++) {
+	            var randNum = new rand_1.Random().getIntBetweenRange(0, cleanMemLocationArr.length - 1);
+	            selectedItemsArr.push(cleanMemLocationArr[randNum]);
+	            cleanMemLocationArr.splice(randNum, 1);
+	        }
+	        this.setMemoryLocationUsed(selectedItemsArr);
+	        return selectedItemsArr;
+	    };
 	    /**
 	     * initBlocks
 	     * Metodo responsavel por adicionar dinamicamente os blocos dentro do db-buffer-cache
@@ -3206,6 +3243,10 @@
 	            this.blocks[memLocation].setUsed(true);
 	        }
 	    };
+	    /**
+	     * setMemoryLocationUsedWithHash
+	     * seta area de memoria como utilizada e marca a memoria da mesma
+	     */
 	    DbBufferCache.prototype.setMemoryLocationUsedWithHash = function (memLocationArr, hash) {
 	        this.setMemoryLocationUsed(memLocationArr);
 	        //setting hash color
@@ -3213,6 +3254,23 @@
 	            var memLocation = memLocationArr_2[_i];
 	            this.blocks[memLocation].setColor(hash.getColor());
 	        }
+	    };
+	    DbBufferCache.prototype.setMemoryAttributeByArray = function (arr, attribute) {
+	        //setando blocks como locked                
+	        for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+	            var memLocation = arr_1[_i];
+	            $(this.getBlocks()[memLocation].getElement()).addClass(attribute);
+	        }
+	    };
+	    /**
+	     * setMemoryLocked
+	     * setando locais memoria associados ao hash como LOCKED
+	     */
+	    DbBufferCache.prototype.setMemoryAttribute = function (hash, attribute) {
+	        //setando blocks como locked
+	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	        var memLocationArr = sharedPool.getMemoryLocation(hash);
+	        this.setMemoryAttributeByArray(memLocationArr, attribute);
 	    };
 	    /**
 	     * getNewBlockHtml
@@ -3241,7 +3299,7 @@
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset());
 	        $(newBlock.getElement()).css("position", "absolute");
-	        //$(newBlock.getElement()).css("z-index", 100)
+	        //$(newBlock.getElement()).css("z-index", 100)        
 	        return newBlock.getElement();
 	    };
 	    DbBufferCache.prototype.getElement = function () {
@@ -3269,11 +3327,32 @@
 
 /***/ },
 /* 38 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Random = (function () {
+	    //inclusive random number
+	    function Random() {
+	    }
+	    /**
+	     * getIntBetweenRange
+	     * Inclusive range
+	     */
+	    Random.prototype.getIntBetweenRange = function (min, max) {
+	        return Math.floor(Math.random() * (max - min + 1) + min);
+	    };
+	    return Random;
+	}());
+	exports.Random = Random;
+
+
+/***/ },
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var std = __webpack_require__(39);
-	var rand_1 = __webpack_require__(41);
+	var std = __webpack_require__(40);
+	var rand_1 = __webpack_require__(38);
 	var tooltip_1 = __webpack_require__(23);
 	/**
 	 * SharedPool
@@ -3335,8 +3414,9 @@
 	            return;
 	        }
 	        //selecionando numero randomico de blocos 3 ou 6 blocks
-	        var randomNumBlocks = new rand_1.Random().getIntBetweenRange(0, 1) == 0 ? 3 : 6; //2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
-	        // construindo array com indexes preenchidos com blocos
+	        //let randomNumBlocks = new Random().getIntBetweenRange(0,1) == 0 ? 3 : 6 //2, (releasedBlocksIndexes.length <= 4 ) ?  releasedBlocksIndexes.length : 4)
+	        var randomNumBlocks = 3;
+	        // construindo array com indexes preenchidos com blocos randomicos
 	        var dirtyBLocks = [];
 	        for (var i = 0; i < randomNumBlocks; i++) {
 	            var randomIndex = new rand_1.Random().getIntBetweenRange(0, releasedBlocksIndexes.length - 1);
@@ -3375,7 +3455,7 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {var __extends = (this && this.__extends) || function (d, b) {
@@ -14603,10 +14683,10 @@
 	}
 	catch (exception) { }
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -14789,27 +14869,6 @@
 	    throw new Error('process.chdir is not supported');
 	};
 	process.umask = function() { return 0; };
-
-
-/***/ },
-/* 41 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var Random = (function () {
-	    //inclusive random number
-	    function Random() {
-	    }
-	    /**
-	     * getIntBetweenRange
-	     * Inclusive range
-	     */
-	    Random.prototype.getIntBetweenRange = function (min, max) {
-	        return Math.floor(Math.random() * (max - min + 1) + min);
-	    };
-	    return Random;
-	}());
-	exports.Random = Random;
 
 
 /***/ },
@@ -15018,6 +15077,7 @@
 	};
 	var delay_1 = __webpack_require__(5);
 	var tooltip_1 = __webpack_require__(23);
+	var sql_console_msg_info_1 = __webpack_require__(11);
 	var Lgwr = (function () {
 	    function Lgwr() {
 	        //tooltip do pmon
@@ -15074,13 +15134,17 @@
 	                switch (_a.label) {
 	                    case 0: 
 	                    //anima-los para log-writer
-	                    return [4 /*yield*/, this.animGetBlocksFromRedoLogBuffer(blocks, 10000)];
+	                    return [4 /*yield*/, this.animGetBlocksFromRedoLogBuffer(blocks, 5000)];
 	                    case 1:
 	                        //anima-los para log-writer
 	                        _a.sent();
-	                        //uma vez no log-writer precisamos envia-los ao redo-log-files
-	                        return [4 /*yield*/, this.animSendBlocksToRedoLogFiles(blocks, 10000)];
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< LGWR > Gravando as entradas no Redo Log File'));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 2:
+	                        _a.sent();
+	                        //uma vez no log-writer precisamos envia-los ao redo-log-files
+	                        return [4 /*yield*/, this.animSendBlocksToRedoLogFiles(blocks, 5000)];
+	                    case 3:
 	                        //uma vez no log-writer precisamos envia-los ao redo-log-files
 	                        _a.sent();
 	                        return [2 /*return*/];
@@ -15106,7 +15170,7 @@
 	                            block = blocks_1[_i];
 	                            _loop_1(block);
 	                        }
-	                        return [4 /*yield*/, new delay_1.Delay(delay + 1000).sleep()];
+	                        return [4 /*yield*/, new delay_1.Delay(delay).sleep()];
 	                    case 1:
 	                        _a.sent();
 	                        return [2 /*return*/];
@@ -15130,7 +15194,7 @@
 	                            });
 	                            delay = delay / 1.5;
 	                        }
-	                        return [4 /*yield*/, new delay_1.Delay(delay + 1000).sleep()];
+	                        return [4 /*yield*/, new delay_1.Delay(delay).sleep()];
 	                    case 1:
 	                        _a.sent();
 	                        return [2 /*return*/];

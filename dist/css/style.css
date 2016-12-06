@@ -19,6 +19,12 @@ h1 {
   background-repeat: no-repeat;
 }
 
+.undo-block{
+  background-image: url(../img/undo-block.png);
+  background-size: 15px;
+  background-repeat: no-repeat;
+}
+
 .cursorHand { cursor: pointer; cursor: hand; }
 
 .main-title {
