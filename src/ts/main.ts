@@ -6,6 +6,7 @@ import { ListenerProcess } from './process/listener.process'
 import { Animation } from './animation/animation'
 import { OracleDatabase } from './oracle-database/oracle.database'
 import { OracleInstance } from './oracle-instance/oracle.instance'
+import { SqlDataContainer } from './sql-data/sql.data.container'
 import {Delay} from './time/delay'
 
 /** 
@@ -22,7 +23,8 @@ class Main {
     private serverProcess: ServerProcess
     private userProcess: UserProcess
     private listenerProcess: ListenerProcess
-    
+    private sqlInternalData: SqlDataContainer
+
     // criando instancias de classes SingleTon 
     constructor() {
         this.sqlConsole = new SqlConsole()
@@ -33,17 +35,12 @@ class Main {
         this.animation = new Animation()
         this.oracleInstance = new OracleInstance()
         this.oracleDatabase = new OracleDatabase()
+        this.sqlInternalData = new SqlDataContainer()
         //this.someDelay()    
     }
-
-    async someDelay(){
-        console.log('lol')
-        await new Delay(5000).sleep();
-        for (let i = 0; i < 3; i++) {            
-            console.log(".");
-            await new Delay(1000).sleep();
-        }
-        console.log('lal')
+    
+    getSqlDataContainer(): SqlDataContainer{
+        return this.sqlInternalData
     }
 
     getSqlButtons(): SqlButtons{

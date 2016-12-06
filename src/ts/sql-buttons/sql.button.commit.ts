@@ -15,7 +15,7 @@ export class SqlButtonCommit{
     handleCommit(): void{
         if(Orasim.getAnimation().isAnimating())
             return
-
+        
         new AnimationCommit().start()
     }
 }

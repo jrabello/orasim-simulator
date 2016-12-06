@@ -45,50 +45,15 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-	    return new (P || (P = Promise))(function (resolve, reject) {
-	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-	        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-	        step((generator = generator.apply(thisArg, _arguments)).next());
-	    });
-	};
-	var __generator = (this && this.__generator) || function (thisArg, body) {
-	    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-	    return { next: verb(0), "throw": verb(1), "return": verb(2) };
-	    function verb(n) { return function (v) { return step([n, v]); }; }
-	    function step(op) {
-	        if (f) throw new TypeError("Generator is already executing.");
-	        while (_) try {
-	            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-	            if (y = 0, t) op = [0, t.value];
-	            switch (op[0]) {
-	                case 0: case 1: t = op; break;
-	                case 4: _.label++; return { value: op[1], done: false };
-	                case 5: _.label++; y = op[1]; op = [0]; continue;
-	                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-	                default:
-	                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-	                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-	                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-	                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-	                    if (t[2]) _.ops.pop();
-	                    _.trys.pop(); continue;
-	            }
-	            op = body.call(thisArg, _);
-	        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-	    }
-	};
 	var sql_console_1 = __webpack_require__(1);
-	var sql_buttons_1 = __webpack_require__(11);
-	var server_process_1 = __webpack_require__(19);
-	var user_process_1 = __webpack_require__(27);
-	var listener_process_1 = __webpack_require__(29);
+	var sql_buttons_1 = __webpack_require__(12);
+	var server_process_1 = __webpack_require__(20);
+	var user_process_1 = __webpack_require__(29);
+	var listener_process_1 = __webpack_require__(31);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(30);
-	var oracle_instance_1 = __webpack_require__(32);
-	var delay_1 = __webpack_require__(5);
+	var oracle_database_1 = __webpack_require__(32);
+	var oracle_instance_1 = __webpack_require__(34);
+	var sql_data_container_1 = __webpack_require__(49);
 	/**
 	 * Main
 	 * Classe Responsável por guardar instâncias de todos os metodos
@@ -105,37 +70,11 @@
 	        this.animation = new animation_1.Animation();
 	        this.oracleInstance = new oracle_instance_1.OracleInstance();
 	        this.oracleDatabase = new oracle_database_1.OracleDatabase();
+	        this.sqlInternalData = new sql_data_container_1.SqlDataContainer();
 	        //this.someDelay()    
 	    }
-	    Main.prototype.someDelay = function () {
-	        return __awaiter(this, void 0, void 0, function () {
-	            var i;
-	            return __generator(this, function (_a) {
-	                switch (_a.label) {
-	                    case 0:
-	                        console.log('lol');
-	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
-	                    case 1:
-	                        _a.sent();
-	                        i = 0;
-	                        _a.label = 2;
-	                    case 2:
-	                        if (!(i < 3))
-	                            return [3 /*break*/, 5];
-	                        console.log(".");
-	                        return [4 /*yield*/, new delay_1.Delay(1000).sleep()];
-	                    case 3:
-	                        _a.sent();
-	                        _a.label = 4;
-	                    case 4:
-	                        i++;
-	                        return [3 /*break*/, 2];
-	                    case 5:
-	                        console.log('lal');
-	                        return [2 /*return*/];
-	                }
-	            });
-	        });
+	    Main.prototype.getSqlDataContainer = function () {
+	        return this.sqlInternalData;
 	    };
 	    Main.prototype.getSqlButtons = function () {
 	        return this.sqlButtons;
@@ -174,7 +113,7 @@
 
 	"use strict";
 	var sql_parser_1 = __webpack_require__(2);
-	var sql_console_msg_info_1 = __webpack_require__(9);
+	var sql_console_msg_info_1 = __webpack_require__(11);
 	/**
 	 * SqlConsole
 	 * Classe responsavel por modelar o console que o usuário usa para interagir com a aplicação
@@ -242,7 +181,7 @@
 	"use strict";
 	var animation_null_1 = __webpack_require__(3);
 	var animation_select_1 = __webpack_require__(6);
-	var crc32_1 = __webpack_require__(7);
+	var crc32_1 = __webpack_require__(9);
 	/**
 	 * SqlParser
 	 * Classe Responsavel por fazer analise lexica e sintatica de uma query sql
@@ -541,6 +480,7 @@
 	    }
 	};
 	var animation_1 = __webpack_require__(4);
+	var sql_console_msg_warning_1 = __webpack_require__(7);
 	/**
 	 * AnimationSelect
 	 * Classe responsavel por implementar animações relacionadas ao select
@@ -587,6 +527,7 @@
 	                    return serverProcess.animateByHash(_this.hash, _this.hashFound);
 	                })
 	                    .then(function (result) {
+	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                    Orasim.getAnimation().setAnimating(false);
 	                });
 	                return [2 /*return*/];
@@ -608,7 +549,62 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var hash_1 = __webpack_require__(8);
+	var sql_console_message_1 = __webpack_require__(8);
+	/**
+	 * SqlConsoleMsgWarning
+	 * Classe responsavel por especializar mensagens de aviso do console da aplicacao
+	 */
+	var SqlConsoleMsgWarning = (function (_super) {
+	    __extends(SqlConsoleMsgWarning, _super);
+	    function SqlConsoleMsgWarning(msg) {
+	        return _super.call(this, 'warning', msg) || this;
+	    }
+	    return SqlConsoleMsgWarning;
+	}(sql_console_message_1.SqlConsoleMessage));
+	exports.SqlConsoleMsgWarning = SqlConsoleMsgWarning;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+	/**
+	 * SqlConsoleMessage
+	 * Classe Base, responsavel por modelar as mensagens que serão inseridas no console da aplicação
+	 */
+	var SqlConsoleMessage = (function () {
+	    function SqlConsoleMessage(type, msg) {
+	        this.buildHtmlElement(type, msg);
+	    }
+	    /**
+	     * buildHtmlElement
+	     * Metodo responsavel por criar elemento html que sera inserido no console
+	     * @param   type    tipo da mensagem(info ou error)
+	     * @param   msg     mensagem que sera impressa no console
+	     */
+	    SqlConsoleMessage.prototype.buildHtmlElement = function (type, msg) {
+	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
+	    };
+	    SqlConsoleMessage.prototype.getMsg = function () {
+	        return this.msgElement;
+	    };
+	    return SqlConsoleMessage;
+	}());
+	exports.SqlConsoleMessage = SqlConsoleMessage;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var hash_1 = __webpack_require__(10);
 	/**
 	 * Crc32
 	 * Classe responsavel por especializar um hash modelando o crc32
@@ -692,7 +688,7 @@
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -750,7 +746,7 @@
 
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -759,7 +755,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var sql_console_message_1 = __webpack_require__(10);
+	var sql_console_message_1 = __webpack_require__(8);
 	/**
 	 * SqlConsoleMsgInfo
 	 * Classe responsavel por especializar mensagens de informacao da aplicacao
@@ -775,44 +771,15 @@
 
 
 /***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	"use strict";
-	/**
-	 * SqlConsoleMessage
-	 * Classe Base, responsavel por modelar as mensagens que serão inseridas no console da aplicação
-	 */
-	var SqlConsoleMessage = (function () {
-	    function SqlConsoleMessage(type, msg) {
-	        this.buildHtmlElement(type, msg);
-	    }
-	    /**
-	     * buildHtmlElement
-	     * Metodo responsavel por criar elemento html que sera inserido no console
-	     * @param   type    tipo da mensagem(info ou error)
-	     * @param   msg     mensagem que sera impressa no console
-	     */
-	    SqlConsoleMessage.prototype.buildHtmlElement = function (type, msg) {
-	        this.msgElement = $("<li class=\"console-li-" + type + "\">" + msg + "</li>")[0];
-	    };
-	    SqlConsoleMessage.prototype.getMsg = function () {
-	        return this.msgElement;
-	    };
-	    return SqlConsoleMessage;
-	}());
-	exports.SqlConsoleMessage = SqlConsoleMessage;
-
-
-/***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sql_button_select_1 = __webpack_require__(12);
-	var sql_button_connect_1 = __webpack_require__(14);
-	var sql_button_insert_1 = __webpack_require__(16);
+	var sql_button_select_1 = __webpack_require__(13);
+	var sql_button_connect_1 = __webpack_require__(15);
+	var sql_button_insert_1 = __webpack_require__(17);
 	var sql_button_commit_1 = __webpack_require__(25);
+	var sql_button_rollback_1 = __webpack_require__(27);
 	var SqlButtons = (function () {
 	    function SqlButtons() {
 	        //criando instancia de button select, insert, connect        
@@ -820,7 +787,11 @@
 	        this.sqlButtonConnect = new sql_button_connect_1.SqlButtonConnect();
 	        this.sqlButtonInsert = new sql_button_insert_1.SqlButtonInsert();
 	        this.sqlButtonCommit = new sql_button_commit_1.SqlButtonCommit();
+	        this.sqlButtonRollback = new sql_button_rollback_1.SqlButtonRollback();
 	    }
+	    SqlButtons.prototype.getButtonRollback = function () {
+	        return this.sqlButtonRollback;
+	    };
 	    SqlButtons.prototype.getButtonCommit = function () {
 	        return this.sqlButtonCommit;
 	    };
@@ -839,12 +810,12 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var animation_select_1 = __webpack_require__(6);
-	var sql_id_1 = __webpack_require__(13);
+	var sql_id_1 = __webpack_require__(14);
 	var SqlButtonSelect = (function () {
 	    function SqlButtonSelect() {
 	        var _this = this;
@@ -867,6 +838,9 @@
 	            hashFound = true;
 	        //adicionando na shared pool, caso nao encontrado
 	        sharedPool.addHash(hash);
+	        var sqlDataContainer = Orasim.getSqlDataContainer();
+	        sqlDataContainer.add(query, hash);
+	        //starting animation
 	        new animation_select_1.AnimationSelect(hash, hashFound).start();
 	    };
 	    return SqlButtonSelect;
@@ -875,7 +849,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -884,8 +858,8 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var hash_1 = __webpack_require__(8);
-	var crc32_1 = __webpack_require__(7);
+	var hash_1 = __webpack_require__(10);
+	var crc32_1 = __webpack_require__(9);
 	var SqlId = (function (_super) {
 	    __extends(SqlId, _super);
 	    function SqlId(data) {
@@ -1170,11 +1144,11 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var animation_connect_1 = __webpack_require__(15);
+	var animation_connect_1 = __webpack_require__(16);
 	var SqlButtonConnect = (function () {
 	    function SqlButtonConnect() {
 	        var _this = this;
@@ -1207,7 +1181,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1268,7 +1242,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1307,8 +1281,8 @@
 	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
 	    }
 	};
-	var animation_insert_1 = __webpack_require__(17);
-	var sql_id_1 = __webpack_require__(13);
+	var animation_insert_1 = __webpack_require__(18);
+	var sql_id_1 = __webpack_require__(14);
 	var SqlButtonInsert = (function () {
 	    function SqlButtonInsert() {
 	        var _this = this;
@@ -1319,7 +1293,7 @@
 	    }
 	    SqlButtonInsert.prototype.handleInsert = function () {
 	        return __awaiter(this, void 0, void 0, function () {
-	            var hashFound, query, hash, sharedPool;
+	            var hashFound, query, hash, sharedPool, sqlDataContainer;
 	            return __generator(this, function (_a) {
 	                switch (_a.label) {
 	                    case 0:
@@ -1330,9 +1304,14 @@
 	                        query += Math.random().toString(36).substr(2, 5);
 	                        hash = new sql_id_1.SqlId(query);
 	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	                        //tentando encontrar hash na shared pool
+	                        if (sharedPool.findHash(hash))
+	                            hashFound = true;
 	                        //adicionando hash na shared pool, caso nao encontrado
 	                        sharedPool.addHash(hash);
-	                        return [4 /*yield*/, new animation_insert_1.AnimationInsert(hash).start()];
+	                        sqlDataContainer = Orasim.getSqlDataContainer();
+	                        sqlDataContainer.add(query, hash);
+	                        return [4 /*yield*/, new animation_insert_1.AnimationInsert(hash, hashFound).start()];
 	                    case 1:
 	                        _a.sent();
 	                        return [2 /*return*/];
@@ -1343,103 +1322,6 @@
 	    return SqlButtonInsert;
 	}());
 	exports.SqlButtonInsert = SqlButtonInsert;
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-	    return new (P || (P = Promise))(function (resolve, reject) {
-	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-	        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-	        step((generator = generator.apply(thisArg, _arguments)).next());
-	    });
-	};
-	var __generator = (this && this.__generator) || function (thisArg, body) {
-	    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-	    return { next: verb(0), "throw": verb(1), "return": verb(2) };
-	    function verb(n) { return function (v) { return step([n, v]); }; }
-	    function step(op) {
-	        if (f) throw new TypeError("Generator is already executing.");
-	        while (_) try {
-	            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-	            if (y = 0, t) op = [0, t.value];
-	            switch (op[0]) {
-	                case 0: case 1: t = op; break;
-	                case 4: _.label++; return { value: op[1], done: false };
-	                case 5: _.label++; y = op[1]; op = [0]; continue;
-	                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-	                default:
-	                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-	                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-	                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-	                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-	                    if (t[2]) _.ops.pop();
-	                    _.trys.pop(); continue;
-	            }
-	            op = body.call(thisArg, _);
-	        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-	    }
-	};
-	var animation_1 = __webpack_require__(4);
-	var server_process_insert_1 = __webpack_require__(18);
-	var sql_console_msg_warning_1 = __webpack_require__(21);
-	/**
-	 * AnimationInsert
-	 * Classe responsavel por implementar animações relacionadas ao insert
-	 */
-	var AnimationInsert = (function (_super) {
-	    __extends(AnimationInsert, _super);
-	    function AnimationInsert(hash) {
-	        var _this = _super.call(this) || this;
-	        _this.animationTime = _super.prototype.getDelay.call(_this) * 5;
-	        _this.hash = hash;
-	        return _this;
-	    }
-	    /**
-	     * start
-	     * Inicio da animacao do insert
-	     */
-	    AnimationInsert.prototype.start = function () {
-	        return __awaiter(this, void 0, void 0, function () {
-	            var userProcess, serverProcess;
-	            return __generator(this, function (_a) {
-	                switch (_a.label) {
-	                    case 0:
-	                        // setando estado de inicio da animacao
-	                        Orasim.getAnimation().setAnimating(true);
-	                        userProcess = Orasim.getUserProcess();
-	                        serverProcess = Orasim.getServerProcess();
-	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
-	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
-	                        return [4 /*yield*/, userProcess.animateSendDataToServerProcessAsync(5000, "INSERT")];
-	                    case 1:
-	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
-	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
-	                        _a.sent();
-	                        return [4 /*yield*/, new server_process_insert_1.ServerProcessInsert().animateInsert(this.hash)];
-	                    case 2:
-	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
-	                        console.log("insert animating = false ", this.animationTime);
-	                        Orasim.getAnimation().setAnimating(false);
-	                        return [2 /*return*/];
-	                }
-	            });
-	        });
-	    };
-	    return AnimationInsert;
-	}(animation_1.Animation));
-	exports.AnimationInsert = AnimationInsert;
 
 
 /***/ },
@@ -1488,8 +1370,115 @@
 	    }
 	};
 	var delay_1 = __webpack_require__(5);
-	var server_process_1 = __webpack_require__(19);
-	var sql_console_msg_info_1 = __webpack_require__(9);
+	var animation_1 = __webpack_require__(4);
+	var server_process_insert_1 = __webpack_require__(19);
+	var sql_console_msg_warning_1 = __webpack_require__(7);
+	var sql_console_msg_info_1 = __webpack_require__(11);
+	/**
+	 * AnimationInsert
+	 * Classe responsavel por implementar animações relacionadas ao insert
+	 */
+	var AnimationInsert = (function (_super) {
+	    __extends(AnimationInsert, _super);
+	    function AnimationInsert(hash, isHashFound) {
+	        var _this = _super.call(this) || this;
+	        _this.hash = hash;
+	        _this.animationTime = _super.prototype.getDelay.call(_this) * 5;
+	        _this.isHashFound = isHashFound;
+	        return _this;
+	    }
+	    /**
+	     * start
+	     * Inicio da animacao do insert
+	     */
+	    AnimationInsert.prototype.start = function () {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var userProcess, serverProcess;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        // setando estado de inicio da animacao
+	                        Orasim.getAnimation().setAnimating(true);
+	                        userProcess = Orasim.getUserProcess();
+	                        serverProcess = Orasim.getServerProcess();
+	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+	                        return [4 /*yield*/, userProcess.animateSendDataToServerProcessAsync(5000, "INSERT")];
+	                    case 1:
+	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse...'));
+	                        $("#server-process").addClass("time-clock");
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
+	                    case 2:
+	                        _a.sent();
+	                        return [4 /*yield*/, serverProcess.animateHashNotFound(this.hash)];
+	                    case 3:
+	                        _a.sent();
+	                        return [4 /*yield*/, new server_process_insert_1.ServerProcessInsert().animateInsert(this.hash)];
+	                    case 4:
+	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
+	                        Orasim.getAnimation().setAnimating(false);
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
+	    return AnimationInsert;
+	}(animation_1.Animation));
+	exports.AnimationInsert = AnimationInsert;
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments)).next());
+	    });
+	};
+	var __generator = (this && this.__generator) || function (thisArg, body) {
+	    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+	    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+	    function verb(n) { return function (v) { return step([n, v]); }; }
+	    function step(op) {
+	        if (f) throw new TypeError("Generator is already executing.");
+	        while (_) try {
+	            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+	            if (y = 0, t) op = [0, t.value];
+	            switch (op[0]) {
+	                case 0: case 1: t = op; break;
+	                case 4: _.label++; return { value: op[1], done: false };
+	                case 5: _.label++; y = op[1]; op = [0]; continue;
+	                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+	                default:
+	                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+	                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+	                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+	                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+	                    if (t[2]) _.ops.pop();
+	                    _.trys.pop(); continue;
+	            }
+	            op = body.call(thisArg, _);
+	        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+	    }
+	};
+	var delay_1 = __webpack_require__(5);
+	var server_process_1 = __webpack_require__(20);
+	var sql_console_msg_info_1 = __webpack_require__(11);
 	var ServerProcessInsert = (function (_super) {
 	    __extends(ServerProcessInsert, _super);
 	    function ServerProcessInsert() {
@@ -1502,56 +1491,44 @@
 	                switch (_a.label) {
 	                    case 0:
 	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
-	                        //animacao do relogio no server process, realizando parsing
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse...'));
-	                        $("#server-process").addClass("time-clock");
-	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
-	                    case 1:
-	                        _a.sent();
-	                        //animacao adicionando hash na shared pool
-	                        //pegando array de blocks da shared pool que correspondem ao hash        
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo, gerado \n                     <span style=\"font-weight: bold\">SQL_ID</span>: \n                     <span style=\"font-weight: bold; color: " + hash.getColor() + "\">" + hash.getHashStr() + "</span>, adicionando na <span style=\"font-weight: bold\">SharedPool</span>"));
-	                        $("#server-process").removeClass("time-clock");
-	                        return [4 /*yield*/, _super.prototype.animSearchSharedPool.call(this, 5000)];
-	                    case 2:
-	                        _a.sent();
-	                        sharedPool.animateAddHash(hash);
-	                        //let memLocationArr = sharedPool.getMemoryLocation(hash)
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 3:
-	                        //let memLocationArr = sharedPool.getMemoryLocation(hash)
-	                        _a.sent();
-	                        //escrevendo no dbBufferCache
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>DB_BufferCache</span>"));
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 4:
-	                        _a.sent();
-	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#db-buffer-cache', 5000)];
-	                    case 5:
-	                        _a.sent();
-	                        //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
-	                        return [4 /*yield*/, _super.prototype.animStoreBlocksInDbBufferCache.call(this, hash, 5000)];
-	                    case 6:
-	                        //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
-	                        _a.sent();
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 7:
-	                        _a.sent();
+	                        // //animacao do relogio no server process, realizando parsing
+	                        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
+	                        // $("#server-process").addClass("time-clock")
+	                        // await new Delay(5000).sleep()        
+	                        // //animacao adicionando hash na shared pool
+	                        // //pegando array de blocks da shared pool que correspondem ao hash        
+	                        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(
+	                        //     `< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>
+	                        //              concluído, gerado 
+	                        //              <span style="font-weight: bold">SQL_ID</span>: 
+	                        //              <span style="font-weight: bold; color: ${hash.getColor()}">${hash.getHashStr()}</span>, adicionando na <span style="font-weight: bold">SharedPool</span>`))
+	                        // $("#server-process").removeClass("time-clock")        
+	                        // await super.animSearchSharedPool(5000)        
+	                        // sharedPool.animateAddHash(hash)
+	                        // //let memLocationArr = sharedPool.getMemoryLocation(hash)
+	                        // await new Delay(3000).sleep()
+	                        // //escrevendo no dbBufferCache
+	                        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>DB_BufferCache</span>"))
+	                        // await new Delay(3000).sleep()
+	                        // await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)                
+	                        // //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
+	                        // await super.animStoreBlocksInDbBufferCache(hash, 5000)        
+	                        // await new Delay(3000).sleep()
 	                        //escrevendo no redo-log-files
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 8:
+	                    case 1:
 	                        _a.sent();
 	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#redo-log-buffer', 5000)];
-	                    case 9:
+	                    case 2:
 	                        _a.sent();
 	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
 	                        return [4 /*yield*/, _super.prototype.animStoreBlocksInRedoLogBuffer.call(this, hash, 10000)];
-	                    case 10:
+	                    case 3:
 	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
 	                        _a.sent();
 	                        return [4 /*yield*/, new delay_1.Delay(1000).sleep()];
-	                    case 11:
+	                    case 4:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
@@ -1564,7 +1541,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1603,9 +1580,8 @@
 	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
 	    }
 	};
-	var tooltip_1 = __webpack_require__(20);
-	var sql_console_msg_info_1 = __webpack_require__(9);
-	var sql_console_msg_warning_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(21);
+	var sql_console_msg_info_1 = __webpack_require__(11);
 	var data_block_1 = __webpack_require__(22);
 	var pga_1 = __webpack_require__(24);
 	var delay_1 = __webpack_require__(5);
@@ -2011,7 +1987,6 @@
 	                switch (_a.label) {
 	                    case 0:
 	                        serverProcess = Orasim.getServerProcess();
-	                        //animacao do relogio no server process
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse...'));
 	                        $("#server-process").addClass("time-clock");
 	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
@@ -2040,7 +2015,6 @@
 	                    case 7:
 	                        //enviando dados para user process
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        return [2 /*return*/];
 	                }
 	            });
@@ -2072,31 +2046,35 @@
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 2:
 	                        _a.sent();
-	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo, gerado \n                     <span style=\"font-weight: bold\">SQL_ID</span>: \n                     <span style=\"font-weight: bold; color: " + hash.getColor() + "\">" + hash.getHashStr() + "</span>, adicionando na <span style=\"font-weight: bold\">SharedPool</span>"));
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 3:
+	                        _a.sent();
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Gerado \n                     <span style=\"font-weight: bold\">SQL_ID</span>: \n                     <span style=\"font-weight: bold; color: " + hash.getColor() + "\">" + hash.getHashStr() + "</span>, adicionando na <span style=\"font-weight: bold\">SharedPool</span>"));
 	                        $("#server-process").removeClass("time-clock");
 	                        // animacao adicionando hash na shared pool
 	                        return [4 /*yield*/, serverProcess.animSearchSharedPool(5000)];
-	                    case 3:
+	                    case 4:
 	                        // animacao adicionando hash na shared pool
 	                        _a.sent();
 	                        sharedPool.animateAddHash(hash);
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 4:
+	                    case 5:
 	                        _a.sent();
 	                        memLocationArr = sharedPool.getMemoryLocation(hash);
 	                        // animacao requisitando dados do dataFiles
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lendo blocos em disco e carregando no <span style='font-weight: bold'>DB_BufferCache</span>"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 5:
+	                    case 6:
 	                        _a.sent();
 	                        blockHtmlArr = serverProcess.animateGetBlockFromDataFiles(dataFiles, hash, memLocationArr, 5000);
 	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
-	                    case 6:
+	                    case 7:
 	                        _a.sent();
 	                        // animacao gravando dados no dbBufferCache
 	                        serverProcess.animateStoreBlockInDbBufferCache(blockHtmlArr, dbBufferCache, hash, memLocationArr, 5000);
 	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
-	                    case 7:
+	                    case 8:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
@@ -2140,7 +2118,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2178,31 +2156,6 @@
 	    return Tooltip;
 	}());
 	exports.Tooltip = Tooltip;
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var sql_console_message_1 = __webpack_require__(10);
-	/**
-	 * SqlConsoleMsgWarning
-	 * Classe responsavel por especializar mensagens de aviso do console da aplicacao
-	 */
-	var SqlConsoleMsgWarning = (function (_super) {
-	    __extends(SqlConsoleMsgWarning, _super);
-	    function SqlConsoleMsgWarning(msg) {
-	        return _super.call(this, 'warning', msg) || this;
-	    }
-	    return SqlConsoleMsgWarning;
-	}(sql_console_message_1.SqlConsoleMessage));
-	exports.SqlConsoleMsgWarning = SqlConsoleMsgWarning;
 
 
 /***/ },
@@ -2284,7 +2237,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var Pga = (function () {
 	    function Pga() {
 	        this.setToolTip();
@@ -2369,8 +2322,8 @@
 	};
 	var animation_1 = __webpack_require__(4);
 	var delay_1 = __webpack_require__(5);
-	var sql_console_msg_info_1 = __webpack_require__(9);
-	var sql_console_msg_warning_1 = __webpack_require__(21);
+	var sql_console_msg_info_1 = __webpack_require__(11);
+	var sql_console_msg_warning_1 = __webpack_require__(7);
 	var AnimationCommit = (function (_super) {
 	    __extends(AnimationCommit, _super);
 	    function AnimationCommit() {
@@ -2406,6 +2359,10 @@
 	                    case 4:
 	                        //enviando blocks para redo.log.files
 	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< SP > Commit realizado com sucesso! Transação gravada em disco."));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 5:
+	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        Orasim.getAnimation().setAnimating(false);
 	                        return [2 /*return*/];
@@ -2420,6 +2377,52 @@
 
 /***/ },
 /* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var animation_rollback_1 = __webpack_require__(28);
+	var SqlButtonRollback = (function () {
+	    function SqlButtonRollback() {
+	    }
+	    SqlButtonRollback.prototype.contructor = function () {
+	        var _this = this;
+	        $("#btnRollback").on('click', function () {
+	            _this.handleRollback();
+	        });
+	    };
+	    SqlButtonRollback.prototype.handleRollback = function () {
+	        if (Orasim.getAnimation().isAnimating())
+	            return;
+	        new animation_rollback_1.AnimationRollback().start();
+	    };
+	    return SqlButtonRollback;
+	}());
+	exports.SqlButtonRollback = SqlButtonRollback;
+
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var animation_1 = __webpack_require__(4);
+	var AnimationRollback = (function (_super) {
+	    __extends(AnimationRollback, _super);
+	    function AnimationRollback() {
+	        return _super.call(this) || this;
+	    }
+	    return AnimationRollback;
+	}(animation_1.Animation));
+	exports.AnimationRollback = AnimationRollback;
+
+
+/***/ },
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2459,9 +2462,9 @@
 	    }
 	};
 	var delay_1 = __webpack_require__(5);
-	var tooltip_1 = __webpack_require__(20);
-	var arrow_1 = __webpack_require__(28);
-	var sql_console_msg_info_1 = __webpack_require__(9);
+	var tooltip_1 = __webpack_require__(21);
+	var arrow_1 = __webpack_require__(30);
+	var sql_console_msg_info_1 = __webpack_require__(11);
 	/**
 	 * UserProcess
 	 * Classe responsavel por modelar o objeto UserProcess da animacao
@@ -2569,7 +2572,7 @@
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2919,14 +2922,14 @@
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
-	var sql_console_msg_info_1 = __webpack_require__(9);
-	var sql_console_msg_warning_1 = __webpack_require__(21);
-	var arrow_1 = __webpack_require__(28);
+	var tooltip_1 = __webpack_require__(21);
+	var sql_console_msg_info_1 = __webpack_require__(11);
+	var sql_console_msg_warning_1 = __webpack_require__(7);
+	var arrow_1 = __webpack_require__(30);
 	/**
 	 * ListenerProcess
 	 * Classe responsavel por modelar o objeto ListenerProcess da animacao
@@ -2999,11 +3002,11 @@
 
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(31);
+	var data_files_1 = __webpack_require__(33);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -3017,7 +3020,7 @@
 
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3060,17 +3063,17 @@
 
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(33);
-	var pmon_1 = __webpack_require__(41);
-	var smon_1 = __webpack_require__(42);
-	var dbwr_1 = __webpack_require__(43);
-	var ckpt_1 = __webpack_require__(44);
-	var lgwr_1 = __webpack_require__(45);
-	var arcn_1 = __webpack_require__(46);
+	var sga_1 = __webpack_require__(35);
+	var pmon_1 = __webpack_require__(43);
+	var smon_1 = __webpack_require__(44);
+	var dbwr_1 = __webpack_require__(45);
+	var ckpt_1 = __webpack_require__(46);
+	var lgwr_1 = __webpack_require__(47);
+	var arcn_1 = __webpack_require__(48);
 	var OracleInstance = (function () {
 	    function OracleInstance() {
 	        this.sga = new sga_1.Sga();
@@ -3093,13 +3096,13 @@
 
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(34);
-	var shared_pool_1 = __webpack_require__(35);
-	var redo_log_buffer_1 = __webpack_require__(39);
+	var db_buffer_cache_1 = __webpack_require__(36);
+	var shared_pool_1 = __webpack_require__(37);
+	var redo_log_buffer_1 = __webpack_require__(41);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -3137,11 +3140,11 @@
 
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var data_block_1 = __webpack_require__(22);
 	/**
 	 * DbBufferCache
@@ -3243,13 +3246,13 @@
 
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var std = __webpack_require__(36);
-	var rand_1 = __webpack_require__(38);
-	var tooltip_1 = __webpack_require__(20);
+	var std = __webpack_require__(38);
+	var rand_1 = __webpack_require__(40);
+	var tooltip_1 = __webpack_require__(21);
 	/**
 	 * SharedPool
 	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
@@ -3350,7 +3353,7 @@
 
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {var __extends = (this && this.__extends) || function (d, b) {
@@ -14578,10 +14581,10 @@
 	}
 	catch (exception) { }
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)))
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -14767,7 +14770,7 @@
 
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -14788,12 +14791,12 @@
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
-	var data_block_redo_1 = __webpack_require__(40);
+	var tooltip_1 = __webpack_require__(21);
+	var data_block_redo_1 = __webpack_require__(42);
 	var data_block_1 = __webpack_require__(22);
 	/**
 	 * Redo Log Buffer
@@ -14878,7 +14881,7 @@
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14903,11 +14906,11 @@
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
@@ -14920,11 +14923,11 @@
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var Smon = (function () {
 	    function Smon() {
 	        this.element = $('#smon')[0];
@@ -14937,11 +14940,11 @@
 
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var Dbwr = (function () {
 	    function Dbwr() {
 	        this.element = $('#dbwr')[0];
@@ -14954,11 +14957,11 @@
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var Ckpt = (function () {
 	    function Ckpt() {
 	        this.element = $('#ckpt')[0];
@@ -14971,7 +14974,7 @@
 
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -15011,14 +15014,14 @@
 	    }
 	};
 	var delay_1 = __webpack_require__(5);
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var Lgwr = (function () {
 	    function Lgwr() {
 	        //tooltip do pmon
 	        this.element = $('#lgwr')[0];
 	        new tooltip_1.Tooltip("#lgwr", "Log Writer (LGWR)", "Olá, eu sou o LGWR!");
 	        this.redoBufferBlocksMap = new std.HashMap();
-	        this.redoDataFIlesMap = new std.HashMap();
+	        this.redoDataFilesMap = new std.HashMap();
 	        //this.redoBufferBlocks.has(123)
 	    }
 	    Lgwr.prototype.hasRedoBufferBlockArr = function (hash) {
@@ -15043,7 +15046,7 @@
 	                //resetando o estado dos blocos do redo log buffer
 	                block.setUsed(false);
 	                block.setColor("#ffffff");
-	                //removendo entries usadas do map                
+	                //removendo DataBlockRedo indexes usadas do map                
 	                var hashForDelete = new std.HashSet();
 	                for (var it = this.redoBufferBlocksMap.begin(); !it.equals(this.redoBufferBlocksMap.end()); it = it.next()) {
 	                    for (var _i = 0, _a = it.second; _i < _a.length; _i++) {
@@ -15138,11 +15141,11 @@
 
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(20);
+	var tooltip_1 = __webpack_require__(21);
 	var Arcn = (function () {
 	    function Arcn() {
 	        this.element = $('#arcn')[0];
@@ -15152,6 +15155,52 @@
 	    return Arcn;
 	}());
 	exports.Arcn = Arcn;
+
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var sql_query_data_1 = __webpack_require__(50);
+	var SqlDataContainer = (function () {
+	    function SqlDataContainer() {
+	        this.sqlQueryDataMap = new std.HashMap();
+	    }
+	    SqlDataContainer.prototype.add = function (queryName, hash) {
+	        if (this.sqlQueryDataMap.has(hash.getHash()))
+	            return;
+	        this.sqlQueryDataMap.insert([hash.getHash(), new sql_query_data_1.SqlQueryData(queryName, hash)]);
+	    };
+	    return SqlDataContainer;
+	}());
+	exports.SqlDataContainer = SqlDataContainer;
+
+
+/***/ },
+/* 50 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var SqlQueryData = (function () {
+	    //private numBlocks: number //numero de blocks associados a essa query
+	    function SqlQueryData(queryId, hash) {
+	        this.queryId = queryId;
+	        this.hash = hash;
+	        //this.numBlocks = numBlocks 
+	        if (queryId != 'select') {
+	            this.isTransaction = true;
+	            this.needs2Commit = true;
+	        }
+	        else {
+	            //not select, insert, update, or delete
+	            this.isTransaction = false;
+	            this.needs2Commit = false;
+	        }
+	    }
+	    return SqlQueryData;
+	}());
+	exports.SqlQueryData = SqlQueryData;
 
 
 /***/ }

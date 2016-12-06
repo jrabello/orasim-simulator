@@ -3,6 +3,7 @@ import { Hash } from '../crypt/hash'
 import { Animation } from './animation'
 import { ServerProcess } from '../process/server.process'
 import { UserProcess } from '../process/user.process'
+import { SqlConsoleMsgWarning } from '../sql-console/sql.console.msg.warning'
 
 /**
  * AnimationSelect
@@ -54,7 +55,8 @@ export class AnimationSelect extends Animation{
         .then((result: number) => {            
             return serverProcess.animateByHash(this.hash, this.hashFound)             
         })
-        .then((result: void) => {            
+        .then((result: void) => {          
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))              
             Orasim.getAnimation().setAnimating(false)
         })
     }

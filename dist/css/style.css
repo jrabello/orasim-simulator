@@ -7,6 +7,18 @@ h1 {
   font-size: 3em;
 }
 
+.block-locked {
+  /*top: 30%;
+  left: 30%;
+  width: 15px;
+  height: 15px;
+  content: '';
+  position: absolute;*/
+  background-image: url(../img/bloqueado.png);
+  background-size: 15px;
+  background-repeat: no-repeat;
+}
+
 .cursorHand { cursor: pointer; cursor: hand; }
 
 .main-title {

@@ -15,6 +15,8 @@ interface OrasimStatic {
     getOracleInstance(): any 
 
     getOracleDatabase(): any
+    
+    getSqlDataContainer(): any
 
 }
 
