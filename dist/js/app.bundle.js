@@ -48,11 +48,11 @@
 	var sql_console_1 = __webpack_require__(1);
 	var sql_buttons_1 = __webpack_require__(12);
 	var server_process_1 = __webpack_require__(20);
-	var user_process_1 = __webpack_require__(29);
-	var listener_process_1 = __webpack_require__(31);
+	var user_process_1 = __webpack_require__(30);
+	var listener_process_1 = __webpack_require__(32);
 	var animation_1 = __webpack_require__(4);
-	var oracle_database_1 = __webpack_require__(32);
-	var oracle_instance_1 = __webpack_require__(34);
+	var oracle_database_1 = __webpack_require__(33);
+	var oracle_instance_1 = __webpack_require__(35);
 	var sql_data_container_1 = __webpack_require__(49);
 	/**
 	 * Main
@@ -778,8 +778,8 @@
 	var sql_button_select_1 = __webpack_require__(13);
 	var sql_button_connect_1 = __webpack_require__(15);
 	var sql_button_insert_1 = __webpack_require__(17);
-	var sql_button_commit_1 = __webpack_require__(25);
-	var sql_button_rollback_1 = __webpack_require__(27);
+	var sql_button_commit_1 = __webpack_require__(26);
+	var sql_button_rollback_1 = __webpack_require__(28);
 	var SqlButtons = (function () {
 	    function SqlButtons() {
 	        //criando instancia de button select, insert, connect        
@@ -1398,15 +1398,13 @@
 	                switch (_a.label) {
 	                    case 0:
 	                        // setando estado de inicio da animacao
+	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
 	                        Orasim.getAnimation().setAnimating(true);
 	                        userProcess = Orasim.getUserProcess();
 	                        serverProcess = Orasim.getServerProcess();
-	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
-	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
 	                        return [4 /*yield*/, userProcess.animateSendDataToServerProcessAsync(5000, "INSERT")];
 	                    case 1:
-	                        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
-	                        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Realizando parse...'));
 	                        $("#server-process").addClass("time-clock");
@@ -1491,29 +1489,6 @@
 	                switch (_a.label) {
 	                    case 0:
 	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
-	                        // //animacao do relogio no server process, realizando parsing
-	                        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
-	                        // $("#server-process").addClass("time-clock")
-	                        // await new Delay(5000).sleep()        
-	                        // //animacao adicionando hash na shared pool
-	                        // //pegando array de blocks da shared pool que correspondem ao hash        
-	                        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(
-	                        //     `< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>
-	                        //              concluído, gerado 
-	                        //              <span style="font-weight: bold">SQL_ID</span>: 
-	                        //              <span style="font-weight: bold; color: ${hash.getColor()}">${hash.getHashStr()}</span>, adicionando na <span style="font-weight: bold">SharedPool</span>`))
-	                        // $("#server-process").removeClass("time-clock")        
-	                        // await super.animSearchSharedPool(5000)        
-	                        // sharedPool.animateAddHash(hash)
-	                        // //let memLocationArr = sharedPool.getMemoryLocation(hash)
-	                        // await new Delay(3000).sleep()
-	                        // //escrevendo no dbBufferCache
-	                        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>DB_BufferCache</span>"))
-	                        // await new Delay(3000).sleep()
-	                        // await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)                
-	                        // //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
-	                        // await super.animStoreBlocksInDbBufferCache(hash, 5000)        
-	                        // await new Delay(3000).sleep()
 	                        //escrevendo no redo-log-files
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
@@ -1523,7 +1498,7 @@
 	                    case 2:
 	                        _a.sent();
 	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
-	                        return [4 /*yield*/, _super.prototype.animStoreBlocksInRedoLogBuffer.call(this, hash, 10000)];
+	                        return [4 /*yield*/, _super.prototype.animStoreRedoBlocksInRedoLogBuffer.call(this, hash, 10000)];
 	                    case 3:
 	                        //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
 	                        _a.sent();
@@ -1580,10 +1555,11 @@
 	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
 	    }
 	};
-	var tooltip_1 = __webpack_require__(21);
+	var data_block_redo_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var sql_console_msg_info_1 = __webpack_require__(11);
-	var data_block_1 = __webpack_require__(22);
-	var pga_1 = __webpack_require__(24);
+	var data_block_1 = __webpack_require__(24);
+	var pga_1 = __webpack_require__(25);
 	var delay_1 = __webpack_require__(5);
 	/**
 	 * ServerProcess
@@ -1623,6 +1599,15 @@
 	    };
 	    ServerProcess.prototype.createNewBlock = function () {
 	        var newBlock = new data_block_1.DataBlock();
+	        //criando block dentro do do elemento atual        
+	        $(this.element).prepend(newBlock.getElement());
+	        $(newBlock.getElement()).offset($(this.element).offset());
+	        $(newBlock.getElement()).css("position", "absolute");
+	        $(newBlock.getElement()).css("z-index", 100);
+	        return newBlock;
+	    };
+	    ServerProcess.prototype.createNewRedoBlock = function () {
+	        var newBlock = new data_block_redo_1.DataBlockRedo();
 	        //criando block dentro do do elemento atual        
 	        $(this.element).prepend(newBlock.getElement());
 	        $(newBlock.getElement()).offset($(this.element).offset());
@@ -1703,6 +1688,15 @@
 	        }
 	        return blockHtmlArr;
 	    };
+	    ServerProcess.prototype.createNewRedoBlocks = function (numBlocks, color) {
+	        var blockHtmlArr = new Array();
+	        for (var i = 0; i < numBlocks; i++) {
+	            var block = this.createNewRedoBlock();
+	            block.setColor(color);
+	            blockHtmlArr.push(block);
+	        }
+	        return blockHtmlArr;
+	    };
 	    /**
 	     * animStoreBlockInDbBufferCache
 	     * a diferenca desse metodo para o definido abaixo,
@@ -1744,7 +1738,7 @@
 	            });
 	        });
 	    };
-	    ServerProcess.prototype.animStoreBlocksInRedoLogBuffer = function (hash, delay) {
+	    ServerProcess.prototype.animStoreRedoBlocksInRedoLogBuffer = function (hash, delay) {
 	        return __awaiter(this, void 0, void 0, function () {
 	            var sharedPool, redoLogBuffer, memLocationArr, blockHtmlArr, animCounter, animDelay, _loop_2, _i, blockHtmlArr_2, block;
 	            return __generator(this, function (_a) {
@@ -1753,14 +1747,14 @@
 	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	                        redoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer();
 	                        memLocationArr = sharedPool.getMemoryLocation(hash);
-	                        blockHtmlArr = this.createNewBlocks(memLocationArr.length, hash.getColor());
+	                        blockHtmlArr = this.createNewRedoBlocks(3, hash.getColor());
 	                        animCounter = 0;
 	                        animDelay = 0;
 	                        _loop_2 = function (block) {
 	                            // console.log(dbBufferCache.getBlocks()[memLocationArr[j]].getElement())
 	                            // console.log(dbBufferCache.getBlocks(), memLocationArr[j])            
 	                            // console.log(block)            
-	                            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), delay - (delay * (animDelay)), delay / 6, function () {
+	                            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), delay - (delay * (animDelay)), 0, function () {
 	                                // no inicio da animacao piscar server-process e db-buffer-cache                
 	                                //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
 	                            }, function () {
@@ -2119,47 +2113,6 @@
 
 /***/ },
 /* 21 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var Tooltip = (function () {
-	    /**
-	     * constructor
-	     * Metodo responsavel por incluir a tooltip nos elementos
-	     * @param {idElement} id seletor do elemento html que recebera a tooltip
-	     * @param {title} titulo da janela
-	     * @param {text} texto dentro da janela
-	     */
-	    function Tooltip(idElement, title, text) {
-	        this.genToolTip(idElement, title, text);
-	    }
-	    Tooltip.prototype.genToolTip = function (idElement, title, text) {
-	        // criando tooltip para elemento
-	        $(idElement).qtip({
-	            suppress: false,
-	            content: {
-	                title: {
-	                    text: title,
-	                    button: true
-	                },
-	                text: text + '<br><br>'
-	            },
-	            show: { event: 'click' },
-	            style: { classes: 'qtip-light' },
-	            hide: { event: 'click' },
-	            position: {
-	                target: 'mouse',
-	                adjust: { mouse: false }
-	            }
-	        });
-	    };
-	    return Tooltip;
-	}());
-	exports.Tooltip = Tooltip;
-
-
-/***/ },
-/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2168,27 +2121,23 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var block_1 = __webpack_require__(23);
+	var block_1 = __webpack_require__(22);
 	/**
-	 * DataBlock
-	 * Classe Responsavel modelar um bloco (data block)
+	 * DataBlockRedo
+	 * Classe Responsavel modelar um bloco (data block redo)
 	 */
-	var DataBlock = (function (_super) {
-	    __extends(DataBlock, _super);
-	    function DataBlock() {
-	        return _super.call(this, $("<div class=\"cache-box\"></div>")[0], 4096, false, "#ffffff") || this;
-	        // super.element =         
-	        // this.size = 4096
-	        // this.isUsed = false
-	        // this.color = "#ffffff"
+	var DataBlockRedo = (function (_super) {
+	    __extends(DataBlockRedo, _super);
+	    function DataBlockRedo() {
+	        return _super.call(this, $("<div class=\"buffer-box\"></div>")[0], 4096, false, "#ffffff") || this;
 	    }
-	    return DataBlock;
+	    return DataBlockRedo;
 	}(block_1.Block));
-	exports.DataBlock = DataBlock;
+	exports.DataBlockRedo = DataBlockRedo;
 
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2233,11 +2182,81 @@
 
 
 /***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Tooltip = (function () {
+	    /**
+	     * constructor
+	     * Metodo responsavel por incluir a tooltip nos elementos
+	     * @param {idElement} id seletor do elemento html que recebera a tooltip
+	     * @param {title} titulo da janela
+	     * @param {text} texto dentro da janela
+	     */
+	    function Tooltip(idElement, title, text) {
+	        this.genToolTip(idElement, title, text);
+	    }
+	    Tooltip.prototype.genToolTip = function (idElement, title, text) {
+	        // criando tooltip para elemento
+	        $(idElement).qtip({
+	            suppress: false,
+	            content: {
+	                title: {
+	                    text: title,
+	                    button: true
+	                },
+	                text: text + '<br><br>'
+	            },
+	            show: { event: 'click' },
+	            style: { classes: 'qtip-light' },
+	            hide: { event: 'click' },
+	            position: {
+	                target: 'mouse',
+	                adjust: { mouse: false }
+	            }
+	        });
+	    };
+	    return Tooltip;
+	}());
+	exports.Tooltip = Tooltip;
+
+
+/***/ },
 /* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var block_1 = __webpack_require__(22);
+	/**
+	 * DataBlock
+	 * Classe Responsavel modelar um bloco (data block)
+	 */
+	var DataBlock = (function (_super) {
+	    __extends(DataBlock, _super);
+	    function DataBlock() {
+	        return _super.call(this, $("<div class=\"cache-box\"></div>")[0], 4096, false, "#ffffff") || this;
+	        // super.element =         
+	        // this.size = 4096
+	        // this.isUsed = false
+	        // this.color = "#ffffff"
+	    }
+	    return DataBlock;
+	}(block_1.Block));
+	exports.DataBlock = DataBlock;
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var tooltip_1 = __webpack_require__(23);
 	var Pga = (function () {
 	    function Pga() {
 	        this.setToolTip();
@@ -2252,11 +2271,11 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var animation_commit_1 = __webpack_require__(26);
+	var animation_commit_1 = __webpack_require__(27);
 	var SqlButtonCommit = (function () {
 	    function SqlButtonCommit() {
 	        var _this = this;
@@ -2276,7 +2295,7 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2359,9 +2378,12 @@
 	                    case 4:
 	                        //enviando blocks para redo.log.files
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< SP > Commit realizado com sucesso! Transação gravada em disco."));
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
 	                    case 5:
+	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Commit realizado com sucesso! Transação gravada em disco."));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 6:
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        Orasim.getAnimation().setAnimating(false);
@@ -2376,11 +2398,11 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var animation_rollback_1 = __webpack_require__(28);
+	var animation_rollback_1 = __webpack_require__(29);
 	var SqlButtonRollback = (function () {
 	    function SqlButtonRollback() {
 	    }
@@ -2401,7 +2423,7 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2422,7 +2444,7 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2462,8 +2484,8 @@
 	    }
 	};
 	var delay_1 = __webpack_require__(5);
-	var tooltip_1 = __webpack_require__(21);
-	var arrow_1 = __webpack_require__(30);
+	var tooltip_1 = __webpack_require__(23);
+	var arrow_1 = __webpack_require__(31);
 	var sql_console_msg_info_1 = __webpack_require__(11);
 	/**
 	 * UserProcess
@@ -2572,7 +2594,7 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2922,14 +2944,14 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var sql_console_msg_info_1 = __webpack_require__(11);
 	var sql_console_msg_warning_1 = __webpack_require__(7);
-	var arrow_1 = __webpack_require__(30);
+	var arrow_1 = __webpack_require__(31);
 	/**
 	 * ListenerProcess
 	 * Classe responsavel por modelar o objeto ListenerProcess da animacao
@@ -3002,11 +3024,11 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_files_1 = __webpack_require__(33);
+	var data_files_1 = __webpack_require__(34);
 	var OracleDatabase = (function () {
 	    function OracleDatabase() {
 	        this.dataFiles = new data_files_1.DataFiles();
@@ -3020,11 +3042,11 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var data_block_1 = __webpack_require__(22);
+	var data_block_1 = __webpack_require__(24);
 	/**
 	 * DataFiles
 	 * Classe responsavel por modelar o objeto Data-Files do oracle database
@@ -3063,11 +3085,11 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var sga_1 = __webpack_require__(35);
+	var sga_1 = __webpack_require__(36);
 	var pmon_1 = __webpack_require__(43);
 	var smon_1 = __webpack_require__(44);
 	var dbwr_1 = __webpack_require__(45);
@@ -3096,13 +3118,13 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var db_buffer_cache_1 = __webpack_require__(36);
-	var shared_pool_1 = __webpack_require__(37);
-	var redo_log_buffer_1 = __webpack_require__(41);
+	var db_buffer_cache_1 = __webpack_require__(37);
+	var shared_pool_1 = __webpack_require__(38);
+	var redo_log_buffer_1 = __webpack_require__(42);
 	var Sga = (function () {
 	    function Sga() {
 	        this.dbBufferCache = new db_buffer_cache_1.DbBufferCache();
@@ -3140,12 +3162,12 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
-	var data_block_1 = __webpack_require__(22);
+	var tooltip_1 = __webpack_require__(23);
+	var data_block_1 = __webpack_require__(24);
 	/**
 	 * DbBufferCache
 	 * Classe responsavel por modelar o objeto DbBufferCache do oracle instance
@@ -3246,13 +3268,13 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var std = __webpack_require__(38);
-	var rand_1 = __webpack_require__(40);
-	var tooltip_1 = __webpack_require__(21);
+	var std = __webpack_require__(39);
+	var rand_1 = __webpack_require__(41);
+	var tooltip_1 = __webpack_require__(23);
 	/**
 	 * SharedPool
 	 * Classe responsavel por modelar o objeto SharedPool do oracle instance
@@ -3353,7 +3375,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {var __extends = (this && this.__extends) || function (d, b) {
@@ -14581,10 +14603,10 @@
 	}
 	catch (exception) { }
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)))
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -14770,7 +14792,7 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -14791,13 +14813,13 @@
 
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
-	var data_block_redo_1 = __webpack_require__(42);
-	var data_block_1 = __webpack_require__(22);
+	var tooltip_1 = __webpack_require__(23);
+	var data_block_redo_1 = __webpack_require__(21);
+	var data_block_1 = __webpack_require__(24);
 	/**
 	 * Redo Log Buffer
 	 * Classe responsavel por modelar o objeto RedoLogBuffer do oracle instance
@@ -14852,20 +14874,26 @@
 	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	        var lgwr = Orasim.getOracleInstance().getLgwr();
 	        var memLocationArr = sharedPool.getMemoryLocation(hash);
+	        //limpando ultimos 3 blocks pq na animacao agora so tem 3
+	        if (memLocationArr.length == 6) {
+	            memLocationArr.pop();
+	            memLocationArr.pop();
+	            memLocationArr.pop();
+	        }
 	        //se ja tiver os blocos mapeados retorne
 	        if (lgwr.hasRedoBufferBlockArr(hash))
 	            return;
 	        //verificando quais blocks nao estao sendo utilizados e adicionando os mesmos no log writer
 	        var i = 0;
-	        var numDirtyBlocks = memLocationArr.length;
+	        var blocksUsed = 0;
 	        var blockIndexArr = new Array();
 	        for (var _i = 0, _a = this.dataBlockRedoList; _i < _a.length; _i++) {
 	            var block = _a[_i];
-	            if (!block.used() && numDirtyBlocks) {
+	            if (!block.used() && blocksUsed < memLocationArr.length) {
 	                block.setUsed(true);
 	                block.setColor(hash.getColor());
-	                numDirtyBlocks -= 3;
 	                blockIndexArr.push(i);
+	                blocksUsed++;
 	            }
 	            i++;
 	        }
@@ -14881,36 +14909,11 @@
 
 
 /***/ },
-/* 42 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var block_1 = __webpack_require__(23);
-	/**
-	 * DataBlockRedo
-	 * Classe Responsavel modelar um bloco (data block redo)
-	 */
-	var DataBlockRedo = (function (_super) {
-	    __extends(DataBlockRedo, _super);
-	    function DataBlockRedo() {
-	        return _super.call(this, $("<div class=\"buffer-box\"></div>")[0], 4096, false, "#ffffff") || this;
-	    }
-	    return DataBlockRedo;
-	}(block_1.Block));
-	exports.DataBlockRedo = DataBlockRedo;
-
-
-/***/ },
 /* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var Pmon = (function () {
 	    function Pmon() {
 	        this.element = $('#pmon')[0];
@@ -14927,7 +14930,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var Smon = (function () {
 	    function Smon() {
 	        this.element = $('#smon')[0];
@@ -14944,7 +14947,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var Dbwr = (function () {
 	    function Dbwr() {
 	        this.element = $('#dbwr')[0];
@@ -14961,7 +14964,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var Ckpt = (function () {
 	    function Ckpt() {
 	        this.element = $('#ckpt')[0];
@@ -15014,7 +15017,7 @@
 	    }
 	};
 	var delay_1 = __webpack_require__(5);
-	var tooltip_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var Lgwr = (function () {
 	    function Lgwr() {
 	        //tooltip do pmon
@@ -15071,12 +15074,12 @@
 	                switch (_a.label) {
 	                    case 0: 
 	                    //anima-los para log-writer
-	                    return [4 /*yield*/, this.animGetBlocksFromRedoLogBuffer(blocks, 5000)];
+	                    return [4 /*yield*/, this.animGetBlocksFromRedoLogBuffer(blocks, 10000)];
 	                    case 1:
 	                        //anima-los para log-writer
 	                        _a.sent();
 	                        //uma vez no log-writer precisamos envia-los ao redo-log-files
-	                        return [4 /*yield*/, this.animSendBlocksToRedoLogFiles(blocks, 5000)];
+	                        return [4 /*yield*/, this.animSendBlocksToRedoLogFiles(blocks, 10000)];
 	                    case 2:
 	                        //uma vez no log-writer precisamos envia-los ao redo-log-files
 	                        _a.sent();
@@ -15145,7 +15148,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var tooltip_1 = __webpack_require__(21);
+	var tooltip_1 = __webpack_require__(23);
 	var Arcn = (function () {
 	    function Arcn() {
 	        this.element = $('#arcn')[0];

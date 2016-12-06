@@ -32,12 +32,12 @@ export class AnimationInsert extends Animation{
      */
     async start(){
         // setando estado de inicio da animacao
+        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
         Orasim.getAnimation().setAnimating(true)
         let userProcess: UserProcess = Orasim.getUserProcess()
         let serverProcess: ServerProcess = Orasim.getServerProcess()
-        // let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
-        // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
-        
+                
         await userProcess.animateSendDataToServerProcessAsync(5000, "INSERT")
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
         $("#server-process").addClass("time-clock")

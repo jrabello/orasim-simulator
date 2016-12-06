@@ -32,7 +32,8 @@ export class AnimationCommit extends Animation {
 
         //enviando blocks para redo.log.files
         await lgwr.sendBlocksToRedoLogFiles(blocks)
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< SP > Commit realizado com sucesso! Transação gravada em disco." ))
+        await new Delay(5000).sleep()
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Commit realizado com sucesso! Transação gravada em disco." ))
         await new Delay(3000).sleep()
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
         Orasim.getAnimation().setAnimating(false)
