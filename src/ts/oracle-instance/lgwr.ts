@@ -2,6 +2,7 @@ import { Hash } from '../crypt/hash'
 import { Delay } from '../time/delay'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlock } from '../oracle-database/data.block'
+import { DataBlockRedo } from '../oracle-database/data.block.redo'
 import { RedoLogBuffer } from '../oracle-instance/redo.log.buffer'
 import { UserProcess } from '../process/user.process'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
@@ -32,20 +33,33 @@ export class Lgwr {
     //counting number of blocks used
     //apagando status dos blocks do redo-log-buffer
     //criando numero de blocks dirty dentro de redo-log-buffer para usar na animacao
-    getDirtyBlocksFromRedoLogBuffer(): DataBlock[] {
-        let blocks: DataBlock[] = new Array<DataBlock>()
+    getDirtyBlocksFromRedoLogBuffer(): DataBlockRedo[] {
+        let blocks: DataBlockRedo[] = new Array<DataBlockRedo>()
         let redoLogBuffer: RedoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer()
 
         for (let index in redoLogBuffer.getBlocks()) {
             let block = redoLogBuffer.getBlocks()[index]
-            if (block.used()) {
+            if (block.used()) {                
                 //criando novo bloco que sera usado na animacao de envio para o log writer         
-                let newBlock = redoLogBuffer.createNewDataBlock()
+                let newBlock = redoLogBuffer.createNewDataBlockRedo()
                 newBlock.setColor(block.getColor())
                 blocks.push(newBlock)
                 //resetando o estado dos blocos do redo log buffer
                 block.setUsed(false)
                 block.setColor("#ffffff")
+                //removendo entries usadas do map                
+                let hashForDelete: std.HashSet<number> = new std.HashSet<number>() 
+                for (let it = this.redoBufferBlocksMap.begin(); !it.equals(this.redoBufferBlocksMap.end()); it = it.next()) {
+                    for (let index2 of it.second){
+                        if(index2.toString() == index){
+                            hashForDelete.insert(it.first)
+                            continue
+                        }
+                    }
+                }
+                for (let it = hashForDelete.begin(); !it.equals(hashForDelete.end()); it = it.next()) {
+                    this.redoBufferBlocksMap.erase(it.value)
+                }                    
             }
         }
 
