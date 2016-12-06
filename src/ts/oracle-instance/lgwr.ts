@@ -10,15 +10,17 @@ import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 
 export class Lgwr {
     private element: HTMLElement
+    //mapa para redo buffer cache
     private redoBufferBlocksMap: std.HashMap<number, number[]>
-    private redoDataFIlesMap: std.HashMap<number, number[]>
+    //mapa para redo data files
+    private redoDataFilesMap: std.HashMap<number, number[]>
 
     constructor() {
         //tooltip do pmon
         this.element = $('#lgwr')[0]        
         new Tooltip("#lgwr", "Log Writer (LGWR)", "Olá, eu sou o LGWR!")
         this.redoBufferBlocksMap = new std.HashMap<number, number[]>()
-        this.redoDataFIlesMap = new std.HashMap<number, number[]>()
+        this.redoDataFilesMap = new std.HashMap<number, number[]>()
         //this.redoBufferBlocks.has(123)
     }
 
@@ -47,7 +49,7 @@ export class Lgwr {
                 //resetando o estado dos blocos do redo log buffer
                 block.setUsed(false)
                 block.setColor("#ffffff")
-                //removendo entries usadas do map                
+                //removendo DataBlockRedo indexes usadas do map                
                 let hashForDelete: std.HashSet<number> = new std.HashSet<number>() 
                 for (let it = this.redoBufferBlocksMap.begin(); !it.equals(this.redoBufferBlocksMap.end()); it = it.next()) {
                     for (let index2 of it.second){

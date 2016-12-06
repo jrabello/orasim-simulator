@@ -24,7 +24,7 @@ export class SharedPool {
         this.element = $(`#shared-pool`)[0]
         this.sqlIdMap = new std.HashMap<number, number[]>()
         //this.hashElement = $(`<li class="sql-hash"></li>`)[0]        
-
+        
         // criando tooltip para o SharedPool
         let tooltip = new Tooltip("#shared-pool", "Shared Pool", 
         `
@@ -84,7 +84,7 @@ export class SharedPool {
         //retornando se nao existir mais blocks released
         if(releasedBlocksIndexes.length < 3){
             console.log('SharedPool::addHash no freedBlocksIndexes found!')
-            return
+            return 
         }
 
         //selecionando numero randomico de blocos 3 ou 6 blocks

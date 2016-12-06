@@ -22,8 +22,7 @@ export class AnimationCommit extends Animation {
         Orasim.getAnimation().setAnimating(true)
 
         //enviando commit
-        await userProcess.animateSendDataToServerProcessAsync(5000, "COMMIT")
-        
+        await userProcess.animateSendDataToServerProcessAsync(5000, "COMMIT")        
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< LGWR > Gravando alterações em disco"))        
         await new Delay(3000).sleep()
         await super.animBlinkTwoElements('#lgwr','#redo-log-buffer', 5000)
@@ -33,6 +32,8 @@ export class AnimationCommit extends Animation {
 
         //enviando blocks para redo.log.files
         await lgwr.sendBlocksToRedoLogFiles(blocks)
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< SP > Commit realizado com sucesso! Transação gravada em disco." ))
+        await new Delay(3000).sleep()
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
         Orasim.getAnimation().setAnimating(false)
     }

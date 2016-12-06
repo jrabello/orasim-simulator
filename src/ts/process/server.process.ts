@@ -385,8 +385,8 @@ export class ServerProcess {
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
     async animateByHash(hash: Hash, hashFound: boolean) {
-        let serverProcess: ServerProcess = Orasim.getServerProcess()
         //animacao do relogio no server process
+        let serverProcess: ServerProcess = Orasim.getServerProcess()        
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
         $("#server-process").addClass("time-clock")
         await new Delay(5000).sleep()
@@ -402,8 +402,7 @@ export class ServerProcess {
         //pegando dados do buffer cache
         await serverProcess.animGetDataFromDbBufferCache(5000)        
         //enviando dados para user process
-        await serverProcess.animSendDataToUserProcess(8000)
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))        
+        await serverProcess.animSendDataToUserProcess(8000)                
     }
 
     /**
@@ -411,7 +410,7 @@ export class ServerProcess {
      * Animacao de hash not found
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
-    private async animateHashNotFound(hash: Hash) {
+    async animateHashNotFound(hash: Hash) {
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let dataFiles: DataFiles = Orasim.getOracleDatabase().getDataFiles()
         let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
@@ -429,7 +428,9 @@ export class ServerProcess {
 
         sqlConsole.addMsg(new SqlConsoleMsgInfo(
             `< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>
-                     concluído, gerado 
+                     concluído`))
+        await new Delay(3000).sleep()
+        sqlConsole.addMsg(new SqlConsoleMsgInfo(`< SP > Gerado 
                      <span style="font-weight: bold">SQL_ID</span>: 
                      <span style="font-weight: bold; color: ${hash.getColor()}">${hash.getHashStr()}</span>, adicionando na <span style="font-weight: bold">SharedPool</span>`))
         $("#server-process").removeClass("time-clock")
