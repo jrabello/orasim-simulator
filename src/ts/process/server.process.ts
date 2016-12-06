@@ -1,3 +1,4 @@
+import { DataBlockRedo } from '../oracle-database/data.block.redo'
 import { Tooltip } from '../utils/tooltip'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 import { SqlConsoleMsgWarning } from '../sql-console/sql.console.msg.warning'
@@ -97,6 +98,18 @@ export class ServerProcess {
         return newBlock
     }
 
+    createNewRedoBlock(): DataBlockRedo {
+        let newBlock = new DataBlockRedo()
+
+        //criando block dentro do do elemento atual        
+        $(this.element).prepend(newBlock.getElement())
+        $(newBlock.getElement()).offset($(this.element).offset())
+        $(newBlock.getElement()).css("position", "absolute")
+        $(newBlock.getElement()).css("z-index", 100)
+
+        return newBlock
+    }
+
     /**
      * animateSendBlockTo
      * metodo um pouco mais generico que permite o envio dos dados para elementos usando id  
@@ -166,6 +179,16 @@ export class ServerProcess {
         return blockHtmlArr
     }
 
+    createNewRedoBlocks(numBlocks: number, color: string): DataBlockRedo[]{
+        let blockHtmlArr = new Array<DataBlockRedo>()
+        for(let i = 0; i < numBlocks; i++){
+            let block = this.createNewRedoBlock()
+            block.setColor(color)
+            blockHtmlArr.push(block)
+        }
+        return blockHtmlArr
+    }
+
     /**
      * animStoreBlockInDbBufferCache   
      * a diferenca desse metodo para o definido abaixo, 
@@ -198,12 +221,13 @@ export class ServerProcess {
         await new Delay(delay).sleep()
     }
 
-    async animStoreBlocksInRedoLogBuffer(hash: Hash, delay: number) {
+    async animStoreRedoBlocksInRedoLogBuffer(hash: Hash, delay: number) {
         //generating new blocks
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let redoLogBuffer: RedoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer()
         let memLocationArr = sharedPool.getMemoryLocation(hash)
-        let blockHtmlArr = this.createNewBlocks(memLocationArr.length, hash.getColor())
+        //let blockHtmlArr = this.createNewRedoBlocks(memLocationArr.length, hash.getColor())
+        let blockHtmlArr = this.createNewRedoBlocks(3, hash.getColor())
                 
         //moving blocks 2 dbBufferCache
         let animCounter = 0
@@ -212,7 +236,7 @@ export class ServerProcess {
             // console.log(dbBufferCache.getBlocks()[memLocationArr[j]].getElement())
             // console.log(dbBufferCache.getBlocks(), memLocationArr[j])            
             // console.log(block)            
-            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), delay-(delay*(animDelay)), delay / 6, () => {                
+            Orasim.getAnimation().moveTo(block.getElement(), redoLogBuffer.getFirstCleanBlock().getElement(), delay-(delay*(animDelay)), 0, () => {                
                 // no inicio da animacao piscar server-process e db-buffer-cache                
                 //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('ServerProcess gravando dados no DbBufferCache'))            
             }, () => {                                

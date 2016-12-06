@@ -17,7 +17,7 @@ export class ServerProcessInsert extends ServerProcess{
         // let userProcess: UserProcess = Orasim.getUserProcess()
         // let serverProcess: ServerProcess = Orasim.getServerProcess()
         // let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
-        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        
 
         // //animacao do relogio no server process, realizando parsing
         // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
@@ -44,13 +44,14 @@ export class ServerProcessInsert extends ServerProcess{
         // //await super.animateSendBlockTo('#db-buffer-cache', hash, 5000)
         // await super.animStoreBlocksInDbBufferCache(hash, 5000)        
         // await new Delay(3000).sleep()
-
+        
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         //escrevendo no redo-log-files
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"))
         await new Delay(3000).sleep()         
         await Orasim.getAnimation().animBlinkTwoElements('#server-process','#redo-log-buffer', 5000)
         //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)
-        await super.animStoreBlocksInRedoLogBuffer(hash, 10000)
+        await super.animStoreRedoBlocksInRedoLogBuffer(hash, 10000)
         await new Delay(1000).sleep()        
     }
 }

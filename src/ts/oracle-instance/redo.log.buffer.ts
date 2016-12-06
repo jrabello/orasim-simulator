@@ -73,21 +73,29 @@ export class RedoLogBuffer {
         let lgwr: Lgwr = Orasim.getOracleInstance().getLgwr()
         let memLocationArr = sharedPool.getMemoryLocation(hash)
         
+        //limpando ultimos 3 blocks pq na animacao agora so tem 3
+        if(memLocationArr.length == 6){
+            memLocationArr.pop()
+            memLocationArr.pop()
+            memLocationArr.pop()            
+        }
+
+
         //se ja tiver os blocos mapeados retorne
         if(lgwr.hasRedoBufferBlockArr(hash))
             return        
         
         //verificando quais blocks nao estao sendo utilizados e adicionando os mesmos no log writer
         let i = 0
-        let numDirtyBlocks = memLocationArr.length
+        let blocksUsed = 0        
         let blockIndexArr:number[] = new Array<number>()
         for (let block of this.dataBlockRedoList) {
-            if (!block.used() && numDirtyBlocks) {
+            if (!block.used() && blocksUsed < memLocationArr.length) {
                 block.setUsed(true)
-                block.setColor(hash.getColor())    
-                numDirtyBlocks -= 3
-                blockIndexArr.push(i)            
-            }            
+                block.setColor(hash.getColor())
+                blockIndexArr.push(i)
+                blocksUsed++                
+            }
             i++
         }
         lgwr.addRedoBufferBlockArr(hash, blockIndexArr)
