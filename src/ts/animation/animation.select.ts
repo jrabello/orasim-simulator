@@ -53,7 +53,7 @@ export class AnimationSelect extends Animation{
         // setando estado de termino da animacao        
         userProcess.animateSendDataToServerProcess(this.animationTime * 0.10, "SELECT")
         .then((result: number) => {            
-            return serverProcess.animateByHash(this.hash, this.hashFound)             
+            return serverProcess.animateGetBlocksFromDataFiles(this.hash, this.hashFound)             
         })
         .then((result: void) => {          
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))              

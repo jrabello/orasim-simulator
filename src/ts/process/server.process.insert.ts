@@ -28,7 +28,7 @@ export class ServerProcessInsert extends ServerProcess {
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Copiando blocos atuais e salvando na área de <span style='font-weight: bold'>UNDO</span>"))
         await new Delay(3000).sleep()
         let randomMem = dbBufferCache.duplicateAllocRandomMemory(hash)        
-        dbBufferCache.setMemoryAttributeByArray(randomMem, "undo-block")
+        dbBufferCache.setMemoryAttributeByArray(randomMem, "block-undo")
 
         //escrevendo no redo-log-files
         //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"))

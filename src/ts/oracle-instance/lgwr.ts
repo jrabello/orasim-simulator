@@ -2,6 +2,7 @@ import { Hash } from '../crypt/hash'
 import { Delay } from '../time/delay'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlock } from '../oracle-database/data.block'
+import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
 import { DataBlockRedo } from '../oracle-database/data.block.redo'
 import { RedoLogBuffer } from '../oracle-instance/redo.log.buffer'
 import { UserProcess } from '../process/user.process'
@@ -77,7 +78,8 @@ export class Lgwr {
         await new Delay(3000).sleep()
         
         //uma vez no log-writer precisamos envia-los ao redo-log-files
-        await this.animSendBlocksToRedoLogFiles(blocks, 5000)        
+        await this.animSendBlocksToRedoLogFiles(blocks, 5000)
+                
     }
 
     async animSendBlocksToRedoLogFiles(blocks: DataBlock[], delay: number){

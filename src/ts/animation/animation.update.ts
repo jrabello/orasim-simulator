@@ -26,6 +26,7 @@ export class AnimationUpdate extends Animation{
     /**
      * start
      * Inicio da animacao do update
+     * 
      */
     async start(){        
         let userProcess: UserProcess = Orasim.getUserProcess()
@@ -36,7 +37,7 @@ export class AnimationUpdate extends Animation{
         // setando estado de termino da animacao
         Orasim.getAnimation().setAnimating(true)        
         await userProcess.animateSendDataToServerProcessAsync(5000, "UPDATE")
-        await serverProcess.animateByHash(this.hash, this.isHashFound)
+        await serverProcess.animateGetBlocksFromDataFiles(this.hash, this.isHashFound)
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))                    
         Orasim.getAnimation().setAnimating(false)         
     }

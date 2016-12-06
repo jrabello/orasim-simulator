@@ -11,7 +11,7 @@ import { SharedPool } from '../oracle-instance/shared.pool'
  * @attribute {element} objeto html que referencia o elemento db-buffer-cache 
  * @attribute {blocks} array de objetos que guarda os blocos do data-files
  */
-export class DbBufferCache {    
+export class DbBufferCache {
     private numBlocks: number
     private element: HTMLElement
     private blocks: DataBlock[]
@@ -23,8 +23,8 @@ export class DbBufferCache {
         this.initBlocks()
 
         // criando tooltip para o DbBufferCache
-        let tooltip = new Tooltip("#db-buffer-cache", "DB Buffer Cache", 
-        `
+        let tooltip = new Tooltip("#db-buffer-cache", "DB Buffer Cache",
+            `
         <p align="justify">
         O DB Buffer Cache ou apenas Buffer Cache, é a área de memória que armazena as cópias dos blocos de dados lidos a partir dos datafiles. 
         <br><br>
@@ -77,20 +77,20 @@ export class DbBufferCache {
          `
         )
     }
-    
+
     /**
      * DuplicateAllocRandomMemory
      * duplicates memory allocated by hash reference(allocs the same amount of memory)
      */
-    duplicateAllocRandomMemory(hash: Hash): number[]{
+    duplicateAllocRandomMemory(hash: Hash): number[] {
         let selectedItemsArr = new Array<number>()
         let cleanMemLocationArr = this.getReleasedBlocksMemLocation()
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let sizeDirtyBlocksFromHash = sharedPool.getMemoryLocation(hash).length
-        
+
         for (let i = 0; i < sizeDirtyBlocksFromHash; i++) {
             let randNum = new Random().getIntBetweenRange(0, cleanMemLocationArr.length - 1)
-            selectedItemsArr.push(cleanMemLocationArr[randNum])            
+            selectedItemsArr.push(cleanMemLocationArr[randNum])
             cleanMemLocationArr.splice(randNum, 1)
         }
 
@@ -102,7 +102,7 @@ export class DbBufferCache {
      * initBlocks
      * Metodo responsavel por adicionar dinamicamente os blocos dentro do db-buffer-cache     
      */
-    initBlocks(): void{
+    initBlocks(): void {
         for (let i = 0; i < this.numBlocks; i++) {
             let block = new DataBlock()
             this.blocks.push(block)
@@ -115,51 +115,77 @@ export class DbBufferCache {
      * Metodo responsavel por marcar uma area de memoria como utilizada
      * @param {memLocation} numero de id da localizacao da memoria
      */
-    setMemoryLocationUsed(memLocationArr: number[]){
-        for(let memLocation of memLocationArr){
-            this.blocks[memLocation].setUsed(true)            
+    setMemoryLocationUsed(memLocationArr: number[]) {
+        for (let memLocation of memLocationArr) {
+            this.blocks[memLocation].setUsed(true)
         }
     }
     /**
      * setMemoryLocationUsedWithHash
      * seta area de memoria como utilizada e marca a memoria da mesma
      */
-    setMemoryLocationUsedWithHash(memLocationArr: number[], hash: Hash){
+    setMemoryLocationUsedWithHash(memLocationArr: number[], hash: Hash) {
         this.setMemoryLocationUsed(memLocationArr)
         //setting hash color
-        for(let memLocation of memLocationArr){            
+        for (let memLocation of memLocationArr) {
             this.blocks[memLocation].setColor(hash.getColor())
         }
     }
 
-    setMemoryAttributeByArray(arr: number[], attribute: string){
+    /**
+     * setMemoryLocked
+     * setando locais memoria no array como LOCKED, UNDO, etc...  
+     */
+    setMemoryAttributeByArray(arr: number[], attribute: string) {
         //setando blocks como locked                
-        for(let memLocation of arr){            
+        for (let memLocation of arr) {
             $(this.getBlocks()[memLocation].getElement()).addClass(attribute)
-        }        
+        }
     }
 
     /**
      * setMemoryLocked
-     * setando locais memoria associados ao hash como LOCKED  
+     * setando locais memoria associados ao hash como LOCKED, UNDO, etc...  
      */
-    setMemoryAttribute(hash: Hash, attribute: string){
+    setMemoryAttribute(hash: Hash, attribute: string) {
         //setando blocks como locked
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let memLocationArr = sharedPool.getMemoryLocation(hash)
-        this.setMemoryAttributeByArray(memLocationArr, attribute)        
+        this.setMemoryAttributeByArray(memLocationArr, attribute)
     }
 
-    
+    freeMemoryAttributeByArr(arr: number[], attribute: string) {
+        for (let memLocation of arr) {
+            $(this.getBlocks()[memLocation].getElement()).addClass(attribute)
+        }
+    }
+
+    freeMemoryAttributeByHash(hash: Hash, attribute: string) {
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let memLocationArr = sharedPool.getMemoryLocation(hash)
+        this.freeMemoryAttributeByArr(memLocationArr, attribute)
+    }
+
+    /**
+     * freeMemoryAttribute
+     * removendo atributos da memoria do DbBufferCache(LOCKED,UNDO) e setando used = false caso esteja em uso 
+     */
+    freeMemoryAttribute(attribute: string) {
+        for (let i = 0; i < this.getBlocks().length; i++) {            
+            if (attribute == "block-undo")
+                this.blocks[i].setUsed(true)
+            $(this.blocks[i].getElement()).removeClass(attribute)
+        }        
+    }
 
     /**
      * getNewBlockHtml
      * Metodo responsavel por retornar novo objeto html que sera utilizado para animacao 
      * @returns retorna objeto html(Block) para ser animado  
      */
-    getNewBlockHtml(): HTMLElement{
+    getNewBlockHtml(): HTMLElement {
         let newBlock = new DataBlock()
-        
+
         //adicionando elemento no DOM dinamicamente        
         $(this.element).prepend(newBlock.getElement())
         $(newBlock.getElement()).offset($(this.element).offset())
@@ -167,7 +193,7 @@ export class DbBufferCache {
         //$(newBlock.getElement()).css("z-index", 100)
 
         return newBlock.getElement()
-    } 
+    }
 
     /**
      * getNewBlockHtmlAt
@@ -175,24 +201,24 @@ export class DbBufferCache {
      * @param {memLocation} numero de id da localizacao da memoria
      * @returns retorna objeto html(Block) para ser animado  
      */
-    getNewBlockHtmlAt(memLocation: number): HTMLElement{
+    getNewBlockHtmlAt(memLocation: number): HTMLElement {
         let newBlock = new DataBlock()
-        
+
         //adicionando elemento no DOM dinamicamente        
         newBlock.setColor(this.getBlocks()[memLocation].getColor())
-        $(this.element).prepend(newBlock.getElement())        
-        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset())        
+        $(this.element).prepend(newBlock.getElement())
+        $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset())
         $(newBlock.getElement()).css("position", "absolute")
-        
+
         //$(newBlock.getElement()).css("z-index", 100)        
         return newBlock.getElement()
     }
 
-    getElement(): HTMLElement{
+    getElement(): HTMLElement {
         return this.element
     }
 
-    getBlocks(): DataBlock[]{
+    getBlocks(): DataBlock[] {
         return this.blocks
     }
 
@@ -200,10 +226,10 @@ export class DbBufferCache {
      * getFreeBlocksMemLocation
      * gets location array of free blocks
      */
-    getReleasedBlocksMemLocation(): number[]{
+    getReleasedBlocksMemLocation(): number[] {
         let blocks: number[] = new Array<number>()
-        for (let i = 0; i < this.numBlocks; i++) {            
-            if(!this.blocks[i].used())
+        for (let i = 0; i < this.numBlocks; i++) {
+            if (!this.blocks[i].used())
                 blocks.push(i)
         }
         return blocks

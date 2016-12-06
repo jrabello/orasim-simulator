@@ -6,6 +6,7 @@ import { DataBlock } from '../oracle-database/data.block'
 import { Delay } from '../time/delay'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
 import { SqlConsoleMsgWarning } from '../sql-console/sql.console.msg.warning'
+import { ServerProcess } from '../process/server.process'
 
 export class AnimationCommit extends Animation {
     private animationTime: number
@@ -32,9 +33,19 @@ export class AnimationCommit extends Animation {
 
         //enviando blocks para redo.log.files
         await lgwr.sendBlocksToRedoLogFiles(blocks)
-        await new Delay(5000).sleep()
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Commit realizado com sucesso! Transação gravada em disco." ))
+        
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Commit realizado com sucesso!" ))
         await new Delay(3000).sleep()
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Transação gravada em disco." ))
+        await new Delay(3000).sleep()
+
+        //call server process unlock
+        let serverProcess: ServerProcess = Orasim.getServerProcess()
+        await serverProcess.unlockBlocks()
+
+        //enviando dados para user process                
+        await serverProcess.animSendDataToUserProcess(6000)
+
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
         Orasim.getAnimation().setAnimating(false)
     }

@@ -524,7 +524,7 @@
 	                // setando estado de termino da animacao        
 	                userProcess.animateSendDataToServerProcess(this.animationTime * 0.10, "SELECT")
 	                    .then(function (result) {
-	                    return serverProcess.animateByHash(_this.hash, _this.hashFound);
+	                    return serverProcess.animateGetBlocksFromDataFiles(_this.hash, _this.hashFound);
 	                })
 	                    .then(function (result) {
 	                    Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
@@ -1508,7 +1508,7 @@
 	                    case 2:
 	                        _a.sent();
 	                        randomMem = dbBufferCache.duplicateAllocRandomMemory(hash);
-	                        dbBufferCache.setMemoryAttributeByArray(randomMem, "undo-block");
+	                        dbBufferCache.setMemoryAttributeByArray(randomMem, "block-undo");
 	                        //escrevendo no redo-log-files
 	                        //Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Carregando dados no <span style='font-weight: bold'>Redo Log Buffer</span>"))
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Salvando informações da transação na área de <span style='font-weight: bold'>REDO</span>"));
@@ -1668,6 +1668,37 @@
 	                        });
 	                        return [4 /*yield*/, new delay_1.Delay(delay).sleep()];
 	                    case 1:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
+	    ServerProcess.prototype.unlockBlocks = function () {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var dbBufferCache;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        //liberando blocks e undo
+	                        //desbloquear blocks sujos(locked)
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Desbloqueando os registros dos \"blocos sujos\""));
+	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#db-buffer-cache', 8000)];
+	                    case 1:
+	                        _a.sent();
+	                        dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	                        dbBufferCache.freeMemoryAttribute("block-locked");
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 2:
+	                        _a.sent();
+	                        //desbloqueando area de undo
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Liberando blocos da área de UNDO"));
+	                        return [4 /*yield*/, Orasim.getAnimation().animBlinkTwoElements('#server-process', '#db-buffer-cache', 8000)];
+	                    case 3:
+	                        _a.sent();
+	                        dbBufferCache.freeMemoryAttribute("block-undo");
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 4:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
@@ -1993,7 +2024,7 @@
 	     * Verificando se o hash na shared pool existe, selecionando animacao especifica
 	     * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
 	     */
-	    ServerProcess.prototype.animateByHash = function (hash, hashFound) {
+	    ServerProcess.prototype.animateGetBlocksFromDataFiles = function (hash, hashFound) {
 	        return __awaiter(this, void 0, void 0, function () {
 	            var serverProcess;
 	            return __generator(this, function (_a) {
@@ -2059,7 +2090,7 @@
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 2:
 	                        _a.sent();
-	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo"));
+	                        sqlConsole.addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>\n                     conclu\u00EDdo!"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 3:
 	                        _a.sent();
@@ -2371,7 +2402,7 @@
 	    }
 	    AnimationCommit.prototype.start = function () {
 	        return __awaiter(this, void 0, void 0, function () {
-	            var redoLogBuffer, userProcess, lgwr, blocks;
+	            var redoLogBuffer, userProcess, lgwr, blocks, serverProcess;
 	            return __generator(this, function (_a) {
 	                switch (_a.label) {
 	                    case 0:
@@ -2397,12 +2428,22 @@
 	                    case 4:
 	                        //enviando blocks para redo.log.files
 	                        _a.sent();
-	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Commit realizado com sucesso!"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 5:
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Commit realizado com sucesso! Transação gravada em disco."));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Transação gravada em disco."));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 6:
+	                        _a.sent();
+	                        serverProcess = Orasim.getServerProcess();
+	                        return [4 /*yield*/, serverProcess.unlockBlocks()];
+	                    case 7:
+	                        _a.sent();
+	                        //enviando dados para user process                
+	                        return [4 /*yield*/, serverProcess.animSendDataToUserProcess(6000)];
+	                    case 8:
+	                        //enviando dados para user process                
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        Orasim.getAnimation().setAnimating(false);
@@ -3255,6 +3296,10 @@
 	            this.blocks[memLocation].setColor(hash.getColor());
 	        }
 	    };
+	    /**
+	     * setMemoryLocked
+	     * setando locais memoria no array como LOCKED, UNDO, etc...
+	     */
 	    DbBufferCache.prototype.setMemoryAttributeByArray = function (arr, attribute) {
 	        //setando blocks como locked                
 	        for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
@@ -3264,13 +3309,35 @@
 	    };
 	    /**
 	     * setMemoryLocked
-	     * setando locais memoria associados ao hash como LOCKED
+	     * setando locais memoria associados ao hash como LOCKED, UNDO, etc...
 	     */
 	    DbBufferCache.prototype.setMemoryAttribute = function (hash, attribute) {
 	        //setando blocks como locked
 	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	        var memLocationArr = sharedPool.getMemoryLocation(hash);
 	        this.setMemoryAttributeByArray(memLocationArr, attribute);
+	    };
+	    DbBufferCache.prototype.freeMemoryAttributeByArr = function (arr, attribute) {
+	        for (var _i = 0, arr_2 = arr; _i < arr_2.length; _i++) {
+	            var memLocation = arr_2[_i];
+	            $(this.getBlocks()[memLocation].getElement()).addClass(attribute);
+	        }
+	    };
+	    DbBufferCache.prototype.freeMemoryAttributeByHash = function (hash, attribute) {
+	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
+	        var memLocationArr = sharedPool.getMemoryLocation(hash);
+	        this.freeMemoryAttributeByArr(memLocationArr, attribute);
+	    };
+	    /**
+	     * freeMemoryAttribute
+	     * removendo atributos da memoria do DbBufferCache(LOCKED,UNDO) e setando used = false caso esteja em uso
+	     */
+	    DbBufferCache.prototype.freeMemoryAttribute = function (attribute) {
+	        for (var i = 0; i < this.getBlocks().length; i++) {
+	            if (attribute == "block-undo")
+	                this.blocks[i].setUsed(true);
+	            $(this.blocks[i].getElement()).removeClass(attribute);
+	        }
 	    };
 	    /**
 	     * getNewBlockHtml

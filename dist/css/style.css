@@ -19,7 +19,7 @@ h1 {
   background-repeat: no-repeat;
 }
 
-.undo-block{
+.block-undo{
   background-image: url(../img/undo-block.png);
   background-size: 15px;
   background-repeat: no-repeat;
@@ -673,3 +673,6 @@ line-height: 40px;
 }
 
 
+.redo-log-file-log{
+  background-color: #00b045
+}
