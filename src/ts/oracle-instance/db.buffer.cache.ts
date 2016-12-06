@@ -1,6 +1,8 @@
 import { Hash } from '../crypt/hash'
+import { Random } from '../crypt/rand'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlock } from '../oracle-database/data.block'
+import { SharedPool } from '../oracle-instance/shared.pool'
 
 /**
  * DbBufferCache
@@ -75,6 +77,26 @@ export class DbBufferCache {
          `
         )
     }
+    
+    /**
+     * DuplicateAllocRandomMemory
+     * duplicates memory allocated by hash reference(allocs the same amount of memory)
+     */
+    duplicateAllocRandomMemory(hash: Hash): number[]{
+        let selectedItemsArr = new Array<number>()
+        let cleanMemLocationArr = this.getReleasedBlocksMemLocation()
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let sizeDirtyBlocksFromHash = sharedPool.getMemoryLocation(hash).length
+        
+        for (let i = 0; i < sizeDirtyBlocksFromHash; i++) {
+            let randNum = new Random().getIntBetweenRange(0, cleanMemLocationArr.length - 1)
+            selectedItemsArr.push(cleanMemLocationArr[randNum])            
+            cleanMemLocationArr.splice(randNum, 1)
+        }
+
+        this.setMemoryLocationUsed(selectedItemsArr)
+        return selectedItemsArr
+    }
 
     /**
      * initBlocks
@@ -98,7 +120,10 @@ export class DbBufferCache {
             this.blocks[memLocation].setUsed(true)            
         }
     }
-
+    /**
+     * setMemoryLocationUsedWithHash
+     * seta area de memoria como utilizada e marca a memoria da mesma
+     */
     setMemoryLocationUsedWithHash(memLocationArr: number[], hash: Hash){
         this.setMemoryLocationUsed(memLocationArr)
         //setting hash color
@@ -106,6 +131,26 @@ export class DbBufferCache {
             this.blocks[memLocation].setColor(hash.getColor())
         }
     }
+
+    setMemoryAttributeByArray(arr: number[], attribute: string){
+        //setando blocks como locked                
+        for(let memLocation of arr){            
+            $(this.getBlocks()[memLocation].getElement()).addClass(attribute)
+        }        
+    }
+
+    /**
+     * setMemoryLocked
+     * setando locais memoria associados ao hash como LOCKED  
+     */
+    setMemoryAttribute(hash: Hash, attribute: string){
+        //setando blocks como locked
+        let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
+        let memLocationArr = sharedPool.getMemoryLocation(hash)
+        this.setMemoryAttributeByArray(memLocationArr, attribute)        
+    }
+
+    
 
     /**
      * getNewBlockHtml
@@ -139,8 +184,7 @@ export class DbBufferCache {
         $(newBlock.getElement()).offset($(this.getBlocks()[memLocation].getElement()).offset())        
         $(newBlock.getElement()).css("position", "absolute")
         
-        //$(newBlock.getElement()).css("z-index", 100)
-        
+        //$(newBlock.getElement()).css("z-index", 100)        
         return newBlock.getElement()
     }
 

@@ -369,8 +369,6 @@ export class ServerProcess {
         }
     }
 
-    
-
     async animSearchSharedPool(delay: number) {
         $('#server-process').repeat().fadeTo(delay * 0.25, 0.1).fadeTo(delay * 0.25, 1).until(1)
         await new Delay(delay * 0.50).sleep()
@@ -399,7 +397,6 @@ export class ServerProcess {
 
         $('#user-process').repeat().fadeTo(delay * 0.165, 0.1).fadeTo(delay * 0.165, 1).until(1)
         await new Delay(delay * 0.33).sleep()
-
     }
 
     /**

@@ -71,10 +71,13 @@ export class Lgwr {
     //implementando animacao pegando do redo.log.buffer e enviando blocks para redo-log-files
     async sendBlocksToRedoLogFiles(blocks: DataBlock[]) {               
         //anima-los para log-writer
-        await this.animGetBlocksFromRedoLogBuffer(blocks, 10000)
+        await this.animGetBlocksFromRedoLogBuffer(blocks, 5000)
 
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< LGWR > Gravando as entradas no Redo Log File'))        
+        await new Delay(3000).sleep()
+        
         //uma vez no log-writer precisamos envia-los ao redo-log-files
-        await this.animSendBlocksToRedoLogFiles(blocks, 10000)        
+        await this.animSendBlocksToRedoLogFiles(blocks, 5000)        
     }
 
     async animSendBlocksToRedoLogFiles(blocks: DataBlock[], delay: number){
@@ -87,7 +90,7 @@ export class Lgwr {
             })
             delay = delay / 1.5
         }
-        await new Delay(delay+1000).sleep()
+        await new Delay(delay).sleep()
     }
 
     async animGetBlocksFromRedoLogBuffer(blocks: DataBlock[], delay: number){
@@ -101,6 +104,6 @@ export class Lgwr {
             })
             delay = delay / 1.5
         }
-        await new Delay(delay+1000).sleep()
+        await new Delay(delay).sleep()
     }
 }

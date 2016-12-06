@@ -23,10 +23,10 @@ export class AnimationCommit extends Animation {
 
         //enviando commit
         await userProcess.animateSendDataToServerProcessAsync(5000, "COMMIT")        
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< LGWR > Gravando alterações em disco"))        
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< LGWR > Lendo as entradas no Redo Log Buffer"))        
         await new Delay(3000).sleep()
         await super.animBlinkTwoElements('#lgwr','#redo-log-buffer', 5000)
- 
+        
         //pegando dirty blocks from redoLogBuffer
         let blocks = lgwr.getDirtyBlocksFromRedoLogBuffer()
 
