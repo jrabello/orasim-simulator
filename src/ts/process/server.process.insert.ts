@@ -38,7 +38,7 @@ export class ServerProcessInsert extends ServerProcess {
         await new Delay(3000).sleep()
         await Orasim.getAnimation().animBlinkTwoElements('#server-process', '#redo-log-buffer', 5000)
         await super.animStoreRedoBlocksInRedoLogBuffer(hash, 10000)
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Retornando o controle para UserProcess`))
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Retornando o controle para o UserProcess`))
         await new Delay(3000).sleep()
         //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)        
     }
