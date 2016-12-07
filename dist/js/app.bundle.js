@@ -3227,15 +3227,16 @@
 	        return __awaiter(this, void 0, void 0, function () {
 	            return __generator(this, function (_a) {
 	                switch (_a.label) {
-	                    case 0:
-	                        this.changeGroupsColor();
+	                    case 0: return [4 /*yield*/, this.changeGroupsColor()];
+	                    case 1:
+	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + (this.selectorIndex + 1) + " arquivos: " + this.discoA[this.selectorIndex] + " e " + this.discoB[this.selectorIndex] + " "));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 1:
+	                    case 2:
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + (this.selectorIndex + 1) + " status..: EM USO"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 2:
+	                    case 3:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
@@ -3249,19 +3250,34 @@
 	        $('#' + this.discoB[this.group2]).attr('class', "log");
 	    };
 	    RedoLogFiles.prototype.changeGroupsColor = function () {
-	        if (this.selectorIndex == this.group1) {
-	            $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-green");
-	            $('#' + this.discoB[this.group1]).attr('class', "log redo-log-file-green");
-	            $('#' + this.discoA[this.group2]).attr('class', "log redo-log-file-red");
-	            $('#' + this.discoB[this.group2]).attr('class', "log redo-log-file-red");
-	        }
-	        else {
-	            //grupo 2 escolhido
-	            $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-red");
-	            $('#' + this.discoB[this.group1]).attr('class', "log redo-log-file-red");
-	            $('#' + this.discoA[this.group2]).attr('class', "log redo-log-file-green");
-	            $('#' + this.discoB[this.group2]).attr('class', "log redo-log-file-green");
-	        }
+	        return __awaiter(this, void 0, void 0, function () {
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        if (!(this.selectorIndex == this.group1))
+	                            return [3 /*break*/, 2];
+	                        $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-green");
+	                        $('#' + this.discoB[this.group1]).attr('class', "log redo-log-file-green");
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 1:
+	                        _a.sent();
+	                        $('#' + this.discoA[this.group2]).attr('class', "log redo-log-file-red");
+	                        $('#' + this.discoB[this.group2]).attr('class', "log redo-log-file-red");
+	                        return [3 /*break*/, 4];
+	                    case 2:
+	                        //grupo 2 escolhido
+	                        $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-red");
+	                        $('#' + this.discoB[this.group1]).attr('class', "log redo-log-file-red");
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 3:
+	                        _a.sent();
+	                        $('#' + this.discoA[this.group2]).attr('class', "log redo-log-file-green");
+	                        $('#' + this.discoB[this.group2]).attr('class', "log redo-log-file-green");
+	                        _a.label = 4;
+	                    case 4: return [2 /*return*/];
+	                }
+	            });
+	        });
 	    };
 	    RedoLogFiles.prototype.storeData = function (blocks) {
 	        return __awaiter(this, void 0, void 0, function () {
@@ -3272,7 +3288,7 @@
 	                        sizeBlocks = blocks.length;
 	                        this.numBlocksInserted += sizeBlocks;
 	                        if (!(this.numBlocksInserted >= 3))
-	                            return [3 /*break*/, 11];
+	                            return [3 /*break*/, 12];
 	                        this.numBlocksInserted = 0;
 	                        selectorPlusOne = this.selectorIndex + 1;
 	                        //6 RedoBLocks arrived!
@@ -3308,23 +3324,25 @@
 	                    case 7:
 	                        _a.sent();
 	                        this.selectorIndex ^= 1;
-	                        this.changeGroupsColor();
+	                        return [4 /*yield*/, this.changeGroupsColor()];
+	                    case 8:
+	                        _a.sent();
 	                        selectorPlusOne = this.selectorIndex + 1;
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + selectorPlusOne + " arquivos: " + this.discoA[this.selectorIndex] + " e " + this.discoB[this.selectorIndex] + " "));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 8:
+	                    case 9:
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + selectorPlusOne + " status..: EM USO"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 9:
+	                    case 10:
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< ARCH > Liberando o Redo Log File: Grupo " + ((this.selectorIndex ^ 1) + 1) + " "));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 10:
+	                    case 11:
 	                        _a.sent();
 	                        this.resetGroupsColor();
-	                        _a.label = 11;
-	                    case 11: return [2 /*return*/];
+	                        _a.label = 12;
+	                    case 12: return [2 /*return*/];
 	                }
 	            });
 	        });
