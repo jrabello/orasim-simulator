@@ -88,13 +88,20 @@ export class DbBufferCache {
         let sharedPool: SharedPool = Orasim.getOracleInstance().getSga().getSharedPool()
         let sizeDirtyBlocksFromHash = sharedPool.getMemoryLocation(hash).length
 
+        //alocando blocks randomicos
         for (let i = 0; i < sizeDirtyBlocksFromHash; i++) {
             let randNum = new Random().getIntBetweenRange(0, cleanMemLocationArr.length - 1)
             selectedItemsArr.push(cleanMemLocationArr[randNum])
             cleanMemLocationArr.splice(randNum, 1)
         }
 
+        //setando como memoria utilizada
         this.setMemoryLocationUsed(selectedItemsArr)
+
+        //colocando mesma cor do hash        
+        for (let memLocation of selectedItemsArr) {
+            this.blocks[memLocation].setColor(hash.getColor())
+        }
         return selectedItemsArr
     }
 
@@ -172,8 +179,10 @@ export class DbBufferCache {
      */
     freeMemoryAttribute(attribute: string) {
         for (let i = 0; i < this.getBlocks().length; i++) {            
-            if (attribute == "block-undo" && this.blocks[i].used())
+            if (attribute == "block-undo" && this.blocks[i].used()){
                 this.blocks[i].setUsed(false)
+                this.blocks[i].setColor("#ffffff")
+            }
             $(this.blocks[i].getElement()).removeClass(attribute)
         }        
     }

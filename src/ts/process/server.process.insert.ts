@@ -20,7 +20,7 @@ export class ServerProcessInsert extends ServerProcess {
         let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
 
         //lockando blocos sujos
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lockando registros nos \"blocos sujos\""))
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Bloqueando registros nos "blocos sujos"`))
         await new Delay(3000).sleep()
         await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)
         dbBufferCache.setMemoryAttribute(hash,"block-locked")
@@ -38,7 +38,8 @@ export class ServerProcessInsert extends ServerProcess {
         await new Delay(3000).sleep()
         await Orasim.getAnimation().animBlinkTwoElements('#server-process', '#redo-log-buffer', 5000)
         await super.animStoreRedoBlocksInRedoLogBuffer(hash, 10000)
-        await new Delay(1000).sleep()
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Retornando o controle para UserProcess`))
+        await new Delay(3000).sleep()
         //await super.animateSendBlockTo('#redo-log-buffer', hash, 5000)        
     }
 
