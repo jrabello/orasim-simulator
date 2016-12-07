@@ -177,14 +177,27 @@ export class DbBufferCache {
      * freeMemoryAttribute
      * removendo atributos da memoria do DbBufferCache(LOCKED,UNDO) e setando used = false caso esteja em uso 
      */
-    freeMemoryAttribute(attribute: string) {
+    freeMemoryAttribute(attribute: string) {        
         for (let i = 0; i < this.getBlocks().length; i++) {            
-            if (attribute == "block-undo" && this.blocks[i].used() && $(this.blocks[i].getElement()).hasClass("block-undo")){
+            if ( this.blocks[i].used() && attribute == "block-undo" && $(this.blocks[i].getElement()).hasClass("block-undo")){
                 this.blocks[i].setUsed(false)
                 this.blocks[i].setColor("#ffffff")
             }
             $(this.blocks[i].getElement()).removeClass(attribute)
         }        
+    }
+    /**
+     * getBlockIndexesWithAttribute
+     * Pegando indexes dos blocos com determinado atributo
+     */
+    getBlockIndexes(attribute: string): number[]{
+        let blockIndexArr = new Array<number>()
+        for (let i = 0; i < this.getBlocks().length; i++) {
+            if ( this.blocks[i].used() && $(this.blocks[i].getElement()).hasClass(attribute) ) {
+                blockIndexArr.push(i)
+            }
+        }
+        return blockIndexArr
     }
 
     /**

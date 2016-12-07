@@ -401,7 +401,7 @@ export class ServerProcess {
     }
 
     async animSendDataToUserProcess(delay: number) {
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Retornando o resultado para <span style='font-weight: bold'>UserProcess</span>"))
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Retornando o controle para o <span style='font-weight: bold'>UserProcess</span>"))
         $('#server-process').repeat().fadeTo(delay * 0.165, 0.1).fadeTo(delay * 0.165, 1).until(1)
         await new Delay(delay * 0.33).sleep()
 
@@ -524,8 +524,9 @@ export class ServerProcess {
                      <span style="font-weight: bold; color: ${hash.getColor()}">${hash.getHashStr()}</span>`))
         $("#server-process").removeClass("time-clock")
         await serverProcess.animSearchSharedPool(5000)
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< UP > Commando executado com sucesso!..."))
-
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Retornando o controle para o UserProcess`))
+        await new Delay(3000).sleep()
+        
         // pegando ultimo hash adicionado         
         // animacao pegando dados do dbBufferCache
         // animacao enviando dados para userProcess
