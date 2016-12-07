@@ -80,12 +80,11 @@ export class Lgwr {
 
         //uma vez no log-writer precisamos envia-los ao redo-log-files
         await this.animSendBlocksToRedoLogFiles(blocks, 5000)
-        
+
+        //adicionando redo files no archiver
         let redoLogFiles: RedoLogFiles = Orasim.getOracleDatabase().getRedoLogFiles()
         await redoLogFiles.showCurrentLogGroup()
         await redoLogFiles.storeData(blocks)
-
-                        
     }
 
     async animSendBlocksToRedoLogFiles(blocks: DataBlock[], delay: number){
