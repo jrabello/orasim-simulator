@@ -2422,38 +2422,36 @@
 	                    case 1:
 	                        //enviando commit
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< UP > Enviando comando COMMIT para o ServerProcess'));
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 2:
-	                        _a.sent();
+	                        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Enviando comando COMMIT para o ServerProcess'))        
+	                        // await new Delay(3000).sleep()
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > Lendo as entradas no Redo Log Buffer"));
 	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
-	                    case 3:
+	                    case 2:
 	                        _a.sent();
 	                        return [4 /*yield*/, _super.prototype.animBlinkTwoElements.call(this, '#lgwr', '#redo-log-buffer', 5000)];
-	                    case 4:
+	                    case 3:
 	                        _a.sent();
 	                        blocks = lgwr.getDirtyBlocksFromRedoLogBuffer();
 	                        //enviando blocks para redo.log.files
 	                        return [4 /*yield*/, lgwr.sendBlocksToRedoLogFiles(blocks)];
-	                    case 5:
+	                    case 4:
 	                        //enviando blocks para redo.log.files
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Commit realizado com sucesso!"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 6:
+	                    case 5:
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Transação gravada em disco."));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 7:
+	                    case 6:
 	                        _a.sent();
 	                        serverProcess = Orasim.getServerProcess();
 	                        return [4 /*yield*/, serverProcess.unlockBlocks()];
-	                    case 8:
+	                    case 7:
 	                        _a.sent();
 	                        //enviando dados para user process                
 	                        return [4 /*yield*/, serverProcess.animSendDataToUserProcess(6000)];
-	                    case 9:
+	                    case 8:
 	                        //enviando dados para user process                
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
@@ -3244,6 +3242,12 @@
 	            });
 	        });
 	    };
+	    RedoLogFiles.prototype.resetGroupsColor = function () {
+	        $('#' + this.discoA[this.group1]).attr('class', "log");
+	        $('#' + this.discoB[this.group1]).attr('class', "log");
+	        $('#' + this.discoA[this.group2]).attr('class', "log");
+	        $('#' + this.discoB[this.group2]).attr('class', "log");
+	    };
 	    RedoLogFiles.prototype.changeGroupsColor = function () {
 	        if (this.selectorIndex == this.group1) {
 	            $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-green");
@@ -3318,6 +3322,7 @@
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 10:
 	                        _a.sent();
+	                        this.resetGroupsColor();
 	                        _a.label = 11;
 	                    case 11: return [2 /*return*/];
 	                }
@@ -3526,7 +3531,7 @@
 	     */
 	    DbBufferCache.prototype.freeMemoryAttribute = function (attribute) {
 	        for (var i = 0; i < this.getBlocks().length; i++) {
-	            if (attribute == "block-undo" && this.blocks[i].used()) {
+	            if (attribute == "block-undo" && this.blocks[i].used() && $(this.blocks[i].getElement()).hasClass("block-undo")) {
 	                this.blocks[i].setUsed(false);
 	                this.blocks[i].setColor("#ffffff");
 	            }
