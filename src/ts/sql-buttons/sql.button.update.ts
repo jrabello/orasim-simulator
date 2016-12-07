@@ -36,6 +36,6 @@ export class SqlButtonUpdate{
         let sqlDataContainer: SqlDataContainer = Orasim.getSqlDataContainer()
         sqlDataContainer.add(query, hash)
 
-        await new AnimationUpdate(hash, hashFound).start()
+        await new AnimationUpdate(hash).start()
     }
 }

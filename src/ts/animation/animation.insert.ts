@@ -43,12 +43,14 @@ export class AnimationInsert extends Animation{
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
         $("#server-process").addClass("time-clock")
         await new Delay(5000).sleep()
-        
+
         //animacao hash nao encontrado no dbBufferCache
         await serverProcess.animateHashNotFound(this.hash)
         //resto da animacao de insert             
         await new ServerProcessInsert().animateInsert(this.hash)        
 
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Retornando o controle para o UserProcess`))
+        await new Delay(3000).sleep()
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))        
         Orasim.getAnimation().setAnimating(false)       
         

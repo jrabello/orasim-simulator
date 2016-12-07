@@ -48,6 +48,8 @@ export class AnimationCommit extends Animation {
         //enviando dados para user process                
         await serverProcess.animSendDataToUserProcess(6000)
 
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Retornando o controle para o UserProcess`))
+        await new Delay(3000).sleep()        
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))
         Orasim.getAnimation().setAnimating(false)
     }

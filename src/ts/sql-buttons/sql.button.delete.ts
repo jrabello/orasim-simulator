@@ -14,7 +14,7 @@ export class SqlButtonDelete{
         })
     }
 
-    handleDelete(): void{
+    async handleDelete(){
         //se animacao em andamento retorne
         if(Orasim.getAnimation().isAnimating())
             return
@@ -31,6 +31,6 @@ export class SqlButtonDelete{
         let sqlDataContainer: SqlDataContainer = Orasim.getSqlDataContainer()
         sqlDataContainer.add(query, hash)
 
-        //await new AnimationDelete(hash).start()
+        await new AnimationDelete(hash).start()
     }
 }

@@ -1,8 +1,11 @@
 import { Hash } from '../crypt/hash'
+import { Delay } from '../time/delay'
 import { Animation } from './animation'
 import { ServerProcess } from '../process/server.process'
 import { UserProcess } from '../process/user.process'
 import { SqlConsoleMsgWarning } from '../sql-console/sql.console.msg.warning'
+import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
+import { ServerProcessInsert } from '../process/server.process.insert'
 
 /**
  * AnimationUpdate
@@ -16,7 +19,7 @@ export class AnimationDelete extends Animation{
     private hash: Hash
     private isHashFound: boolean
 
-    constructor(hash: Hash, isHashFound: boolean){
+    constructor(hash: Hash){
         super()
         this.hash = hash
         //this.buildAnimUpdate(isHashFound)       
@@ -27,16 +30,25 @@ export class AnimationDelete extends Animation{
      * Inicio da animacao do update
      */
     async start(){        
+                //copia do insert        
+        Orasim.getAnimation().setAnimating(true)
         let userProcess: UserProcess = Orasim.getUserProcess()
         let serverProcess: ServerProcess = Orasim.getServerProcess()
                 
-        // setando estado de inicio da animacao
-        // executando animacoes dentro de promises permitindo execucao sincrona entre animacoes        
-        // setando estado de termino da animacao
-        Orasim.getAnimation().setAnimating(true)        
+        //animacao do relogio
         await userProcess.animateSendDataToServerProcessAsync(5000, "DELETE")
-        await serverProcess.animateGetBlocksFromDataFiles(this.hash, this.isHashFound)
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))                    
-        Orasim.getAnimation().setAnimating(false)                    
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
+        $("#server-process").addClass("time-clock")
+        await new Delay(5000).sleep()
+
+        //animacao hash nao encontrado no dbBufferCache
+        await serverProcess.animateHashNotFound(this.hash)
+        //resto da animacao de insert             
+        await new ServerProcessInsert().animateInsert(this.hash)        
+
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< SP > Retornando o controle para o UserProcess`))
+        await new Delay(3000).sleep()
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgWarning("< UP > Aguardando solicitação..."))        
+        Orasim.getAnimation().setAnimating(false)                       
     }
 }

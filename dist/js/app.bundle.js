@@ -1424,6 +1424,10 @@
 	                    case 4:
 	                        //resto da animacao de insert             
 	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para o UserProcess"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 5:
+	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        Orasim.getAnimation().setAnimating(false);
 	                        return [2 /*return*/];
@@ -1527,10 +1531,6 @@
 	                        _a.sent();
 	                        return [4 /*yield*/, _super.prototype.animStoreRedoBlocksInRedoLogBuffer.call(this, hash, 10000)];
 	                    case 7:
-	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para o UserProcess"));
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 8:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
@@ -2158,7 +2158,10 @@
 	                        return [4 /*yield*/, serverProcess.animSearchSharedPool(5000)];
 	                    case 1:
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< UP > Commando executado com sucesso!..."));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para o UserProcess"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 2:
+	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
 	            });
@@ -2455,6 +2458,10 @@
 	                    case 8:
 	                        //enviando dados para user process                
 	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para o UserProcess"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 9:
+	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning("< UP > Aguardando solicitação..."));
 	                        Orasim.getAnimation().setAnimating(false);
 	                        return [2 /*return*/];
@@ -2475,14 +2482,14 @@
 	var animation_rollback_1 = __webpack_require__(29);
 	var SqlButtonRollback = (function () {
 	    function SqlButtonRollback() {
-	    }
-	    SqlButtonRollback.prototype.contructor = function () {
 	        var _this = this;
+	        console.log("SqlButtonRollback!");
 	        $("#btnRollback").on('click', function () {
 	            _this.handleRollback();
 	        });
-	    };
+	    }
 	    SqlButtonRollback.prototype.handleRollback = function () {
+	        console.log("handleRollback!");
 	        if (Orasim.getAnimation().isAnimating())
 	            return;
 	        new animation_rollback_1.AnimationRollback().start();
@@ -2502,12 +2509,161 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments)).next());
+	    });
+	};
+	var __generator = (this && this.__generator) || function (thisArg, body) {
+	    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+	    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+	    function verb(n) { return function (v) { return step([n, v]); }; }
+	    function step(op) {
+	        if (f) throw new TypeError("Generator is already executing.");
+	        while (_) try {
+	            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+	            if (y = 0, t) op = [0, t.value];
+	            switch (op[0]) {
+	                case 0: case 1: t = op; break;
+	                case 4: _.label++; return { value: op[1], done: false };
+	                case 5: _.label++; y = op[1]; op = [0]; continue;
+	                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+	                default:
+	                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+	                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+	                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+	                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+	                    if (t[2]) _.ops.pop();
+	                    _.trys.pop(); continue;
+	            }
+	            op = body.call(thisArg, _);
+	        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+	        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+	    }
+	};
 	var animation_1 = __webpack_require__(4);
+	var delay_1 = __webpack_require__(5);
+	var sql_console_msg_info_1 = __webpack_require__(11);
+	var sql_console_msg_warning_1 = __webpack_require__(7);
 	var AnimationRollback = (function (_super) {
 	    __extends(AnimationRollback, _super);
 	    function AnimationRollback() {
 	        return _super.call(this) || this;
 	    }
+	    AnimationRollback.prototype.start = function () {
+	        return __awaiter(this, void 0, void 0, function () {
+	            var redoLogBuffer, userProcess, lgwr, dbBufferCache, blockIndexesLocked, blocksOldColorArr, allBLocks, i, blockUndoIndexes, i, i;
+	            return __generator(this, function (_a) {
+	                switch (_a.label) {
+	                    case 0:
+	                        redoLogBuffer = Orasim.getOracleInstance().getSga().getRedoLogBuffer();
+	                        userProcess = Orasim.getUserProcess();
+	                        lgwr = Orasim.getOracleInstance().getLgwr();
+	                        Orasim.getAnimation().setAnimating(true);
+	                        //enviando rollback
+	                        return [4 /*yield*/, userProcess.animateSendDataToServerProcessAsync(5000, "ROLLBACK")];
+	                    case 1:
+	                        //enviando rollback
+	                        _a.sent();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Descartando as alterações realizadas"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 2:
+	                        _a.sent();
+	                        dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Desbloqueando os registros que seriam alterados'));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 3:
+	                        _a.sent();
+	                        return [4 /*yield*/, _super.prototype.animBlinkTwoElements.call(this, '#server-process', '#db-buffer-cache', 5000)];
+	                    case 4:
+	                        _a.sent();
+	                        blockIndexesLocked = dbBufferCache.getBlockIndexes("block-locked");
+	                        dbBufferCache.freeMemoryAttribute("block-locked");
+	                        // < SP > Liberando os blocos para nova escrita (se der usar nesse caso um "L" de bloco de livre 
+	                        // e deixar branco a cor)
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Liberando os blocos para nova escrita'));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 5:
+	                        _a.sent();
+	                        return [4 /*yield*/, _super.prototype.animBlinkTwoElements.call(this, '#server-process', '#db-buffer-cache', 5000)];
+	                    case 6:
+	                        _a.sent();
+	                        blocksOldColorArr = new Array();
+	                        allBLocks = dbBufferCache.getBlocks();
+	                        i = 0;
+	                        _a.label = 7;
+	                    case 7:
+	                        if (!(i < blockIndexesLocked.length))
+	                            return [3 /*break*/, 10];
+	                        blocksOldColorArr.push(allBLocks[blockIndexesLocked[i]].getColor());
+	                        allBLocks[blockIndexesLocked[i]].setColor('#ffffff');
+	                        return [4 /*yield*/, new delay_1.Delay(300).sleep()];
+	                    case 8:
+	                        _a.sent();
+	                        _a.label = 9;
+	                    case 9:
+	                        i++;
+	                        return [3 /*break*/, 7];
+	                    case 10:
+	                        // < SP > Voltando registros da área de UNDO para o DB_BufferCache 
+	                        // (piscar bloco de UNDO e depois apagar deixando só o bloco)
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Liberando registros da área de UNDO para o DB_BufferCache'));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 11:
+	                        _a.sent();
+	                        return [4 /*yield*/, _super.prototype.animBlinkTwoElements.call(this, '#server-process', '#db-buffer-cache', 5000)];
+	                    case 12:
+	                        _a.sent();
+	                        blockUndoIndexes = dbBufferCache.getBlockIndexes("block-undo");
+	                        i = 0;
+	                        _a.label = 13;
+	                    case 13:
+	                        if (!(i < blockUndoIndexes.length))
+	                            return [3 /*break*/, 16];
+	                        allBLocks[blockUndoIndexes[i]].setColor('#ffffff');
+	                        allBLocks[blockUndoIndexes[i]].setUsed(false);
+	                        $(allBLocks[blockUndoIndexes[i]].getElement()).removeClass("block-undo");
+	                        return [4 /*yield*/, new delay_1.Delay(300).sleep()];
+	                    case 14:
+	                        _a.sent();
+	                        _a.label = 15;
+	                    case 15:
+	                        i++;
+	                        return [3 /*break*/, 13];
+	                    case 16:
+	                        i = 0;
+	                        _a.label = 17;
+	                    case 17:
+	                        if (!(i < blockIndexesLocked.length))
+	                            return [3 /*break*/, 20];
+	                        //blocksOldColorArr.push(allBLocks[blockIndexesLocked[i]].getColor())
+	                        allBLocks[blockIndexesLocked[i]].setColor(blocksOldColorArr[i]);
+	                        return [4 /*yield*/, new delay_1.Delay(300).sleep()];
+	                    case 18:
+	                        _a.sent();
+	                        _a.label = 19;
+	                    case 19:
+	                        i++;
+	                        return [3 /*break*/, 17];
+	                    case 20:
+	                        // < SP > Retornando o controle para UserProcess
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< SP > Retornando o controle para UserProcess'));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 21:
+	                        _a.sent();
+	                        // < UP > Aguardando solicitação...
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_warning_1.SqlConsoleMsgWarning('< UP > Aguardando solicitação...'));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                    case 22:
+	                        _a.sent();
+	                        return [2 /*return*/];
+	                }
+	            });
+	        });
+	    };
 	    return AnimationRollback;
 	}(animation_1.Animation));
 	exports.AnimationRollback = AnimationRollback;
@@ -3590,12 +3746,25 @@
 	     */
 	    DbBufferCache.prototype.freeMemoryAttribute = function (attribute) {
 	        for (var i = 0; i < this.getBlocks().length; i++) {
-	            if (attribute == "block-undo" && this.blocks[i].used() && $(this.blocks[i].getElement()).hasClass("block-undo")) {
+	            if (this.blocks[i].used() && attribute == "block-undo" && $(this.blocks[i].getElement()).hasClass("block-undo")) {
 	                this.blocks[i].setUsed(false);
 	                this.blocks[i].setColor("#ffffff");
 	            }
 	            $(this.blocks[i].getElement()).removeClass(attribute);
 	        }
+	    };
+	    /**
+	     * getBlockIndexesWithAttribute
+	     * Pegando indexes dos blocos com determinado atributo
+	     */
+	    DbBufferCache.prototype.getBlockIndexes = function (attribute) {
+	        var blockIndexArr = new Array();
+	        for (var i = 0; i < this.getBlocks().length; i++) {
+	            if (this.blocks[i].used() && $(this.blocks[i].getElement()).hasClass(attribute)) {
+	                blockIndexArr.push(i);
+	            }
+	        }
+	        return blockIndexArr;
 	    };
 	    /**
 	     * getNewBlockHtml
