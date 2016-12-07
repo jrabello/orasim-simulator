@@ -39,7 +39,7 @@ export class RedoLogFiles {
     }
 
     async showCurrentLogGroup() {
-        this.changeGroupsColor()
+        await this.changeGroupsColor()
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< LGWR > REDO Grupo ${this.selectorIndex + 1} arquivos: ${this.discoA[this.selectorIndex]} e ${this.discoB[this.selectorIndex]} `))
         await new Delay(3000).sleep()
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< LGWR > REDO Grupo ${this.selectorIndex + 1} status..: EM USO`))
@@ -53,16 +53,18 @@ export class RedoLogFiles {
         $('#' + this.discoB[this.group2]).attr('class', "log")
     }
 
-    changeGroupsColor() {
+    async changeGroupsColor() {
         if (this.selectorIndex == this.group1) {
             $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-green")
             $('#' + this.discoB[this.group1]).attr('class', "log redo-log-file-green")
+            await new Delay(3000).sleep()
             $('#' + this.discoA[this.group2]).attr('class', "log redo-log-file-red")
             $('#' + this.discoB[this.group2]).attr('class', "log redo-log-file-red")
         } else {
             //grupo 2 escolhido
             $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-red")
             $('#' + this.discoB[this.group1]).attr('class', "log redo-log-file-red")
+            await new Delay(3000).sleep()
             $('#' + this.discoA[this.group2]).attr('class', "log redo-log-file-green")
             $('#' + this.discoB[this.group2]).attr('class', "log redo-log-file-green")
         }
@@ -100,16 +102,18 @@ export class RedoLogFiles {
                 `< LGWR > REDO Grupo ${selectorPlusOne} status..: LIBERADO`))
             await new Delay(3000).sleep()
             this.selectorIndex ^= 1
-            this.changeGroupsColor()
+            await this.changeGroupsColor()
             selectorPlusOne = this.selectorIndex + 1
 
             Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(
                 `< LGWR > REDO Grupo ${selectorPlusOne} arquivos: ${this.discoA[this.selectorIndex]} e ${this.discoB[this.selectorIndex]} `))
             await new Delay(3000).sleep()
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< LGWR > REDO Grupo ${selectorPlusOne} status..: EM USO`))
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(
+                `< LGWR > REDO Grupo ${selectorPlusOne} status..: EM USO`))
             await new Delay(3000).sleep()
 
-            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(`< ARCH > Liberando o Redo Log File: Grupo ${(this.selectorIndex ^ 1) + 1} `))
+            Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo(
+                `< ARCH > Liberando o Redo Log File: Grupo ${(this.selectorIndex ^ 1) + 1} `))
             await new Delay(3000).sleep()
             this.resetGroupsColor()
         }

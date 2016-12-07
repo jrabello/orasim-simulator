@@ -48,7 +48,7 @@ Estilo da cabeça das setas
   content: '';
   height: 5px;
   width: 5px;
-  border: 2.5px solid transparent;
+  border: 4.5px solid transparent;
   position: absolute;
   border-bottom-color: red;
   border-right-color: red;
