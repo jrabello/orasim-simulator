@@ -1205,8 +1205,8 @@
 	    __extends(AnimationConnect, _super);
 	    function AnimationConnect() {
 	        var _this = _super.call(this) || this;
-	        _this.animUserProcessDelay = _super.prototype.getDelay.call(_this) * 0.1;
-	        _this.animListenerProcessDelay = _super.prototype.getDelay.call(_this) * 0.1;
+	        _this.animUserProcessDelay = _super.prototype.getDelay.call(_this) * 3;
+	        _this.animListenerProcessDelay = _super.prototype.getDelay.call(_this) * 3;
 	        return _this;
 	    }
 	    /**
