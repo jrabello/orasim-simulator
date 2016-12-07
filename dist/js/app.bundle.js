@@ -1497,7 +1497,7 @@
 	                        sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	                        dbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache();
 	                        //lockando blocos sujos
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Lockando registros nos \"blocos sujos\""));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Bloqueando registros nos \"blocos sujos\""));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 1:
 	                        _a.sent();
@@ -1527,7 +1527,8 @@
 	                        return [4 /*yield*/, _super.prototype.animStoreRedoBlocksInRedoLogBuffer.call(this, hash, 10000)];
 	                    case 7:
 	                        _a.sent();
-	                        return [4 /*yield*/, new delay_1.Delay(1000).sleep()];
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para UserProcess"));
+	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 8:
 	                        _a.sent();
 	                        return [2 /*return*/];
@@ -2426,7 +2427,7 @@
 	                    case 2:
 	                        _a.sent();
 	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > Lendo as entradas no Redo Log Buffer"));
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
+	                        return [4 /*yield*/, new delay_1.Delay(5000).sleep()];
 	                    case 3:
 	                        _a.sent();
 	                        return [4 /*yield*/, _super.prototype.animBlinkTwoElements.call(this, '#lgwr', '#redo-log-buffer', 5000)];
@@ -3204,10 +3205,10 @@
 	var sql_console_msg_info_1 = __webpack_require__(11);
 	var RedoLogFiles = (function () {
 	    function RedoLogFiles() {
-	        this.LOG1_A = "LOG1-A";
-	        this.LOG2_A = "LOG2-A";
-	        this.LOG1_B = "LOG1-B";
-	        this.LOG2_B = "LOG2-B";
+	        this.LOG1_A = "LOG1_A";
+	        this.LOG2_A = "LOG2_A";
+	        this.LOG1_B = "LOG1_B";
+	        this.LOG2_B = "LOG2_B";
 	        this.discoA = new Array();
 	        this.discoA.push(this.LOG1_A);
 	        this.discoA.push(this.LOG2_A);
@@ -3219,21 +3220,22 @@
 	        this.selectorIndex = 0;
 	        this.numBlocksInserted = 0;
 	        this.incrementer = 1;
-	        $('#' + this.discoA[this.group1]).addClass("redo-log-file-green");
-	        $('#' + this.discoB[this.group1]).addClass("redo-log-file-green");
-	        $('#' + this.discoA[this.group2]).addClass("redo-log-file-red");
-	        $('#' + this.discoB[this.group2]).addClass("redo-log-file-red");
+	        // $('#'+this.discoA[this.group1]).addClass("redo-log-file-green")
+	        // $('#'+this.discoB[this.group1]).addClass("redo-log-file-green")
+	        // $('#'+this.discoA[this.group2]).addClass("redo-log-file-red")
+	        // $('#'+this.discoB[this.group2]).addClass("redo-log-file-red")
 	    }
 	    RedoLogFiles.prototype.showCurrentLogGroup = function () {
 	        return __awaiter(this, void 0, void 0, function () {
 	            return __generator(this, function (_a) {
 	                switch (_a.label) {
 	                    case 0:
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< LGWR > REDO Grupo ' + this.selectorIndex + 1 + ' arquivos: ' + this.discoA[this.selectorIndex] + ' e ' + this.discoB[this.selectorIndex] + ' '));
+	                        this.changeGroupsColor();
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + (this.selectorIndex + 1) + " arquivos: " + this.discoA[this.selectorIndex] + " e " + this.discoB[this.selectorIndex] + " "));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 1:
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< LGWR > REDO Grupo ' + this.selectorIndex + 1 + ' status..: EM USO'));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + (this.selectorIndex + 1) + " status..: EM USO"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 2:
 	                        _a.sent();
@@ -3242,8 +3244,8 @@
 	            });
 	        });
 	    };
-	    RedoLogFiles.prototype.switchGroups = function () {
-	        if (this.selectorIndex + 1 == this.group1) {
+	    RedoLogFiles.prototype.changeGroupsColor = function () {
+	        if (this.selectorIndex == this.group1) {
 	            $('#' + this.discoA[this.group1]).attr('class', "log redo-log-file-green");
 	            $('#' + this.discoB[this.group1]).attr('class', "log redo-log-file-green");
 	            $('#' + this.discoA[this.group2]).attr('class', "log redo-log-file-red");
@@ -3274,16 +3276,16 @@
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 1:
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< ARCH > REDO Grupo ' + selectorPlusOne + ' status..: EM CÓPIA'));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< ARCH > REDO Grupo " + selectorPlusOne + " status..: EM C\u00D3PIA"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 2:
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< ARCH > Copiando o Redo Log File: Grupo ' + selectorPlusOne));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< ARCH > Copiando o Redo Log File: Grupo " + selectorPlusOne));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 3:
 	                        _a.sent();
 	                        //animacao salvando archive
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< ARCH > Salvando como Archived Log File: ARC_0' + ++this.incrementer));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< ARCH > Salvando como Archived Log File: ARC_0" + ++this.incrementer));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 4:
 	                        _a.sent();
@@ -3292,27 +3294,27 @@
 	                    case 5:
 	                        _a.sent();
 	                        $("#arc0" + this.incrementer).removeClass("hiddenArc");
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< ARCH > Archive ARC_0' + this.incrementer + ' salvo com sucesso!'));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< ARCH > Archive ARC_0" + this.incrementer + " salvo com sucesso!"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 6:
 	                        _a.sent();
 	                        //swithing to another group
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< LGWR > REDO Grupo ' + selectorPlusOne + ' status..: LIBERADO'));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + selectorPlusOne + " status..: LIBERADO"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 7:
 	                        _a.sent();
 	                        this.selectorIndex ^= 1;
-	                        this.switchGroups();
+	                        this.changeGroupsColor();
 	                        selectorPlusOne = this.selectorIndex + 1;
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< LGWR > REDO Grupo ' + selectorPlusOne + ' arquivos: ' + this.discoA[this.selectorIndex] + ' e ' + this.discoB[this.selectorIndex] + ' '));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + selectorPlusOne + " arquivos: " + this.discoA[this.selectorIndex] + " e " + this.discoB[this.selectorIndex] + " "));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 8:
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< LGWR > REDO Grupo ' + selectorPlusOne + ' status..: EM USO'));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< LGWR > REDO Grupo " + selectorPlusOne + " status..: EM USO"));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 9:
 	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo('< ARCH > Liberando o Redo Log File: Grupo ' + (this.selectorIndex ^ 1) + 1));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< ARCH > Liberando o Redo Log File: Grupo " + ((this.selectorIndex ^ 1) + 1) + " "));
 	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
 	                    case 10:
 	                        _a.sent();
@@ -3437,12 +3439,19 @@
 	        var cleanMemLocationArr = this.getReleasedBlocksMemLocation();
 	        var sharedPool = Orasim.getOracleInstance().getSga().getSharedPool();
 	        var sizeDirtyBlocksFromHash = sharedPool.getMemoryLocation(hash).length;
+	        //alocando blocks randomicos
 	        for (var i = 0; i < sizeDirtyBlocksFromHash; i++) {
 	            var randNum = new rand_1.Random().getIntBetweenRange(0, cleanMemLocationArr.length - 1);
 	            selectedItemsArr.push(cleanMemLocationArr[randNum]);
 	            cleanMemLocationArr.splice(randNum, 1);
 	        }
+	        //setando como memoria utilizada
 	        this.setMemoryLocationUsed(selectedItemsArr);
+	        //colocando mesma cor do hash        
+	        for (var _i = 0, selectedItemsArr_1 = selectedItemsArr; _i < selectedItemsArr_1.length; _i++) {
+	            var memLocation = selectedItemsArr_1[_i];
+	            this.blocks[memLocation].setColor(hash.getColor());
+	        }
 	        return selectedItemsArr;
 	    };
 	    /**
@@ -3517,8 +3526,10 @@
 	     */
 	    DbBufferCache.prototype.freeMemoryAttribute = function (attribute) {
 	        for (var i = 0; i < this.getBlocks().length; i++) {
-	            if (attribute == "block-undo" && this.blocks[i].used())
+	            if (attribute == "block-undo" && this.blocks[i].used()) {
 	                this.blocks[i].setUsed(false);
+	                this.blocks[i].setColor("#ffffff");
+	            }
 	            $(this.blocks[i].getElement()).removeClass(attribute);
 	        }
 	    };
