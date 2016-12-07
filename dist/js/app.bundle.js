@@ -2009,7 +2009,7 @@
 	            return __generator(this, function (_a) {
 	                switch (_a.label) {
 	                    case 0:
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para o <span style='font-weight: bold'>UserProcess</span>"));
+	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para o UserProcess"));
 	                        $('#server-process').repeat().fadeTo(delay * 0.165, 0.1).fadeTo(delay * 0.165, 1).until(1);
 	                        return [4 /*yield*/, new delay_1.Delay(delay * 0.33).sleep()];
 	                    case 1:
@@ -2161,10 +2161,6 @@
 	                        $("#server-process").removeClass("time-clock");
 	                        return [4 /*yield*/, serverProcess.animSearchSharedPool(5000)];
 	                    case 1:
-	                        _a.sent();
-	                        Orasim.getSqlConsole().addMsg(new sql_console_msg_info_1.SqlConsoleMsgInfo("< SP > Retornando o controle para o UserProcess"));
-	                        return [4 /*yield*/, new delay_1.Delay(3000).sleep()];
-	                    case 2:
 	                        _a.sent();
 	                        return [2 /*return*/];
 	                }
