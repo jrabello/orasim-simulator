@@ -167,7 +167,8 @@
 	     */
 	    SqlConsole.prototype.addMsg = function (msg) {
 	        $("#console-msg-list-container").append(msg.getMsg());
-	        $("#console").scrollTop(1000);
+	        $('#console').scrollTop($('#console')[0].scrollHeight);
+	        //$("#console").scrollTop(1000);
 	    };
 	    return SqlConsole;
 	}());
