@@ -144,6 +144,22 @@ export class ServerProcess {
         await new Delay(delay).sleep()        
     }
 
+    async unlockBlocks(){        
+        //liberando blocks e undo
+        //desbloquear blocks sujos(locked)
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Desbloqueando os registros dos \"blocos sujos\"" ))
+        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 8000)
+        let dbBufferCache: DbBufferCache = Orasim.getOracleInstance().getSga().getDbBufferCache()
+        dbBufferCache.freeMemoryAttribute("block-locked")
+        await new Delay(3000).sleep()
+
+        //desbloqueando area de undo
+        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Liberando blocos da área de UNDO" ))
+        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 8000)        
+        dbBufferCache.freeMemoryAttribute("block-undo")
+        await new Delay(3000).sleep()        
+    }
+    
     /**
      * animateGetBlockFromDataFiles
      * Metodo responsavel por animar os blocks que o server-process pega do data-files
@@ -405,7 +421,7 @@ export class ServerProcess {
      * Verificando se o hash na shared pool existe, selecionando animacao especifica
      * @returns Promise<number> uma promise é retornada devido a necessidade sincrona da animacao
      */
-    async animateByHash(hash: Hash, hashFound: boolean) {
+    async animateGetBlocksFromDataFiles(hash: Hash, hashFound: boolean) {
         //animacao do relogio no server process
         let serverProcess: ServerProcess = Orasim.getServerProcess()        
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< SP > Realizando parse...'))
@@ -449,7 +465,7 @@ export class ServerProcess {
 
         sqlConsole.addMsg(new SqlConsoleMsgInfo(
             `< SP > <span style='font-weight: bold; color: red;'>HARD Parse</span>
-                     concluído`))
+                     concluído!`))
         await new Delay(3000).sleep()
         sqlConsole.addMsg(new SqlConsoleMsgInfo(`< SP > Gerado 
                      <span style="font-weight: bold">SQL_ID</span>: 

@@ -2,10 +2,12 @@ import { Hash } from '../crypt/hash'
 import { Delay } from '../time/delay'
 import { Tooltip } from '../utils/tooltip'
 import { DataBlock } from '../oracle-database/data.block'
+import { DbBufferCache } from '../oracle-instance/db.buffer.cache'
 import { DataBlockRedo } from '../oracle-database/data.block.redo'
 import { RedoLogBuffer } from '../oracle-instance/redo.log.buffer'
 import { UserProcess } from '../process/user.process'
 import { SqlConsoleMsgInfo } from '../sql-console/sql.console.msg.info'
+import { RedoLogFiles } from '../oracle-database/redo.log.files'
  
 
 export class Lgwr {
@@ -75,9 +77,15 @@ export class Lgwr {
 
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< LGWR > Gravando as entradas no Redo Log File'))        
         await new Delay(3000).sleep()
-        
+
         //uma vez no log-writer precisamos envia-los ao redo-log-files
-        await this.animSendBlocksToRedoLogFiles(blocks, 5000)        
+        await this.animSendBlocksToRedoLogFiles(blocks, 5000)
+        
+        let redoLogFiles: RedoLogFiles = Orasim.getOracleDatabase().getRedoLogFiles()
+        await redoLogFiles.showCurrentLogGroup()
+        await redoLogFiles.storeData(blocks)
+
+                        
     }
 
     async animSendBlocksToRedoLogFiles(blocks: DataBlock[], delay: number){
