@@ -24,8 +24,8 @@ export class AnimationCommit extends Animation {
 
         //enviando commit
         await userProcess.animateSendDataToServerProcessAsync(5000, "COMMIT")
-        Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Enviando comando COMMIT para o ServerProcess'))        
-        await new Delay(3000).sleep()
+        // Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo('< UP > Enviando comando COMMIT para o ServerProcess'))        
+        // await new Delay(3000).sleep()
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< LGWR > Lendo as entradas no Redo Log Buffer"))        
         await new Delay(5000).sleep()
         await super.animBlinkTwoElements('#lgwr','#redo-log-buffer', 5000)
