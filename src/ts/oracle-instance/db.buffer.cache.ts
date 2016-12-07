@@ -172,8 +172,8 @@ export class DbBufferCache {
      */
     freeMemoryAttribute(attribute: string) {
         for (let i = 0; i < this.getBlocks().length; i++) {            
-            if (attribute == "block-undo")
-                this.blocks[i].setUsed(true)
+            if (attribute == "block-undo" && this.blocks[i].used())
+                this.blocks[i].setUsed(false)
             $(this.blocks[i].getElement()).removeClass(attribute)
         }        
     }

@@ -22,11 +22,13 @@ export class ServerProcessInsert extends ServerProcess {
         //lockando blocos sujos
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Lockando registros nos \"blocos sujos\""))
         await new Delay(3000).sleep()
+        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)
         dbBufferCache.setMemoryAttribute(hash,"block-locked")
 
         //duplicando entradas no dbBufferCache(UNDO)
         Orasim.getSqlConsole().addMsg(new SqlConsoleMsgInfo("< SP > Copiando blocos atuais e salvando na área de <span style='font-weight: bold'>UNDO</span>"))
         await new Delay(3000).sleep()
+        await Orasim.getAnimation().animBlinkTwoElements('#server-process','#db-buffer-cache', 5000)
         let randomMem = dbBufferCache.duplicateAllocRandomMemory(hash)        
         dbBufferCache.setMemoryAttributeByArray(randomMem, "block-undo")
 

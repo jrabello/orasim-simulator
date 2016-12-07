@@ -672,7 +672,10 @@ line-height: 40px;
   font-size: 14px
 }
 
+.redo-log-file-green{
+  background-color: lime
+}
 
-.redo-log-file-log{
-  background-color: #00b045
+.redo-log-file-red{
+  background-color: red
 }
