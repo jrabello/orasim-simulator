@@ -10,14 +10,14 @@
     "gen:doc": "typedoc --out ./doc ./src/ts --module amd --includeDeclarations --ignoreCompilerErrors"
   },
   "devDependencies": {
-    "acorn": "^4.0.3",
-    "html-webpack-plugin": "^2.22.0",
-    "ts-loader": "^1.2.2",
-    "typescript": "^2.2.0-dev.20161202",
-    "typings": "^1.5.0",
-    "webpack": "^1.13.3"
+    "acorn": "4.0.3",
+    "html-webpack-plugin": "2.22.0",
+    "ts-loader": "1.2.2",
+    "typescript": "2.2.0-dev.20161202",
+    "typings": "1.5.0",
+    "webpack": "1.13.3"
   },
   "dependencies": {
-    "typescript-stl": "^1.2.4"
+    "typescript-stl": "1.2.4"
   }
 }

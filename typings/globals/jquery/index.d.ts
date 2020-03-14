@@ -600,7 +600,7 @@ interface JQueryEasingFunctions {
  * Static members of jQuery (those on $ and jQuery themselves)
  */
 interface JQueryStatic {
-
+    
     /**
      * Perform an asynchronous HTTP (Ajax) request.
      *
@@ -3216,6 +3216,8 @@ interface JQuery {
     repeat(): any
     qtip(obj: Object): any
 }
+
+
 declare module "jquery" {
     export = $;
 }
